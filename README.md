@@ -1,25 +1,26 @@
-#Cloud Client
+# Cloud Client
 Cloud Client is an open source Minecraft PVP Client for 1.7.10 and 1.8.9 using the Forge API.
 
-##Downloading
+## Downloading
 - Download the mod from the Releases section here
-- Download the mod using the installer (github.com/CloudClientDev/cloudinstaller)
+- Download the mod using the installer (https://github.com/CloudClientDev/cloudinstaller)
 
-##Workspace Setup
+## Workspace Setup
 1. Clone or download the repository either using git or the zip download
 2. Open the folder, either 1.7.10 or 1.8.9 and copy the path
 3. Open a command proment or terminal and change the directory to the copied path (for example: "cd C:\User\Desktop\cloudclient-main\1.8.9")
 4. Type in "gradlew setupDecompWorkspace" and either add "idea" if using intelliJ IDEA or "eclipse" if using Eclipse (IntelliJ IDEA is recommended)
 5. Wait for everything to finish and open the project using your preferred IDE from above. Do not import the project as a gradle project
+6. Lastly add "--tweakClass org.spongepowered.asm.launch.MixinTweaker --mixin mixins.cloudmc.json" to your programm arguments
 
-##Building
+## Building
 In order to build the project you will first need to setup your workspace, which you can do above.
 1. Open either the 1.7.10 or 1.8.9 folder and copy the path
 2. Open a command proment or terminal and change the directory to the copied path (for example: "cd C:\User\Desktop\cloudclient-main\1.8.9")
 3. Type in "gradlew build". This will make a new build in C:\User\Desktop\cloudclient-main\1.8.9\build\libs
 4. Copy the .jar file and paste it into your mods folder in order to launch the mod
 
-##License
+## License
 This project is licensed under the GNU GPL-3.0 License
 
 Permissions:
