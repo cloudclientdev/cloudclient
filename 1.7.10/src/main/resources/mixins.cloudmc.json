@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.6",
+  "package": "dev.cloudmc.mixins",
+  "refmap": "mixins.cloudmc.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "EntityRendererMixin",
+    "FontRendererMixin",
+    "GuiMainMenuMixin",
+    "GuiScreenMixin",
+    "MinecraftMixin"
+  ]
+}

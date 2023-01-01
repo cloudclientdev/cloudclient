@@ -1,0 +1,62 @@
+/** Common code for Forge 1.7.10 builds */
+
+apply plugin: 'forge'
+
+version = "1.3.2"
+group = "dev.cloudmc"
+archivesBaseName = "cloudmc"
+
+minecraft {
+    version = "${project.minecraft_version}-${project.forge_version}"
+    runDir = "run"
+	replace '@VERSION@', project.version
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+configurations {
+    embed
+    compile.extendsFrom(embed)
+	shade
+    compile.extendsFrom(shade)
+}
+
+if(project.enable_mixin.toBoolean()) {
+	apply from: "buildscript/forge-1.7-mixin.gradle"
+}
+
+project.ext.override_dependencies = false
+
+jar {
+    from(sourceSets.main.output);
+
+    // embed libraries in jar
+    from configurations.embed.collect {
+        exclude '**/LICENSE', '**/LICENSE.txt'
+        it.isDirectory() ? it : zipTree(it)
+    }
+	
+	configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            exclude '**/LICENSE', '**/LICENSE.txt', 'META-INF', 'META-INF/**'
+        }
+    }
+}
+
+processResources {
+    // This will ensure that this task is redone when the versions or any
+	// user-defined properties change.
+    inputs.property "version", version
+    inputs.property "mcversion", project.minecraft.version
+	inputs.properties project.ext.getProperties()
+
+    filesMatching('*.info') {
+        expand project.properties
+    }
+}
+
+// Ensures that the encoding of source files is set to UTF-8, see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}

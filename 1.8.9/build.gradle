@@ -1,0 +1,117 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven { url 'https://repo.spongepowered.org/maven' }
+        maven { url 'https://files.minecraftforge.net/maven' }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'org.spongepowered.mixin'
+
+version = "1.3.2"
+group= "dev.cloudmc"
+archivesBaseName = "cloudmc"
+
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = "1.8.9-11.15.1.2318-1.8.9"
+    runDir = "run"
+    mappings = "stable_22"
+    makeObfSourceJar = false
+    clientJvmArgs += '-Dfml.coreMods.load=dev.cloudmc.mixins.MixinLoader'
+}
+
+mixin {
+    defaultObfuscationEnv searge
+    sourceSets {
+        main {
+            ext.refMap = 'mixins.cloudmc.refmap.json'
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://repo.spongepowered.org/maven'
+    }
+    maven {
+        url 'https://litarvan.github.io/maven'
+    }
+    maven {
+        url 'https://jitpack.io'
+    }
+}
+
+configurations {
+    embed
+    compile.extendsFrom embed
+}
+
+dependencies {
+    embed('org.spongepowered:mixin:0.6.4-SNAPSHOT') {
+
+        exclude module: 'gson'
+        exclude module: 'guava'
+        exclude module: 'jarjar'
+        exclude module: 'commons-codec'
+        exclude module: 'commons-io'
+        exclude module: 'launchwrapper'
+        exclude module: 'asm-commons'
+        exclude module: 'slf4j-api'
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        // replace version and mcversion
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+
+jar {
+
+    from(configurations.embed.collect {
+        it.isDirectory() ? it : zipTree(it)
+    }) {
+        exclude 'dummyThing',
+                'LICENSE.txt',
+                'META-INF/MUMFREY.RSA',
+                'META-INF/maven/**',
+                'org/**/*.html'
+    }
+    manifest.attributes(
+            // Name for the clients mixins.json.
+            'MixinConfigs': 'mixins.cloudmc.json',
+            // Access transformer configuration.
+            //'FMLAT': 'hydrogen_at.cfg',
+            // Directory for the org library mixin loader.
+            'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+            // Actually not too sure what this is for.
+            'TweakOrder': 0,
+            // Whether ur using mcp accessor's or not.
+            'FMLCorePluginContainsFMLMod': 'true',
+            // Directory for the mixin loader for the built jar.
+            'FMLCorePlugin': 'dev.cloudmc.injection.MixinLoader',
+            // Turn this to false for the client to be able to load in a IDE.
+            'ForceLoadAsMod': 'true'
+    )
+}
