@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.feature.mod;
@@ -11,7 +11,6 @@ public class Mod {
 
     private String name;
     private String description;
-    private int optionalKey;
     private boolean toggled;
 
     public Mod(String name, String description) {
@@ -41,14 +40,6 @@ public class Mod {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public int getOptionalKey() {
-        return optionalKey;
-    }
-
-    public void setOptionalKey(int optionalKey) {
-        this.optionalKey = optionalKey;
     }
 
     public boolean isToggled() {

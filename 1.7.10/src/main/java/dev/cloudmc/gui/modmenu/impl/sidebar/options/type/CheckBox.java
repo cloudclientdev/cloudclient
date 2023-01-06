@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.modmenu.impl.sidebar.options.type;
@@ -19,13 +19,8 @@ public class CheckBox extends Options {
 
     Animate animateCheckBox = new Animate();
 
-    private boolean roundedCorners;
-
     public CheckBox(Option option, Panel panel, int y) {
         super(option, panel, y);
-        if(option.getName().equalsIgnoreCase("Rounded Corners")){
-            roundedCorners = true;
-        }
     }
 
     /**
@@ -51,7 +46,7 @@ public class CheckBox extends Options {
                 option.getName(),
                 panel.getX() + 20,
                 panel.getY() + panel.getH() + getY() + 6,
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
 
         Helper2D.drawRoundedRectangle(
@@ -61,7 +56,7 @@ public class CheckBox extends Options {
                 20,
                 2,
                 option.isCheckToggled() ? ClientStyle.getBackgroundColor(80).getRGB() : ClientStyle.getBackgroundColor(50).getRGB(),
-                ClientStyle.isRoundedCorners() ? 0 : -1
+                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
 
         Helper2D.drawPicture(
@@ -82,7 +77,7 @@ public class CheckBox extends Options {
                                 ? 20
                                 : 0
                         : animateCheckBox.getValueI() * 2,
-                ClientStyle.getColor().getRGB(),
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(),
                 "icon/check.png"
         );
     }
@@ -107,9 +102,6 @@ public class CheckBox extends Options {
                     mouseY)
             ) {
                 option.setCheckToggled(!option.isCheckToggled());
-                if(roundedCorners){
-                    ClientStyle.setRoundedCorners(option.isCheckToggled());
-                }
             }
         }
     }

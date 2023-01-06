@@ -1,8 +1,15 @@
+/*
+ * Copyright (c) 2022 DupliCAT
+ * GNU Lesser General Public License v3.0
+ */
+
 package dev.cloudmc.mixins;
 
-import dev.cloudmc.helpers.DebugFPS;
+import dev.cloudmc.helpers.DebugFPSHelper;
+import dev.cloudmc.helpers.ServerDataHelper;
 import dev.cloudmc.helpers.animation.DeltaTime;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ServerData;
 import org.lwjgl.Sys;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 abstract class MinecraftMixin {
 
     @Shadow private static int debugFPS;
-
+    @Shadow private ServerData currentServerData;
     long lastFrame = Sys.getTime();
 
     /**
@@ -28,6 +35,7 @@ abstract class MinecraftMixin {
         int deltaTime = (int) (currentTime - lastFrame);
         lastFrame = currentTime;
         DeltaTime.setDeltaTime(deltaTime);
-        DebugFPS.setDebugFPS(debugFPS);
+        DebugFPSHelper.setDebugFPS(debugFPS);
+        ServerDataHelper.setServerData(currentServerData);
     }
 }

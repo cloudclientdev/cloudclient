@@ -1,11 +1,13 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.feature.option;
 
 import dev.cloudmc.gui.modmenu.impl.sidebar.options.type.CellGrid;
+import dev.cloudmc.gui.modmenu.impl.sidebar.options.type.Keybinding;
+import org.lwjgl.input.Keyboard;
 import scala.tools.cmd.gen.AnyValReps;
 
 import java.awt.*;
@@ -23,8 +25,9 @@ public class OptionManager {
     public void init() {
         addOption(new Option("Font Changer", "Arial", 0,
                 GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
-        addOption(new Option("Client Color", new Color(255, 255, 255)));
+        addOption(new Option("Color", new Color(255, 255, 255)));
         addOption(new Option("Rounded Corners", true));
+        addOption(new Option("ModMenu Keybinding", Keyboard.KEY_RSHIFT));
     }
 
     /**

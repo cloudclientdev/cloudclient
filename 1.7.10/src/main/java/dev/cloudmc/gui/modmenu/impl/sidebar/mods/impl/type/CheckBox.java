@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.type;
@@ -46,7 +46,7 @@ public class CheckBox extends Settings {
                 setting.getName(),
                 button.getPanel().getX() + 20,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 6,
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
 
         Helper2D.drawRoundedRectangle(
@@ -56,7 +56,7 @@ public class CheckBox extends Settings {
                 20,
                 2,
                 setting.isCheckToggled() ? ClientStyle.getBackgroundColor(80).getRGB() : ClientStyle.getBackgroundColor(50).getRGB(),
-                ClientStyle.isRoundedCorners() ? 0 : -1
+                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
 
         Helper2D.drawPicture(
@@ -77,7 +77,7 @@ public class CheckBox extends Settings {
                                 ? 20
                                 : 0
                         : animateCheckBox.getValueI() * 2,
-                ClientStyle.getColor().getRGB(),
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(),
                 "icon/check.png"
         );
     }

@@ -1,8 +1,15 @@
+/*
+ * Copyright (c) 2022 DupliCAT
+ * GNU Lesser General Public License v3.0
+ */
+
 package dev.cloudmc.config;
 
 import com.google.gson.Gson;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.option.Option;
+import dev.cloudmc.gui.ClientStyle;
 import dev.cloudmc.helpers.DirHelper;
 
 import java.io.File;
@@ -38,6 +45,12 @@ public class ConfigSaver {
             );
             configArray.addConfig(config);
         }
+
+        for(Option option : Cloud.INSTANCE.optionManager.getOptions()){
+            configArray.addConfigOption(option);
+        }
+
+        configArray.setDarkMode(ClientStyle.isDarkMode());
 
         String json = new Gson().toJson(configArray);
         writer.write(json);

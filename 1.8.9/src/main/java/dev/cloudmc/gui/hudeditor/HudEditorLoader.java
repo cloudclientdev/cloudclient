@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.hudeditor;
@@ -23,7 +23,7 @@ public class HudEditorLoader {
 
     @SubscribeEvent
     public void onKey(InputEvent.KeyInputEvent e) {
-        if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+        if(Keyboard.isKeyDown(Cloud.INSTANCE.optionManager.getOptionByName("ModMenu Keybinding").getKey())) {
             Cloud.INSTANCE.mc.displayGuiScreen(Cloud.INSTANCE.hudEditor);
         }
     }

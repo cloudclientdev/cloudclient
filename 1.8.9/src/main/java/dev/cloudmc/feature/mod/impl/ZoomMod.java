@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.feature.mod.impl;
@@ -26,7 +26,7 @@ public class ZoomMod extends Mod {
                 "Zoom",
                 "Allows you to zoom into the world."
         );
-        setOptionalKey(Keyboard.KEY_C);
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Keybinding", this, Keyboard.KEY_C));
 
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Zoom Amount", this, 120, 30));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Smooth Zoom", this, true));
@@ -46,7 +46,7 @@ public class ZoomMod extends Mod {
 
     @SubscribeEvent
     public void onKey(InputEvent.KeyInputEvent e) {
-        if(Keyboard.isKeyDown(getOptionalKey())){
+        if(Keyboard.isKeyDown(getKey())){
             zoom = true;
             animate.setReversed(true);
         }
@@ -69,5 +69,9 @@ public class ZoomMod extends Mod {
 
     private static float getAmount() {
         return Cloud.INSTANCE.settingManager.getSettingByModAndName("Zoom", "Zoom Amount").getCurrentNumber();
+    }
+
+    private int getKey(){
+        return Cloud.INSTANCE.settingManager.getSettingByModAndName(getName(), "Keybinding").getKey();
     }
 }

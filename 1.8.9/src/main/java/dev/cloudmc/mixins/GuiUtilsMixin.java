@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2022 DupliCAT
+ * GNU Lesser General Public License v3.0
+ */
+
 package dev.cloudmc.mixins;
 
 import dev.cloudmc.Cloud;
@@ -10,16 +15,20 @@ import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static net.minecraftforge.fml.client.config.GuiUtils.drawGradientRect;
 
 @Mixin(GuiUtils.class)
 public abstract class GuiUtilsMixin {
 
     private static int scroll = 0;
-
-    @Shadow public static void drawGradientRect(int zLevel, int left, int top, int right, int bottom, int startColor, int endColor) {}
 
     /**
      * @author DupliCAT

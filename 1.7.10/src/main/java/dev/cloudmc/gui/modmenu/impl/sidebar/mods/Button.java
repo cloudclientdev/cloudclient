@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.modmenu.impl.sidebar.mods;
@@ -45,12 +45,6 @@ public class Button {
         if (Cloud.INSTANCE.settingManager.getSettingsByMod(mod) != null) {
             int addY = 40;
 
-            if (mod.getOptionalKey() != Keyboard.KEY_NONE) {
-                Settings settingsKeybinding = new Keybinding(new Setting("Keybinding"), this, addY);
-                settingsList.add(settingsKeybinding);
-                addY += settingsKeybinding.getH();
-            }
-
             for (Setting setting : Cloud.INSTANCE.settingManager.getSettingsByMod(mod)) {
                 switch (setting.getMode()) {
                     case "CheckBox":
@@ -78,6 +72,10 @@ public class Button {
                         settingsList.add(settingsCellGrid);
                         addY += settingsCellGrid.getH();
                         break;
+                    case "Keybinding":
+                        Keybinding settingKeybinding = new Keybinding(setting, this, addY);
+                        settingsList.add(settingKeybinding);
+                        addY += settingKeybinding.getH();
                 }
             }
         }
@@ -107,12 +105,12 @@ public class Button {
          */
 
         if (!getPanel().isAnyButtonOpen()) {
-            Helper2D.drawRoundedRectangle(panel.getX() + 5 + x, panel.getY() + panel.getH() + 5 + y, w, h, 2, ClientStyle.getBackgroundColor(40).getRGB(), ClientStyle.isRoundedCorners() ? 0 : -1);
-            Helper2D.drawRoundedRectangle(panel.getX() + 5 + x, panel.getY() + panel.getH() + y + 60, w, 25, 2, ClientStyle.getBackgroundColor(50).getRGB(), ClientStyle.isRoundedCorners() ? 2 : -1);
-            Cloud.INSTANCE.fontHelper.size20.drawString(mod.getName(), panel.getX() + 10 + x, panel.getY() + panel.getH() + y + 67, ClientStyle.getColor().getRGB());
-            Helper2D.drawRoundedRectangle(panel.getX() + 13 + x + 77, panel.getY() + panel.getH() + y + h - 16, 30, 15, 2, ClientStyle.getBackgroundColor(50).getRGB(), ClientStyle.isRoundedCorners() ? 0 : -1);
-            Helper2D.drawRoundedRectangle(animateButton.hasFinished() ? mod.isToggled() ? panel.getX() + 13 + 15 + x + 77 : panel.getX() + 13 + x + 77 : panel.getX() + 13 + animateButton.getValueI() + x + 77, panel.getY() + panel.getH() + y + h - 16, 15, 15, 2, ClientStyle.getBackgroundColor(70).getRGB(), ClientStyle.isRoundedCorners() ? 0 : -1);
-            Helper2D.drawPicture(panel.getX() + getX() + getW() / 2 - 12, panel.getY() + panel.getH() + getY() + 15, 35, 35, ClientStyle.getColor().getRGB(), "icon/button/button/" + mod.getName() + ".png");
+            Helper2D.drawRoundedRectangle(panel.getX() + 5 + x, panel.getY() + panel.getH() + 5 + y, w, h, 2, ClientStyle.getBackgroundColor(40).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
+            Helper2D.drawRoundedRectangle(panel.getX() + 5 + x, panel.getY() + panel.getH() + y + 60, w, 25, 2, ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 2 : -1);
+            Cloud.INSTANCE.fontHelper.size20.drawString(mod.getName(), panel.getX() + 10 + x, panel.getY() + panel.getH() + y + 67, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
+            Helper2D.drawRoundedRectangle(panel.getX() + 13 + x + 77, panel.getY() + panel.getH() + y + h - 16, 30, 15, 2, ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
+            Helper2D.drawRoundedRectangle(animateButton.hasFinished() ? mod.isToggled() ? panel.getX() + 13 + 15 + x + 77 : panel.getX() + 13 + x + 77 : panel.getX() + 13 + animateButton.getValueI() + x + 77, panel.getY() + panel.getH() + y + h - 16, 15, 15, 2, ClientStyle.getBackgroundColor(70).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
+            Helper2D.drawPicture(panel.getX() + getX() + getW() / 2 - 12, panel.getY() + panel.getH() + getY() + 15, 35, 35, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), "icon/button/button/" + mod.getName() + ".png");
         }
 
         if (open) {
@@ -123,12 +121,12 @@ public class Button {
                     .setReversed(false)
                     .update();
 
-            Helper2D.drawRoundedRectangle(panel.getX() + 5, panel.getY() + panel.getH() + 5 + 300 - animatePanel.getValueI(), panel.getW() - 10, panel.getH(), 2, ClientStyle.getBackgroundColor(80).getRGB(), ClientStyle.isRoundedCorners() ? 1 : -1);
+            Helper2D.drawRoundedRectangle(panel.getX() + 5, panel.getY() + panel.getH() + 5 + 300 - animatePanel.getValueI(), panel.getW() - 10, panel.getH(), 2, ClientStyle.getBackgroundColor(80).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 1 : -1);
             Helper2D.drawRectangle(panel.getX() + 5, panel.getY() + panel.getH() + 35 + 300 - animatePanel.getValueI(), panel.getW() - 10, 265, ClientStyle.getBackgroundColor(40).getRGB());
-            Helper2D.drawRoundedRectangle(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10 + 300 - animatePanel.getValueI(), 20, 20, 2, MathHelper.withinBox(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10, 20, 20, mouseX, mouseY) ? ClientStyle.getBackgroundColor(70).getRGB() : ClientStyle.getBackgroundColor(50).getRGB(), ClientStyle.isRoundedCorners() ? 0 : -1);
-            Helper2D.drawPicture(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10 + 300 - animatePanel.getValueI(), 20, 20, ClientStyle.getColor().getRGB(), "icon/cross.png");
-            Cloud.INSTANCE.fontHelper.size30.drawString(mod.getName(), panel.getX() + 5 + 7, panel.getY() + panel.getH() + 5 + 8 + 300 - animatePanel.getValueI(), ClientStyle.getColor().getRGB());
-            Cloud.INSTANCE.fontHelper.size20.drawString(mod.getDescription(), panel.getX() + 20 + Cloud.INSTANCE.fontHelper.size30.getStringWidth(mod.getName()), panel.getY() + panel.getH() + 316 - animatePanel.getValueI(), ClientStyle.getColor().getRGB());
+            Helper2D.drawRoundedRectangle(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10 + 300 - animatePanel.getValueI(), 20, 20, 2, MathHelper.withinBox(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10, 20, 20, mouseX, mouseY) ? ClientStyle.getBackgroundColor(70).getRGB() : ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
+            Helper2D.drawPicture(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10 + 300 - animatePanel.getValueI(), 20, 20, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), "icon/cross.png");
+            Cloud.INSTANCE.fontHelper.size30.drawString(mod.getName(), panel.getX() + 5 + 7, panel.getY() + panel.getH() + 5 + 8 + 300 - animatePanel.getValueI(), Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
+            Cloud.INSTANCE.fontHelper.size20.drawString(mod.getDescription(), panel.getX() + 20 + Cloud.INSTANCE.fontHelper.size30.getStringWidth(mod.getName()), panel.getY() + panel.getH() + 316 - animatePanel.getValueI(), Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
 
             /*
             Updates settings if they change their height

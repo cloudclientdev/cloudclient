@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.hudeditor.impl.impl;
@@ -29,7 +29,9 @@ public class ReachdisplayHud extends HudMod {
 
     @SubscribeEvent
     public void onAttack(AttackEntityEvent e) {
-        if (Cloud.INSTANCE.mc.objectMouseOver != null && Cloud.INSTANCE.mc.objectMouseOver.typeOfHit.equals(MovingObjectPosition.MovingObjectType.ENTITY)) {
+        if (Cloud.INSTANCE.mc.objectMouseOver != null &&
+                Cloud.INSTANCE.mc.objectMouseOver.typeOfHit.equals(MovingObjectPosition.MovingObjectType.ENTITY)
+        ) {
             Vec3 vec3 = Cloud.INSTANCE.mc.getRenderViewEntity().getPositionEyes(1);
             range = Cloud.INSTANCE.mc.objectMouseOver.hitVec.distanceTo(vec3);
         }
@@ -65,7 +67,7 @@ public class ReachdisplayHud extends HudMod {
     }
 
     @SubscribeEvent
-    public void onRender2D(RenderGameOverlayEvent.Text e) {
+    public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             if (isModern()) {
                 if (isBackground()) {

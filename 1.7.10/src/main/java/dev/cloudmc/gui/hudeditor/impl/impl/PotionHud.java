@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.hudeditor.impl.impl;
@@ -58,7 +58,7 @@ public class PotionHud extends HudMod {
     }
 
     @SubscribeEvent
-    public void onRender2D(RenderGameOverlayEvent.Text e) {
+    public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
         Collection collection = Cloud.INSTANCE.mc.thePlayer.getActivePotionEffects();
         if(collection.isEmpty()){
             return;

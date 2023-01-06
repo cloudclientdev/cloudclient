@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.type;
@@ -59,7 +59,7 @@ public class ColorPicker extends Settings {
                 setting.getName(),
                 button.getPanel().getX() + 20,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 6,
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
 
         if (isOpen()) {
@@ -76,13 +76,13 @@ public class ColorPicker extends Settings {
                     button.getPanel().getX() + button.getPanel().getW() - 37,
                     button.getPanel().getY() + button.getPanel().getH() + getY() + animate.getValueI() - 45,
                     18, 71, 2, ClientStyle.getBackgroundColor(50).getRGB(),
-                    ClientStyle.isRoundedCorners() ? 0 : -1
+                    Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
             );
             Helper2D.drawRoundedRectangle(
                     button.getPanel().getX() + button.getPanel().getW() - 171,
                     button.getPanel().getY() + button.getPanel().getH() + getY() + animate.getValueI() - 45,
                     131, 71, 2, ClientStyle.getBackgroundColor(50).getRGB(),
-                    ClientStyle.isRoundedCorners() ? 0 : -1
+                    Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
             );
 
             Helper2D.drawPicture(
@@ -94,7 +94,7 @@ public class ColorPicker extends Settings {
                     button.getPanel().getX() + button.getPanel().getW() - 36,
                     button.getPanel().getY() + button.getPanel().getH() + getY() + yPos + animate.getValueI() - 44,
                     16, 4, 2, -1,
-                    ClientStyle.isRoundedCorners() ? 0 : -1
+                    Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
             );
 
             chooseHue();
@@ -121,7 +121,7 @@ public class ColorPicker extends Settings {
                     button.getPanel().getX() + button.getPanel().getW() - xPos2 - 44,
                     button.getPanel().getY() + button.getPanel().getH() + getY() + yPos2 + animate.getValueI() - 44,
                     4, 4, 2, -1,
-                    ClientStyle.isRoundedCorners() ? 0 : -1
+                    Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
             );
 
             if (!animate.hasFinished()) {
@@ -135,7 +135,7 @@ public class ColorPicker extends Settings {
                 button.getPanel().getX() + button.getPanel().getW() - 41,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 1,
                 22, 22, 2, ClientStyle.getBackgroundColor(50).getRGB(),
-                ClientStyle.isRoundedCorners() ? 0 : -1
+                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
         Helper2D.drawRectangle(
                 button.getPanel().getX() + button.getPanel().getW() - 39,
@@ -149,7 +149,7 @@ public class ColorPicker extends Settings {
                         Cloud.INSTANCE.fontHelper.size20.getStringWidth(
                                 String.format("#%02x%02x%02x", setting.getColor().getRed(), setting.getColor().getGreen(), setting.getColor().getBlue())
                         ),
-                button.getPanel().getY() + button.getPanel().getH() + 3 + getY() + 6, ClientStyle.getColor().getRGB()
+                button.getPanel().getY() + button.getPanel().getH() + 3 + getY() + 6, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
     }
 

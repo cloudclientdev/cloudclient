@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.type;
@@ -17,6 +17,7 @@ public class CellGrid extends Settings {
 
     public CellGrid(Setting setting, Button button, int y) {
         super(setting, button, y);
+        setH(135);
     }
 
     /**
@@ -33,7 +34,7 @@ public class CellGrid extends Settings {
                 setting.getName(),
                 button.getPanel().getX() + 20,
                 button.getPanel().getY() + button.getPanel().getH() + 6 + getY(),
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
 
         int x = 0;

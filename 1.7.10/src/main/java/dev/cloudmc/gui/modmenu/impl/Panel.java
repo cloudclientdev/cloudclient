@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.modmenu.impl;
@@ -87,6 +87,11 @@ public class Panel {
                     optionsList.add(cellGrid);
                     addOptionY += cellGrid.getH();
                     break;
+                case "Keybinding":
+                    Keybinding keybinding = new Keybinding(option, this, addOptionY);
+                    optionsList.add(keybinding);
+                    addOptionY += keybinding.getH();
+                    break;
             }
         }
     }
@@ -99,12 +104,12 @@ public class Panel {
      */
 
     public void renderPanel(int mouseX, int mouseY) {
-        Helper2D.drawRoundedRectangle(x, y, w, h, 2, ClientStyle.getBackgroundColor(70).getRGB(), ClientStyle.isRoundedCorners() ? 1 : -1);
-        Helper2D.drawRoundedRectangle(x, y + 30, w, h + 270, 2, ClientStyle.getBackgroundColor(50).getRGB(), ClientStyle.isRoundedCorners() ? 2 : -1);
-        Helper2D.drawRoundedRectangle(x + w - 25, y + 5, 20, 20, 2, MathHelper.withinBox(x + w - 25, y + 5, 20, 20, mouseX, mouseY) ? ClientStyle.getBackgroundColor(70).getRGB() : ClientStyle.getBackgroundColor(50).getRGB(), ClientStyle.isRoundedCorners() ? 0 : -1);
-        Helper2D.drawPicture(x + w - 25, y + 5, 20, 20, ClientStyle.getColor().getRGB(), "icon/cross.png");
-        Helper2D.drawPicture(x + 2, y - 1, 35, 35, ClientStyle.getColor().getRGB(), "cloudlogo.png");
-        Cloud.INSTANCE.fontHelper.size40.drawString(Cloud.modName, x + 37, y + 6, ClientStyle.getColor().getRGB());
+        Helper2D.drawRoundedRectangle(x, y, w, h, 2, ClientStyle.getBackgroundColor(70).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 1 : -1);
+        Helper2D.drawRoundedRectangle(x, y + 30, w, h + 270, 2, ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 2 : -1);
+        Helper2D.drawRoundedRectangle(x + w - 25, y + 5, 20, 20, 2, MathHelper.withinBox(x + w - 25, y + 5, 20, 20, mouseX, mouseY) ? ClientStyle.getBackgroundColor(70).getRGB() : ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
+        Helper2D.drawPicture(x + w - 25, y + 5, 20, 20, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), "icon/cross.png");
+        Helper2D.drawPicture(x + 2, y - 1, 35, 35, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), "cloudlogo.png");
+        Cloud.INSTANCE.fontHelper.size40.drawString(Cloud.modName, x + 37, y + 6, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
 
         /*
         Buttons are only drawn if the Sidebar is on the mods tab
@@ -187,13 +192,13 @@ public class Panel {
         Draws the sidebar with the mods and settings tab
          */
 
-        Helper2D.drawRoundedRectangle(x - 50, y, 40, h + 300, 2, ClientStyle.getBackgroundColor(50).getRGB(), ClientStyle.isRoundedCorners() ? 0 : -1);
-        Helper2D.drawRoundedRectangle(x - 50, y + selected * 40, 40, 40, 2, ClientStyle.getBackgroundColor(50).getRGB(), ClientStyle.isRoundedCorners() ? 0 : -1);
+        Helper2D.drawRoundedRectangle(x - 50, y, 40, h + 300, 2, ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
+        Helper2D.drawRoundedRectangle(x - 50, y + selected * 40, 40, 40, 2, ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
 
         String[] buttons = {"Mods", "Settings"};
         for (int i = 0; i < buttons.length; i++) {
-            Cloud.INSTANCE.fontHelper.size15.drawString(buttons[i], x - 30 - Cloud.INSTANCE.fontHelper.size15.getStringWidth(buttons[i]) / 2, y + 30 + i * 40, ClientStyle.getColor().getRGB());
-            Helper2D.drawPicture(x - 40, y + 5 + i * 40, 20, 20, ClientStyle.getColor().getRGB(), "icon/button/sidebar/icon" + i + ".png");
+            Cloud.INSTANCE.fontHelper.size15.drawString(buttons[i], x - 30 - Cloud.INSTANCE.fontHelper.size15.getStringWidth(buttons[i]) / 2, y + 30 + i * 40, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
+            Helper2D.drawPicture(x - 40, y + 5 + i * 40, 20, 20, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), "icon/button/sidebar/icon" + i + ".png");
         }
     }
 
@@ -241,6 +246,11 @@ public class Panel {
                 option.mouseReleased(mouseX, mouseY, state);
             }
         }
+    }
+    
+    public void initGui(){
+        ScaledResolution sr = new ScaledResolution(Cloud.INSTANCE.mc, Cloud.INSTANCE.mc.displayWidth, Cloud.INSTANCE.mc.displayHeight);
+        setX(sr.getScaledWidth() / 2 - 250);
     }
 
     /**

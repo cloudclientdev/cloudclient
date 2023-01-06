@@ -1,13 +1,15 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.helpers.font;
 
+import dev.cloudmc.Cloud;
+
 public class FontHelper {
 
-    private String font = "Arial Rounded MT Bold";
+    private String font;
 
     public GlyphPageFontRenderer size15;
     public GlyphPageFontRenderer size20;
@@ -19,6 +21,7 @@ public class FontHelper {
     }
 
     public void init(){
+        font = Cloud.INSTANCE.optionManager.getOptionByName("Font Changer").getCurrentMode();
         size15 = GlyphPageFontRenderer.create(font, 15, false, false, false);
         size20 = GlyphPageFontRenderer.create(font, 20, false, false, false);
         size30 = GlyphPageFontRenderer.create(font, 30, false, false, false);

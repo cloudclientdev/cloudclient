@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
 import dev.cloudmc.feature.setting.Setting;
+import dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.type.Keybinding;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -24,7 +25,7 @@ public class ToggleSprintMod extends Mod {
                 "ToggleSprint",
                 "Allows you to toggle the Sprint button instead of holding it."
         );
-        setOptionalKey(Keyboard.KEY_LCONTROL);
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Keybinding", this, Keyboard.KEY_LCONTROL));
 
         String[] mode = {"Modern", "Legacy"};
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Mode", this, "Modern", 0, mode));
@@ -36,17 +37,30 @@ public class ToggleSprintMod extends Mod {
         return toggled;
     }
 
+    @Override
+    public void onDisable(){
+        super.onDisable();
+        KeyBinding.setKeyBindState(Cloud.INSTANCE.mc.gameSettings.keyBindSprint.getKeyCode(), false);
+    }
+
     @SubscribeEvent
     public void onTick(TickEvent.PlayerTickEvent e) {
         if (toggled) {
             KeyBinding.setKeyBindState(Cloud.INSTANCE.mc.gameSettings.keyBindSprint.getKeyCode(), true);
         }
+        else {
+            KeyBinding.setKeyBindState(Cloud.INSTANCE.mc.gameSettings.keyBindSprint.getKeyCode(), false);
+        }
     }
 
     @SubscribeEvent
     public void key(InputEvent.KeyInputEvent e) {
-        if(Keyboard.isKeyDown(getOptionalKey())){
+        if(Keyboard.isKeyDown(getKey())){
             toggled = !toggled;
         }
+    }
+
+    private int getKey(){
+        return Cloud.INSTANCE.settingManager.getSettingByModAndName(getName(), "Keybinding").getKey();
     }
 }

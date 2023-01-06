@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.hudeditor.impl.impl;
@@ -11,6 +11,16 @@ import dev.cloudmc.gui.ClientStyle;
 import dev.cloudmc.gui.hudeditor.impl.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
 import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.ServerDataHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.GuiPlayerInfo;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.network.OldServerPinger;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class PingHud extends HudMod {
@@ -51,7 +61,7 @@ public class PingHud extends HudMod {
     }
 
     @SubscribeEvent
-    public void onRender2D(RenderGameOverlayEvent.Text e) {
+    public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             if (isModern()) {
                 if (isBackground()) {
@@ -79,7 +89,7 @@ public class PingHud extends HudMod {
     }
 
     private long getPing(){
-        return  /*Cloud.INSTANCE.minecraft.getCurrentServerData() == null ? 0 : Cloud.INSTANCE.minecraft.getCurrentServerData().pingToServer; */ 0;
+        return Cloud.INSTANCE.mc.isIntegratedServerRunning() ? 0 : ServerDataHelper.getServerData().pingToServer;
     }
 
     private int getColor() {

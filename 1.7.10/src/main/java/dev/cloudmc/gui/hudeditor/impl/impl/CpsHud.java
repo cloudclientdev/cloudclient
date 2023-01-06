@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.hudeditor.impl.impl;
@@ -18,6 +18,7 @@ public class CpsHud extends HudMod {
 
     CpsHelper cpsRight = new CpsHelper();
     CpsHelper cpsLeft = new CpsHelper();
+    private boolean noGuiScreen;
 
     public CpsHud(String name, int x, int y) {
         super(name, x, y);
@@ -55,7 +56,8 @@ public class CpsHud extends HudMod {
     }
 
     @SubscribeEvent
-    public void onRender2D(RenderGameOverlayEvent.Text e) {
+    public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
+        noGuiScreen = Cloud.INSTANCE.mc.currentScreen == null;
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             if (isModern()) {
                 if (isBackground()) {
@@ -99,10 +101,10 @@ public class CpsHud extends HudMod {
     }
 
     private int getLeftCPS() {
-        return cpsLeft.getCPS(0);
+        return cpsLeft.getCPS(0, noGuiScreen);
     }
 
     private int getRightCPS() {
-        return cpsRight.getCPS(1);
+        return cpsRight.getCPS(1, noGuiScreen);
     }
 }

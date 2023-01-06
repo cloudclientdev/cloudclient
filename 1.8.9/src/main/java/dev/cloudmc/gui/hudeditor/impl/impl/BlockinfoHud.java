@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.hudeditor.impl.impl;
@@ -55,7 +55,7 @@ public class BlockinfoHud extends HudMod {
     }
 
     @SubscribeEvent
-    public void onRender2D(RenderGameOverlayEvent.Text e) {
+    public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
 
         if (getLookingAtBlock() == null) {
             return;

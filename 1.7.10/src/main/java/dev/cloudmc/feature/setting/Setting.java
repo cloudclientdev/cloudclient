@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.feature.setting;
@@ -27,6 +27,7 @@ public class Setting {
     private float maxNumber, currentNumber;
 
     private boolean[] cells;
+    private int key;
 
     /**
      * A setting which can be toggled on and off
@@ -89,6 +90,14 @@ public class Setting {
         this.mod = mod;
 
         this.cells = cells;
+    }
+
+    public Setting(String name, Mod mod, int key){
+        this.mode = "Keybinding";
+        this.name = name;
+        this.mod = mod;
+
+        this.key = key;
     }
 
     public Setting(String name) {
@@ -181,5 +190,13 @@ public class Setting {
 
     public void setCells(boolean[] cells) {
         this.cells = cells;
+    }
+
+    public int getKey() {
+        return key;
+    }
+
+    public void setKey(int key) {
+        this.key = key;
     }
 }

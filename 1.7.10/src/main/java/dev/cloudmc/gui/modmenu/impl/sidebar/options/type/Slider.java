@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.modmenu.impl.sidebar.options.type;
@@ -37,21 +37,21 @@ public class Slider extends Options {
                 option.getName(),
                 panel.getX() + 20,
                 panel.getY() + panel.getH() + getY() + 6,
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
         Cloud.INSTANCE.fontHelper.size20.drawString(
                 String.valueOf(MathHelper.round(option.getCurrentNumber(), 1)),
                 panel.getX() + panel.getW() - 175 -
                         Cloud.INSTANCE.fontHelper.size20.getStringWidth(String.valueOf(MathHelper.round(option.getCurrentNumber(), 1))),
                 panel.getY() + panel.getH() + getY() + 9,
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
 
         Helper2D.drawRoundedRectangle(
                 panel.getX() + panel.getW() - sliderWidth - 20,
                 panel.getY() + panel.getH() + getY() + 10,
                 150, 5, 2, ClientStyle.getBackgroundColor(50).getRGB(),
-                ClientStyle.isRoundedCorners() ? 0 : -1
+                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
 
         Helper2D.drawRoundedRectangle(
@@ -59,7 +59,7 @@ public class Slider extends Options {
                         (int) (option.getCurrentNumber() * 150 / option.getMaxNumber() - 3),
                 panel.getY() + panel.getH() + getY() + 5,
                 7, 16, 1, ClientStyle.getBackgroundColor(80).getRGB(),
-                ClientStyle.isRoundedCorners() ? 0 : -1
+                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
 
         if (drag) {

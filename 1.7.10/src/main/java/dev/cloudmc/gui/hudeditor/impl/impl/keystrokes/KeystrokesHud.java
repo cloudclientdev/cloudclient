@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.hudeditor.impl.impl.keystrokes;
@@ -48,7 +48,7 @@ public class KeystrokesHud extends HudMod {
     }
 
     @SubscribeEvent
-    public void onRender2D(RenderGameOverlayEvent.Text e) {
+    public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             keyUp.renderKey(getX() + 28, getY() + 2, 24, 24, isModern(), Cloud.INSTANCE.mc.gameSettings.keyBindForward, 0x50000000, getColor(), isBackground());
             keyDown.renderKey(getX() + 28, getY() + 28, 24, 24, isModern(), Cloud.INSTANCE.mc.gameSettings.keyBindBack, 0x50000000, getColor(), isBackground());

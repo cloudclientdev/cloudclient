@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.hudeditor.impl.impl.keystrokes.keys;
@@ -9,20 +9,32 @@ import dev.cloudmc.Cloud;
 import dev.cloudmc.helpers.CpsHelper;
 import dev.cloudmc.helpers.Helper2D;
 import net.minecraft.client.Minecraft;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 public class MouseKey {
 
-    CpsHelper cps = new CpsHelper();
+    private CpsHelper cps = new CpsHelper();
+
+    private boolean noGuiScreen;
 
     public void renderKey(int x, int y, int width, int height, boolean modern, int mouseButton, int color, int fontColor, boolean background, boolean cps) {
+        boolean mouseDown;
+        if(Cloud.INSTANCE.mc.currentScreen == null) {
+            mouseDown = Mouse.isButtonDown(mouseButton);
+        }
+        else {
+            mouseDown = false;
+        }
+
+        noGuiScreen = Cloud.INSTANCE.mc.currentScreen == null;
 
         if (modern) {
             if (background) {
                 Helper2D.drawRoundedRectangle(x, y, width, height, 2, color, 0);
             }
 
-            if (Mouse.isButtonDown(mouseButton)) {
+            if (mouseDown) {
                 Helper2D.drawRoundedRectangle(
                         x,
                         y,
@@ -46,7 +58,7 @@ public class MouseKey {
                 Helper2D.drawRectangle(x, y, width, height, color);
             }
 
-            if (Mouse.isButtonDown(mouseButton)) {
+            if (mouseDown) {
                 Helper2D.drawRectangle(
                         x,
                         y,
@@ -66,6 +78,6 @@ public class MouseKey {
     }
 
     private int getCPS(int mouseButton) {
-        return cps.getCPS(mouseButton);
+        return cps.getCPS(mouseButton, noGuiScreen);
     }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.modmenu.impl.sidebar.options.type;
@@ -34,7 +34,7 @@ public class CellGrid extends Options {
                 option.getName(),
                 panel.getX() + 20,
                 panel.getY() + panel.getH() + 6 + getY(),
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
 
         int x = 0;

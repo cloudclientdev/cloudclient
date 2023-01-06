@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.hudeditor.impl;
@@ -90,7 +90,7 @@ public class HudEditor extends GuiScreen {
                 Cloud.modName,
                 width / 2 - Cloud.INSTANCE.fontHelper.size40.getStringWidth(Cloud.modName) / 2,
                 height / 2 + 36 - animateLogo.getValueI(),
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
         Helper2D.drawPicture(
                 width / 2 - 25,
@@ -109,13 +109,13 @@ public class HudEditor extends GuiScreen {
                         100, 20, mouseX, mouseY
                 ) ? ClientStyle.getBackgroundColor(70).getRGB() :
                         ClientStyle.getBackgroundColor(50).getRGB(),
-                ClientStyle.isRoundedCorners() ? 0 : -1
+                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
         Cloud.INSTANCE.fontHelper.size20.drawString(
                 "Open Mods",
                 width / 2 - Cloud.INSTANCE.fontHelper.size20.getStringWidth("Open Mods") / 2,
                 height / 2,
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
 
         for (HudMod hudMod : hudModList) {
@@ -130,9 +130,9 @@ public class HudEditor extends GuiScreen {
                 40,
                 2,
                 ClientStyle.getBackgroundColor(40).getRGB(),
-                ClientStyle.isRoundedCorners() ? 0 : -1
+                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
-        Helper2D.drawPicture(15, height - 45, 30, 30, ClientStyle.getColor().getRGB(), ClientStyle.isDarkMode() ? "icon/dark.png" : "icon/light.png");
+        Helper2D.drawPicture(15, height - 45, 30, 30, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), ClientStyle.isDarkMode() ? "icon/dark.png" : "icon/light.png");
     }
 
     /**

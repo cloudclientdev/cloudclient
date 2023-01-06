@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc;
@@ -35,7 +35,7 @@ public class Cloud {
 
     public static final String modID = "cloudmc";
     public static final String modName = "Cloud";
-    public static final String modVersion = "1.3.2 [1.7.10]";
+    public static final String modVersion = "1.3.3 [1.7.10]";
 
     public Minecraft mc = Minecraft.getMinecraft();
 
@@ -67,9 +67,7 @@ public class Cloud {
         try {
             ConfigLoader.loadConfig();
         }
-        catch (Exception e) {
-            ConfigSaver.saveConfig();
-        }
+        catch (Exception ignored) {}
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.type;
@@ -39,7 +39,7 @@ public class Keybinding extends Settings {
                 setting.getName(),
                 button.getPanel().getX() + 20,
                 button.getPanel().getY() + button.getPanel().getH() + 6 + getY(),
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
         Helper2D.drawRoundedRectangle(
                 button.getPanel().getX() + button.getPanel().getW() - 90,
@@ -49,14 +49,14 @@ public class Keybinding extends Settings {
                 setting.isCheckToggled() ?
                         ClientStyle.getBackgroundColor(80).getRGB() :
                         ClientStyle.getBackgroundColor(50).getRGB(),
-                ClientStyle.isRoundedCorners() ? 0 : -1
+                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
         Cloud.INSTANCE.fontHelper.size20.drawString(
-                active ? "?" : Keyboard.getKeyName(button.getMod().getOptionalKey()),
+                active ? "?" : Keyboard.getKeyName(setting.getKey()),
                 button.getPanel().getX() + button.getPanel().getW() - 55 -
-                        Cloud.INSTANCE.fontHelper.size20.getStringWidth(active ? "?" : Keyboard.getKeyName(button.getMod().getOptionalKey())) / 2,
+                        Cloud.INSTANCE.fontHelper.size20.getStringWidth(active ? "?" : Keyboard.getKeyName(setting.getKey())) / 2,
                 button.getPanel().getY() + button.getPanel().getH() + 8 + getY(),
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
     }
 
@@ -70,11 +70,18 @@ public class Keybinding extends Settings {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        active = MathHelper.withinBox(
-                button.getPanel().getX() + button.getPanel().getW() - 140,
+        if(MathHelper.withinBox(button.getPanel().getX() + button.getPanel().getW() - 140,
                 button.getPanel().getY() + button.getPanel().getH() + 2 + getY(),
-                120, 21, mouseX, mouseY
-        );
+                120, 21, mouseX, mouseY)
+        ){
+            if(!active){
+                active = true;
+            }
+            else {
+                active = false;
+                getSetting().setKey(Keyboard.KEY_NONE);
+            }
+        }
     }
 
     /**
@@ -85,7 +92,7 @@ public class Keybinding extends Settings {
     public void onKey(TickEvent.ClientTickEvent e) {
         int key = Keyboard.getEventKey();
         if (active) {
-            button.getMod().setOptionalKey(key);
+            getSetting().setKey(key);
             if (Keyboard.isKeyDown(key)) {
                 active = false;
             }

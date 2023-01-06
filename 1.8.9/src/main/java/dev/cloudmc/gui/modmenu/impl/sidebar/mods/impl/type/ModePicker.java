@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.type;
@@ -47,14 +47,14 @@ public class ModePicker extends Settings {
                 setting.getName(),
                 button.getPanel().getX() + 20,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 6,
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
         Cloud.INSTANCE.fontHelper.size20.drawString(
                 setting.getCurrentMode(),
                 button.getPanel().getX() + button.getPanel().getW() - 20 -
                         Cloud.INSTANCE.fontHelper.size20.getStringWidth(setting.getCurrentMode()),
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 9,
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
 
         if (isOpen()) {
@@ -71,7 +71,7 @@ public class ModePicker extends Settings {
                     button.getPanel().getY() + button.getPanel().getH() + getY() - setting.getOptions().length * 15 + animateSelect.getValueI() + 20,
                     longestString + 10, setting.getOptions().length * 15 + 2,
                     2, ClientStyle.getBackgroundColor(50).getRGB(),
-                    ClientStyle.isRoundedCorners() ? 0 : -1
+                    Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
             );
 
             int offset = 0;
@@ -86,7 +86,7 @@ public class ModePicker extends Settings {
                         setting.getOptions()[i],
                         button.getPanel().getX() + button.getPanel().getW() - 24 - longestString,
                         button.getPanel().getY() + button.getPanel().getH() + getY() + offset * 15 - setting.getOptions().length * 15 + animateSelect.getValueI() + 25,
-                        ClientStyle.getColor().getRGB()
+                        Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
                 );
 
                 if (hovered) {
@@ -94,7 +94,7 @@ public class ModePicker extends Settings {
                             button.getPanel().getX() + button.getPanel().getW() - 30 - longestString,
                             button.getPanel().getY() + button.getPanel().getH() + getY() + offset * 15 - setting.getOptions().length * 15 + animateSelect.getValueI() + 20,
                             longestString + 10, 17, 2, ClientStyle.getBackgroundColor(50).getRGB(),
-                            ClientStyle.isRoundedCorners() ? 0 : -1
+                            Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
                     );
                 }
                 if (longestString < Cloud.INSTANCE.fontHelper.size20.getStringWidth(setting.getOptions()[i])) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.type;
@@ -37,21 +37,21 @@ public class Slider extends Settings {
                 setting.getName(),
                 button.getPanel().getX() + 20,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 6,
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
         Cloud.INSTANCE.fontHelper.size20.drawString(
                 String.valueOf(MathHelper.round(setting.getCurrentNumber(), 1)),
                 button.getPanel().getX() + button.getPanel().getW() - 175 -
                         Cloud.INSTANCE.fontHelper.size20.getStringWidth(String.valueOf(MathHelper.round(setting.getCurrentNumber(), 1))),
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 9,
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
 
         Helper2D.drawRoundedRectangle(
                 button.getPanel().getX() + button.getPanel().getW() - sliderWidth - 20,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 10,
                 150, 5, 2, ClientStyle.getBackgroundColor(50).getRGB(),
-                ClientStyle.isRoundedCorners() ? 0 : -1
+                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
 
         Helper2D.drawRoundedRectangle(
@@ -59,7 +59,7 @@ public class Slider extends Settings {
                         (int) (setting.getCurrentNumber() * 150 / setting.getMaxNumber() - 3),
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 5,
                 7, 16, 1, ClientStyle.getBackgroundColor(80).getRGB(),
-                ClientStyle.isRoundedCorners() ? 0 : -1
+                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
 
         if (drag) {

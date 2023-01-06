@@ -1,12 +1,11 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.titlescreen;
 
 import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.ClientStyle;
 import dev.cloudmc.helpers.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
 import net.minecraft.client.gui.GuiMultiplayer;
@@ -25,16 +24,11 @@ public class TitleScreen extends Panorama {
     private final Button settingsButton;
 
     public TitleScreen() {
-        singlePlayerButton =
-                new Button("Singleplayer", width / 2 - 75, height / 2);
+        singlePlayerButton = new Button("Singleplayer", width / 2 - 75, height / 2);
         addButton(singlePlayerButton);
-
-        multiPlayerButton =
-                new Button("Multiplayer", width / 2 - 75, height / 2 + 25);
+        multiPlayerButton = new Button("Multiplayer", width / 2 - 75, height / 2 + 25);
         addButton(multiPlayerButton);
-
-        settingsButton =
-                new Button("Settings", width / 2 - 75, height / 2 + 50);
+        settingsButton = new Button("Settings", width / 2 - 75, height / 2 + 50);
         addButton(settingsButton);
     }
 
@@ -139,7 +133,7 @@ public class TitleScreen extends Panorama {
                 20,
                 2,
                 MathHelper.withinBox(width - 25, 5, 20, 20, mouseX, mouseY) ? 0x30ffffff : 0x20ffffff,
-                ClientStyle.isRoundedCorners() ? 0 : -1
+                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
         Helper2D.drawPicture(width - 25, 5, 20, 20, 0xffffffff, "icon/cross.png");
     }

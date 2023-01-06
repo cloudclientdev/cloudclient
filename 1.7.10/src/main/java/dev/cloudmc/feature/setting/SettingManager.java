@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.feature.setting;
@@ -9,8 +9,7 @@ import dev.cloudmc.feature.mod.Mod;
 
 import java.util.ArrayList;
 
-public class
-SettingManager {
+public class SettingManager {
 
     public ArrayList<Setting> settingList;
 

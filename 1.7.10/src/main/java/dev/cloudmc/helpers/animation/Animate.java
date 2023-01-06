@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2022 LaVache-FR
- *
  * GPL-3.0 license
  */
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.modmenu.impl.sidebar.options.type;
@@ -31,14 +31,10 @@ public class ColorPicker extends Options {
     private int xPos2 = 127, yPos2;
     private int red, blue, green;
     private int finalRed, finalBlue, finalGreen;
-    private boolean clientColor = false;
 
     public ColorPicker(Option option, Panel panel, int y) {
         super(option, panel, y);
         setOptionHeight(75);
-        if(option.getName().equalsIgnoreCase("client color")){
-            clientColor = true;
-        }
     }
 
     /**
@@ -63,7 +59,7 @@ public class ColorPicker extends Options {
                 option.getName(),
                 panel.getX() + 20,
                 panel.getY() + panel.getH() + getY() + 6,
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
 
         if (isOpen()) {
@@ -75,13 +71,13 @@ public class ColorPicker extends Options {
                     panel.getX() + panel.getW() - 37,
                     panel.getY() + panel.getH() + getY() + animate.getValueI() - 45,
                     18, 71, 2, ClientStyle.getBackgroundColor(50).getRGB(),
-                    ClientStyle.isRoundedCorners() ? 0 : -1
+                    Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
             );
             Helper2D.drawRoundedRectangle(
                     panel.getX() + panel.getW() - 171,
                     panel.getY() + panel.getH() + getY() + animate.getValueI() - 45,
                     131, 71, 2, ClientStyle.getBackgroundColor(50).getRGB(),
-                    ClientStyle.isRoundedCorners() ? 0 : -1
+                    Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
             );
 
             Helper2D.drawPicture(
@@ -93,7 +89,7 @@ public class ColorPicker extends Options {
                     panel.getX() + panel.getW() - 36,
                     panel.getY() + panel.getH() + getY() + yPos + animate.getValueI() - 44,
                     16, 4, 2, -1,
-                    ClientStyle.isRoundedCorners() ? 0 : -1
+                    Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
             );
 
             chooseHue();
@@ -120,7 +116,7 @@ public class ColorPicker extends Options {
                     panel.getX() + panel.getW() - xPos2 - 44,
                     panel.getY() + panel.getH() + getY() + yPos2 + animate.getValueI() - 44,
                     4, 4, 2, -1,
-                    ClientStyle.isRoundedCorners() ? 0 : -1
+                    Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
             );
 
             if (!animate.hasFinished()) {
@@ -128,16 +124,13 @@ public class ColorPicker extends Options {
             }
 
             option.setColor(new Color(finalRed, finalGreen, finalBlue));
-            if(clientColor){
-                ClientStyle.setColor(option.getColor());
-            }
         }
 
         Helper2D.drawRoundedRectangle(
                 panel.getX() + panel.getW() - 41,
                 panel.getY() + panel.getH() + getY() + 1,
                 22, 22, 2, ClientStyle.getBackgroundColor(50).getRGB(),
-                ClientStyle.isRoundedCorners() ? 0 : -1
+                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
         Helper2D.drawRectangle(
                 panel.getX() + panel.getW() - 39,
@@ -151,7 +144,7 @@ public class ColorPicker extends Options {
                         Cloud.INSTANCE.fontHelper.size20.getStringWidth(
                                 String.format("#%02x%02x%02x", option.getColor().getRed(), option.getColor().getGreen(), option.getColor().getBlue())
                         ),
-                panel.getY() + panel.getH() + 3 + getY() + 6, ClientStyle.getColor().getRGB()
+                panel.getY() + panel.getH() + 3 + getY() + 6, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
     }
 

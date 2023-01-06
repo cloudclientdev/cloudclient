@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.helpers;
@@ -33,36 +33,28 @@ public class Helper2D {
 
     public static void drawRoundedRectangle(int x, int y, int w, int h, int radius, int color, int index) {
         if (index == -1) {
-            Gui.drawRect(x, y, w + x, y + h, color);
+            drawRectangle(x, y, w, h, color);
         }
         else if (index == 0) {
-            Gui.drawRect(x + radius, y + radius, x + w - radius, y + h - radius, color);
-            Gui.drawRect(x + radius, y, x + w - radius, y + radius, color);
-            Gui.drawRect(x + w - radius, y + radius, x + w, y + h - radius, color);
-            Gui.drawRect(x + radius, y + h - radius, x + w - radius, y + h, color);
-            Gui.drawRect(x, y + radius, x + radius, y + h - radius, color);
+            drawRectangle(x + radius, y + radius, w - radius * 2, h - radius * 2, color);
+            drawRectangle(x + radius, y, w - radius * 2, radius, color);
+            drawRectangle(x + w - radius, y + radius, radius, h - radius * 2, color);
+            drawRectangle(x + radius, y + h - radius, w - radius * 2, radius, color);
+            drawRectangle(x, y + radius, radius, h - radius * 2, color);
             drawCircle(x + radius, y + radius, radius, 180, 270, color);
             drawCircle(x + w - radius, y + radius, radius, 270, 360, color);
             drawCircle(x + radius, y + h - radius, radius, 90, 180, color);
             drawCircle(x + w - radius, y + h - radius, radius, 0, 90, color);
         }
         else if (index == 1) {
-            Gui.drawRect(0, 0, 0, 0, -1);
-            Gui.drawRect(x + radius, y + radius, x + w - radius, y + h - radius, color);
-            Gui.drawRect(x + radius, y, x + w - radius, y + radius, color);
-            Gui.drawRect(x + w - radius, y + radius, x + w, y + h - radius, color);
-            Gui.drawRect(x, y + h - radius, x + w, y + h, color);
-            Gui.drawRect(x, y + radius, x + radius, y + h - radius, color);
+            drawRectangle(x + radius, y, w - radius * 2, radius, color);
+            drawRectangle(x, y + radius, w, h - radius, color);
             drawCircle(x + radius, y + radius, radius, 180, 270, color);
             drawCircle(x + w - radius, y + radius, radius, 270, 360, color);
         }
         else if (index == 2) {
-            Gui.drawRect(0, 0, 0, 0, -1);
-            Gui.drawRect(x + radius, y + radius, x + w - radius, y + h - radius, color);
-            Gui.drawRect(x, y, x + w, y + radius, color);
-            Gui.drawRect(x + w - radius, y + radius, x + w, y + h - radius, color);
-            Gui.drawRect(x + radius, y + h - radius, x + w - radius, y + h, color);
-            Gui.drawRect(x, y + radius, x + radius, y + h - radius, color);
+            drawRectangle(x, y, w, h - radius, color);
+            drawRectangle(x + radius, y + h - radius, w - radius * 2, radius, color);
             drawCircle(x + radius, y + h - radius, radius, 90, 180, color);
             drawCircle(x + w - radius, y + h - radius, radius, 0, 90, color);
         }
@@ -227,7 +219,10 @@ public class Helper2D {
         glVertex2f(x, y);
         for (var = h; var <= j; var++) {
             color(color);
-            glVertex2f((float) (r * Math.cos(Math.PI * var / 180) + x), (float) (r * Math.sin(Math.PI * var / 180) + y));
+            glVertex2f(
+                    (float) (r * Math.cos(Math.PI * var / 180) + x),
+                    (float) (r * Math.sin(Math.PI * var / 180) + y)
+            );
         }
 
         glEnd();

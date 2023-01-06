@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc;
@@ -36,7 +36,7 @@ public class Cloud {
 
     public static final String modID = "cloudmc";
     public static final String modName = "Cloud";
-    public static final String modVersion = "1.3.2 [1.8.9]";
+    public static final String modVersion = "1.3.3 [1.8.9]";
 
     public Minecraft mc = Minecraft.getMinecraft();
 
@@ -57,10 +57,9 @@ public class Cloud {
 
         settingManager = new SettingManager();
         modManager = new ModManager();
+        optionManager = new OptionManager();
         hudEditorLoader = new HudEditorLoader();
         hudEditor = new HudEditor();
-        optionManager = new OptionManager();
-        fontHelper = new FontHelper();
 
         if (!ConfigSaver.configExists()) {
             ConfigSaver.saveConfig();
@@ -68,9 +67,9 @@ public class Cloud {
         try {
             ConfigLoader.loadConfig();
         }
-        catch (Exception e) {
-            ConfigSaver.saveConfig();
-        }
+        catch (Exception ignored) {}
+
+        fontHelper = new FontHelper();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {

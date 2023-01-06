@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.modmenu;
@@ -75,17 +75,17 @@ public class ModMenu extends GuiScreen {
         Draws the time at the top right
          */
 
-        Helper2D.drawRoundedRectangle(width - 130, -10 - 50 + animateClock.getValueI(), 140, 60, 10, ClientStyle.getBackgroundColor(50).getRGB(), ClientStyle.isRoundedCorners() ? 0 : -1);
-        Helper2D.drawPicture(width - 50, 5 - 50 + animateClock.getValueI(), 40, 40, ClientStyle.getColor().getRGB(), "icon/clock.png");
-        Cloud.INSTANCE.fontHelper.size40.drawString(TimeHelper.getFormattedTimeMinute(), width - 120, 10 - 50 + animateClock.getValueI(), ClientStyle.getColor().getRGB());
-        Cloud.INSTANCE.fontHelper.size20.drawString(TimeHelper.getFormattedDate(), width - 120, 30 - 50 + animateClock.getValueI(), ClientStyle.getColor().getRGB());
+        Helper2D.drawRoundedRectangle(width - 130, -10 - 50 + animateClock.getValueI(), 140, 60, 10, ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
+        Helper2D.drawPicture(width - 50, 5 - 50 + animateClock.getValueI(), 40, 40, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), "icon/clock.png");
+        Cloud.INSTANCE.fontHelper.size40.drawString(TimeHelper.getFormattedTimeMinute(), width - 120, 10 - 50 + animateClock.getValueI(), Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
+        Cloud.INSTANCE.fontHelper.size20.drawString(TimeHelper.getFormattedDate(), width - 120, 30 - 50 + animateClock.getValueI(), Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
 
         /*
         Draws the dark and light mode button on the bottom left
          */
 
-        Helper2D.drawRoundedRectangle(10, height - 50, 40, 40, 2, ClientStyle.getBackgroundColor(40).getRGB(), ClientStyle.isRoundedCorners() ? 0 : -1);
-        Helper2D.drawPicture(15, height - 45, 30, 30, ClientStyle.getColor().getRGB(), ClientStyle.isDarkMode() ? "icon/dark.png" : "icon/light.png");
+        Helper2D.drawRoundedRectangle(10, height - 50, 40, 40, 2, ClientStyle.getBackgroundColor(40).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
+        Helper2D.drawPicture(15, height - 45, 30, 30, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), ClientStyle.isDarkMode() ? "icon/dark.png" : "icon/light.png");
     }
 
     /**
@@ -132,6 +132,7 @@ public class ModMenu extends GuiScreen {
 
     @Override
     public void initGui() {
+        panel.initGui();
         try {
             Cloud.INSTANCE.mc.entityRenderer.theShaderGroup =
                     new ShaderGroup(

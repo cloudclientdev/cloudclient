@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.hudeditor.impl.impl.keystrokes.keys;
@@ -14,15 +14,23 @@ import org.lwjgl.input.Keyboard;
 
 public class KeyboardKey {
 
-    Animate animate = new Animate();
+    private Animate animate = new Animate();
 
     public void renderKey(int x, int y, int width, int height, boolean modern, KeyBinding keyBinding, int color, int fontColor, boolean background) {
+        boolean keyDown;
+        if(Cloud.INSTANCE.mc.currentScreen == null) {
+            keyDown = Keyboard.isKeyDown(keyBinding.getKeyCode());
+        }
+        else {
+            keyDown = false;
+        }
+
         animate
                 .setEase(Easing.CUBIC_IN)
                 .setMin(0)
                 .setMax(12)
                 .setSpeed(100)
-                .setReversed(Keyboard.isKeyDown(keyBinding.getKeyCode()))
+                .setReversed(keyDown)
                 .update();
 
         if (modern) {
@@ -30,7 +38,7 @@ public class KeyboardKey {
                 Helper2D.drawRoundedRectangle(x, y, width, height, 2, color, 0);
             }
 
-            if (animate.hasFinished() && !Keyboard.isKeyDown(keyBinding.getKeyCode())) {
+            if (animate.hasFinished() && !keyDown) {
 
             }
             else {
@@ -57,7 +65,7 @@ public class KeyboardKey {
                 Helper2D.drawRectangle(x, y, width, height, color);
             }
 
-            if (animate.hasFinished() && !Keyboard.isKeyDown(keyBinding.getKeyCode())) {
+            if (animate.hasFinished() && !keyDown) {
 
             }
             else {

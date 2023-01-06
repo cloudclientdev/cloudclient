@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.modmenu.impl.sidebar.options.type;
@@ -51,14 +51,14 @@ public class ModePicker extends Options {
                 option.getName(),
                 panel.getX() + 20,
                 panel.getY() + panel.getH() + getY() + 6,
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB() 
         );
         Cloud.INSTANCE.fontHelper.size20.drawString(
                 option.getCurrentMode(),
                 panel.getX() + panel.getW() - 20 -
                         Cloud.INSTANCE.fontHelper.size20.getStringWidth(option.getCurrentMode()),
                 panel.getY() + panel.getH() + getY() + 9,
-                ClientStyle.getColor().getRGB()
+                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB() 
         );
 
         if (isOpen()) {
@@ -75,7 +75,7 @@ public class ModePicker extends Options {
                     panel.getY() + panel.getH() + getY() - option.getOptions().length * 15 + animateSelect.getValueI() + 20,
                     longestString + 10, option.getOptions().length * 15 + 2,
                     2, ClientStyle.getBackgroundColor(50).getRGB(),
-                    ClientStyle.isRoundedCorners() ? 0 : -1
+                    Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
             );
 
             int offset = 0;
@@ -90,7 +90,7 @@ public class ModePicker extends Options {
                         option.getOptions()[i],
                         panel.getX() + panel.getW() - 24 - longestString,
                         panel.getY() + panel.getH() + getY() + offset * 15 - option.getOptions().length * 15 + animateSelect.getValueI() + 25,
-                        ClientStyle.getColor().getRGB()
+                        Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB() 
                 );
 
                 if (hovered) {
@@ -98,7 +98,7 @@ public class ModePicker extends Options {
                             panel.getX() + panel.getW() - 30 - longestString,
                             panel.getY() + panel.getH() + getY() + offset * 15 - option.getOptions().length * 15 + animateSelect.getValueI() + 20,
                             longestString + 10, 17, 2, ClientStyle.getBackgroundColor(50).getRGB(),
-                            ClientStyle.isRoundedCorners() ? 0 : -1
+                            Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
                     );
                 }
                 if (longestString < Cloud.INSTANCE.fontHelper.size20.getStringWidth(option.getOptions()[i])) {
@@ -144,8 +144,8 @@ public class ModePicker extends Options {
             int offset = 0;
             for (int i = 0; i < option.getOptions().length; i++) {
                 boolean hovered = MathHelper.withinBox(
-                        panel.getX() + panel.getW() - 46 - longestString / 2,
-                        panel.getY() + panel.getH() + getY() + offset * 15 + 24,
+                        panel.getX() + panel.getW() - 30 - longestString,
+                        panel.getY() + panel.getH() + getY() + offset * 15 + 25,
                         longestString + 10, 15, mouseX, mouseY
                 );
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui.titlescreen;
@@ -40,7 +40,7 @@ public class Button {
 
         Helper2D.drawRoundedRectangle(x, y, w, h, 2,
                 MathHelper.withinBox(x, y, w, h, mouseX, mouseY) ? colorPressed : color,
-                ClientStyle.isRoundedCorners() ? 0 : -1
+                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
 
         Cloud.INSTANCE.fontHelper.size20.drawString(

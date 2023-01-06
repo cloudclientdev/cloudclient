@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.feature.mod.impl;
@@ -26,12 +26,18 @@ public class ToggleSneakMod extends Mod {
                 "ToggleSneak",
                 "Allows you to toggle the Sneak button instead of holding it."
         );
-        setOptionalKey(Keyboard.KEY_LSHIFT);
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Keybinding", this, Keyboard.KEY_LSHIFT));
 
         String[] mode = {"Modern", "Legacy"};
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Mode", this, "Modern", 0, mode));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Background", this, true));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Font Color", this, new Color(255, 255, 255)));
+    }
+
+    @Override
+    public void onDisable(){
+        super.onDisable();
+        KeyBinding.setKeyBindState(Cloud.INSTANCE.mc.gameSettings.keyBindSneak.getKeyCode(), false);
     }
 
     public static boolean isSneaking() {
@@ -45,12 +51,19 @@ public class ToggleSneakMod extends Mod {
                 KeyBinding.setKeyBindState(Cloud.INSTANCE.mc.gameSettings.keyBindSneak.getKeyCode(), true);
             }
         }
+        else {
+            KeyBinding.setKeyBindState(Cloud.INSTANCE.mc.gameSettings.keyBindSneak.getKeyCode(), false);
+        }
     }
 
     @SubscribeEvent
     public void key(InputEvent.KeyInputEvent e) {
-        if(Keyboard.isKeyDown(getOptionalKey())){
+        if(Keyboard.isKeyDown(getKey())){
             toggled = !toggled;
         }
+    }
+
+    private int getKey(){
+        return Cloud.INSTANCE.settingManager.getSettingByModAndName(getName(), "Keybinding").getKey();
     }
 }

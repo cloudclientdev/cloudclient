@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.feature.option;
@@ -26,6 +26,7 @@ public class Option {
     private float maxNumber, currentNumber;
 
     private boolean[] cells;
+    private int key;
 
     /**
      * An option which can be toggled on and off
@@ -83,6 +84,13 @@ public class Option {
         this.name = name;
 
         this.cells = cells;
+    }
+
+    public Option(String name, int key) {
+        this.mode = "Keybinding";
+        this.name = name;
+
+        this.key = key;
     }
 
     public Option(String name) {
@@ -167,5 +175,13 @@ public class Option {
 
     public void setCells(boolean[] cells) {
         this.cells = cells;
+    }
+
+    public int getKey() {
+        return key;
+    }
+
+    public void setKey(int key) {
+        this.key = key;
     }
 }

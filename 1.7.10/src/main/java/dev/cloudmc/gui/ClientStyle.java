@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 DupliCAT
- * GNU General Public License v3.0
+ * GNU Lesser General Public License v3.0
  */
 
 package dev.cloudmc.gui;
@@ -10,8 +10,8 @@ import java.awt.*;
 public class ClientStyle {
 
     private static boolean darkMode = false;
-    private static Color color = new Color(255, 255, 255);
-    private static boolean roundedCorners = true;
+
+    private static int guiScale = 1;
 
     /**
      * Returns a color with the given transparency depending on if dark mode is active
@@ -40,19 +40,6 @@ public class ClientStyle {
     }
 
     /**
-     * Returns a boolean which says if the client should use rounded corners or not
-     *
-     * @return Boolean stating if rounded corners should be used
-     */
-    public static boolean isRoundedCorners() {
-        return roundedCorners;
-    }
-
-    public static void setRoundedCorners(boolean roundedCorners) {
-        ClientStyle.roundedCorners = roundedCorners;
-    }
-
-    /**
      * Returns a boolean which says if the client should be in dark or light mode
      *
      * @return Boolean stating if client should be dark or light
@@ -65,16 +52,11 @@ public class ClientStyle {
         ClientStyle.darkMode = darkMode;
     }
 
-    /**
-     * Returns the Color which should be used for the Client
-     *
-     * @return Color which the client uses
-     */
-    public static Color getColor() {
-        return color;
+    public static int getGuiScale() {
+        return guiScale;
     }
 
-    public static void setColor(Color color) {
-        ClientStyle.color = color;
+    public static void setGuiScale(int guiScale) {
+        ClientStyle.guiScale = guiScale;
     }
 }
