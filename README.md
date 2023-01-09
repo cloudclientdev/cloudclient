@@ -41,3 +41,4 @@ This project uses code from:
 - LaVache-FR (AnimationUtil) https://github.com/LaVache-FR
 - Moulberry (MotionBlur) https://github.com/Moulberry
 - makamys (1.7.10 Template) https://github.com/makamys
+- zPeanut (1.8.9 build.gradle) https://github.com/zPeanut/Hydrogen/blob/master/build.gradle
