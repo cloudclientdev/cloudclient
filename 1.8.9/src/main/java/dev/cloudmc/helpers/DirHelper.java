@@ -23,13 +23,13 @@ public class DirHelper {
 
     public static String getDirectory() {
         if (isWindows()) {
-            return System.getenv("APPDATA") + File.separator;
+            return System.getenv("user.dir") + File.separator;
         }
         else if (isLinux()) {
-            return System.getProperty("user.home") + File.separator;
+            return System.getProperty("user.dir") + File.separator;
         }
         else if (isMac()) {
-            return System.getProperty("user.home") + File.separator + "Library" + File.separator + "Application Support" + File.separator;
+            return System.getProperty("user.dir") + File.separator;
         }
         else {
             return null;
