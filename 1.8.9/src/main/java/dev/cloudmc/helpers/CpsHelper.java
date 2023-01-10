@@ -5,34 +5,41 @@
 
 package dev.cloudmc.helpers;
 
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.MouseEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Mouse;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class CpsHelper {
 
-    private final Queue<Long> clicks;
-    private boolean lastClick;
+    private List<Long> leftClicks = new ArrayList<>();
+    private List<Long> rightClicks = new ArrayList<>();
 
-    public CpsHelper(){
-        clicks = new LinkedList<>();
-    }
-
-    private void updateClicks(int mouseButton, boolean shouldAdd){
+    @SubscribeEvent
+    public void onClick(MouseEvent event) {
+        if (Minecraft.getMinecraft().currentScreen != null) return; // don't register cps in GUIs
         long time = System.currentTimeMillis();
 
-        if(Mouse.isButtonDown(mouseButton) != lastClick){
-            lastClick = Mouse.isButtonDown(mouseButton);
-            if(Mouse.isButtonDown(mouseButton) && shouldAdd)
-                clicks.add(time);
-        }
+        if (!event.buttonstate) return;
 
-        clicks.removeIf(e -> e + 1000 < time);
+        if (event.button == 0) leftClicks.add(time);
+        else if (event.button == 1) rightClicks.add(time);
+
+        removeOldClicks(time);
     }
 
-    public int getCPS(int mouseButton, boolean shouldAdd){
-        updateClicks(mouseButton, shouldAdd);
-        return clicks.size();
+    public int getCPS(int mouseButton) {
+        removeOldClicks(System.currentTimeMillis());
+        return mouseButton == 0 ? leftClicks.size() : rightClicks.size();
+    }
+
+    public void removeOldClicks(long currentTime) {
+        leftClicks.removeIf(e -> e + 1000 < currentTime);
+        rightClicks.removeIf(e -> e + 1000 < currentTime);
     }
 }
