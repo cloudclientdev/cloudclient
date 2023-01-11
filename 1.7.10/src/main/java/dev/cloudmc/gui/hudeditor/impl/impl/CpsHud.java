@@ -16,10 +16,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class CpsHud extends HudMod {
 
-    CpsHelper cpsRight = new CpsHelper();
-    CpsHelper cpsLeft = new CpsHelper();
-    private boolean noGuiScreen;
-
     public CpsHud(String name, int x, int y) {
         super(name, x, y);
         setW(60);
@@ -57,7 +53,6 @@ public class CpsHud extends HudMod {
 
     @SubscribeEvent
     public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
-        noGuiScreen = Cloud.INSTANCE.mc.currentScreen == null;
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             if (isModern()) {
                 if (isBackground()) {
@@ -101,10 +96,10 @@ public class CpsHud extends HudMod {
     }
 
     private int getLeftCPS() {
-        return cpsLeft.getCPS(0, noGuiScreen);
+        return Cloud.INSTANCE.cpsHelper.getCPS(0);
     }
 
     private int getRightCPS() {
-        return cpsRight.getCPS(1, noGuiScreen);
+        return Cloud.INSTANCE.cpsHelper.getCPS(1);
     }
 }

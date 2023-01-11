@@ -14,10 +14,6 @@ import org.lwjgl.input.Mouse;
 
 public class MouseKey {
 
-    private CpsHelper cps = new CpsHelper();
-
-    private boolean noGuiScreen;
-
     public void renderKey(int x, int y, int width, int height, boolean modern, int mouseButton, int color, int fontColor, boolean background, boolean cps) {
         boolean mouseDown;
         if(Cloud.INSTANCE.mc.currentScreen == null) {
@@ -26,8 +22,6 @@ public class MouseKey {
         else {
             mouseDown = false;
         }
-
-        noGuiScreen = Cloud.INSTANCE.mc.currentScreen == null;
 
         if (modern) {
             if (background) {
@@ -78,6 +72,6 @@ public class MouseKey {
     }
 
     private int getCPS(int mouseButton) {
-        return cps.getCPS(mouseButton, noGuiScreen);
+        return Cloud.INSTANCE.cpsHelper.getCPS(mouseButton);
     }
 }

@@ -12,6 +12,7 @@ import dev.cloudmc.feature.option.OptionManager;
 import dev.cloudmc.feature.setting.SettingManager;
 import dev.cloudmc.gui.hudeditor.impl.HudEditor;
 import dev.cloudmc.gui.hudeditor.HudEditorLoader;
+import dev.cloudmc.helpers.CpsHelper;
 import dev.cloudmc.helpers.font.FontHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
@@ -46,6 +47,7 @@ public class Cloud {
     public HudEditor hudEditor;
     public OptionManager optionManager;
     public FontHelper fontHelper;
+    public CpsHelper cpsHelper;
 
     /**
      * Initializes the client
@@ -53,6 +55,7 @@ public class Cloud {
     @EventHandler
     public void init(FMLInitializationEvent event) throws IOException {
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register((cpsHelper = new CpsHelper()));
         Display.setTitle(Cloud.modName + " Client " + Cloud.modVersion);
 
         settingManager = new SettingManager();
