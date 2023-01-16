@@ -7,7 +7,7 @@ group = "dev.cloudmc"
 archivesBaseName = "cloudmc"
 
 minecraft {
-    version = "${project.minecraft_version}-${project.forge_version}"
+    version = "1.7.10-10.13.4.1614-1.7.10"
     runDir = "run"
 	replace '@VERSION@', project.version
 }
@@ -22,9 +22,7 @@ configurations {
     compile.extendsFrom(shade)
 }
 
-if(project.enable_mixin.toBoolean()) {
-	apply from: "buildscript/forge-1.7-mixin.gradle"
-}
+apply from: "buildscript/forge-1.7-mixin.gradle"
 
 project.ext.override_dependencies = false
 
