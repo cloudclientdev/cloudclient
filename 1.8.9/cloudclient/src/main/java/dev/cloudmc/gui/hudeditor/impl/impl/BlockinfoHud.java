@@ -57,37 +57,32 @@ public class BlockinfoHud extends HudMod {
 
     @SubscribeEvent
     public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
-
-        if (getLookingAtBlockState() == null) {
+        IBlockState blockState = getLookingAtBlockState();
+        if (blockState == null) {
             return;
         }
 
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
+
+            World world = Cloud.INSTANCE.mc.theWorld;
+            BlockPos blockPos = getLookingAtBlockPos();
+            int meta = blockState.getBlock().getDamageValue(world, blockPos);
+            int id = Item.itemRegistry.getIDForObject(blockState.getBlock().getItem(world, blockPos));
+            ItemStack finalItem = new ItemStack(Item.getItemById(id), 1, meta);
+
             if (isModern()) {
-                IBlockState blockState = getLookingAtBlockState();
-                World world = Cloud.INSTANCE.mc.theWorld;
-                BlockPos blockPos = getLookingAtBlockPos();
-                int meta = blockState.getBlock().getDamageValue(world, blockPos);
-                int id = Item.itemRegistry.getIDForObject(blockState.getBlock().getItem(world, blockPos));
                 if (isBackground()) {
                     Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, 0x50000000, 0);
                 }
-                ItemStack finalItem = new ItemStack(Item.getItemById(id), 1, meta);
                 Cloud.INSTANCE.fontHelper.size20.drawString(finalItem.getDisplayName(), getX() + 35, getY() + 10, getColor());
                 renderItem(finalItem);
             }
             else {
-                IBlockState blockState = getLookingAtBlockState();
-                World world = Cloud.INSTANCE.mc.theWorld;
-                BlockPos blockPos = getLookingAtBlockPos();
-                int meta = blockState.getBlock().getDamageValue(world, blockPos);
-                int id = Item.itemRegistry.getIDForObject(blockState.getBlock().getItem(world, blockPos));
                 if (isBackground()) {
                     Helper2D.drawRectangle(getX(), getY(), getW(), getH(), 0x50000000);
                 }
-                ItemStack itemStack = new ItemStack(Item.getItemById(id), 1, meta);
-                Cloud.INSTANCE.mc.fontRendererObj.drawString(itemStack.getDisplayName(), getX() + 35, getY() + 10, getColor());
-                renderItem(itemStack);
+                Cloud.INSTANCE.mc.fontRendererObj.drawString(finalItem.getDisplayName(), getX() + 35, getY() + 10, getColor());
+                renderItem(finalItem);
             }
         }
     }

@@ -58,34 +58,30 @@ public class BlockinfoHud extends HudMod {
 
     @SubscribeEvent
     public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
-
-        if (getLookingAtBlock() == null) {
+        Block block = getLookingAtBlock();
+        if (block == null) {
             return;
         }
 
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
+            World world = Cloud.INSTANCE.mc.theWorld;
+            Vector3f v = getLookingAtPosition();
+            int id = Item.itemRegistry.getIDForObject(block.getItem(world, (int) v.x, (int) v.y, (int) v.z));
+            ItemStack finalItem = new ItemStack(Item.getItemById(id), 1, block.getDamageValue(world, (int) v.x, (int) v.y, (int) v.z));
+
             if (isModern()) {
                 if (isBackground()) {
                     Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, 0x50000000, 0);
                 }
-                World world = Cloud.INSTANCE.mc.theWorld;
-                Vector3f v = getLookingAtPosition();
-                Block block = getLookingAtBlock();
-                int id = Item.itemRegistry.getIDForObject(block.getItem(world, (int)v.x, (int)v.y, (int)v.z));
-                Cloud.INSTANCE.fontHelper.size20.drawString(getBlockName(id, block.getDamageValue(world, (int)v.x, (int)v.y, (int)v.z), (int)v.x, (int)v.y, (int)v.z), getX() + 35, getY() + 10, getColor());
-                renderItem(new ItemStack(Item.getItemById(id), 1, block.getDamageValue(world, (int)v.x, (int)v.y, (int)v.z)));
+                Cloud.INSTANCE.fontHelper.size20.drawString(getBlockName(id, block.getDamageValue(world, (int) v.x, (int) v.y, (int) v.z)), getX() + 35, getY() + 10, getColor());
+                renderItem(finalItem);
             }
             else {
                 if (isBackground()) {
                     Helper2D.drawRectangle(getX(), getY(), getW(), getH(), 0x50000000);
                 }
-
-                World world = Cloud.INSTANCE.mc.theWorld;
-                Vector3f v = getLookingAtPosition();
-                Block block = getLookingAtBlock();
-                int id = Item.itemRegistry.getIDForObject(block.getItem(world, (int)v.x, (int)v.y, (int)v.z));
-                Cloud.INSTANCE.mc.fontRendererObj.drawString(getBlockName(id, block.getDamageValue(world, (int)v.x, (int)v.y, (int)v.z), (int)v.x, (int)v.y, (int)v.z), getX() + 35, getY() + 10, getColor());
-                renderItem(new ItemStack(Item.getItemById(id), 1, block.getDamageValue(world, (int)v.x, (int)v.y, (int)v.z)));
+                Cloud.INSTANCE.mc.fontRendererObj.drawString(getBlockName(id, block.getDamageValue(world, (int) v.x, (int) v.y, (int) v.z)), getX() + 35, getY() + 10, getColor());
+                renderItem(finalItem);
             }
         }
     }
@@ -120,8 +116,7 @@ public class BlockinfoHud extends HudMod {
         GL11.glPopMatrix();
     }
 
-    private String getBlockName(int itemId, int damageValue, int x, int y, int z) {
-        World world = Cloud.INSTANCE.mc.theWorld;
+    private String getBlockName(int itemId, int damageValue) {
         return new ItemStack(Item.getItemById(itemId), 1, damageValue).getDisplayName();
     }
 
