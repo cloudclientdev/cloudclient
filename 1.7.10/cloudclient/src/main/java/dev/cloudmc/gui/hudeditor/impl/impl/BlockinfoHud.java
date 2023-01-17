@@ -14,10 +14,14 @@ import dev.cloudmc.helpers.Helper2D;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import org.lwjgl.opengl.GL11;
+
+import javax.vecmath.Vector3f;
 
 public class BlockinfoHud extends HudMod {
 
@@ -64,17 +68,24 @@ public class BlockinfoHud extends HudMod {
                 if (isBackground()) {
                     Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, 0x50000000, 0);
                 }
-
-                Cloud.INSTANCE.fontHelper.size20.drawString(getBlockName(getLookingAtBlock()), getX() + 35, getY() + 10, getColor());
-                renderItem(new ItemStack(getLookingAtBlock()));
+                World world = Cloud.INSTANCE.mc.theWorld;
+                Vector3f v = getLookingAtPosition();
+                Block block = getLookingAtBlock();
+                int id = Item.itemRegistry.getIDForObject(block.getItem(world, (int)v.x, (int)v.y, (int)v.z));
+                Cloud.INSTANCE.fontHelper.size20.drawString(getBlockName(id, block.getDamageValue(world, (int)v.x, (int)v.y, (int)v.z), (int)v.x, (int)v.y, (int)v.z), getX() + 35, getY() + 10, getColor());
+                renderItem(new ItemStack(Item.getItemById(id), 1, block.getDamageValue(world, (int)v.x, (int)v.y, (int)v.z)));
             }
             else {
                 if (isBackground()) {
                     Helper2D.drawRectangle(getX(), getY(), getW(), getH(), 0x50000000);
                 }
 
-                Cloud.INSTANCE.mc.fontRendererObj.drawString(getBlockName(getLookingAtBlock()), getX() + 35, getY() + 10, getColor());
-                renderItem(new ItemStack(getLookingAtBlock()));
+                World world = Cloud.INSTANCE.mc.theWorld;
+                Vector3f v = getLookingAtPosition();
+                Block block = getLookingAtBlock();
+                int id = Item.itemRegistry.getIDForObject(block.getItem(world, (int)v.x, (int)v.y, (int)v.z));
+                Cloud.INSTANCE.mc.fontRendererObj.drawString(getBlockName(id, block.getDamageValue(world, (int)v.x, (int)v.y, (int)v.z), (int)v.x, (int)v.y, (int)v.z), getX() + 35, getY() + 10, getColor());
+                renderItem(new ItemStack(Item.getItemById(id), 1, block.getDamageValue(world, (int)v.x, (int)v.y, (int)v.z)));
             }
         }
     }
@@ -109,18 +120,23 @@ public class BlockinfoHud extends HudMod {
         GL11.glPopMatrix();
     }
 
-    private String getBlockName(Block block){
-        String cleanName = block.getLocalizedName()
-                .replace("tile.", "")
-                .replace(".name", "");
-        return cleanName.substring(0, 1).toUpperCase()
-                + cleanName.substring(1);
+    private String getBlockName(int itemId, int damageValue, int x, int y, int z) {
+        World world = Cloud.INSTANCE.mc.theWorld;
+        return new ItemStack(Item.getItemById(itemId), 1, damageValue).getDisplayName();
     }
 
     private Block getLookingAtBlock() {
         MovingObjectPosition objectMouseOver = Cloud.INSTANCE.mc.objectMouseOver;
         if(objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK){
             return Cloud.INSTANCE.mc.theWorld.getBlock(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
+        }
+        return null;
+    }
+
+    private Vector3f getLookingAtPosition() {
+        MovingObjectPosition objectMouseOver = Cloud.INSTANCE.mc.objectMouseOver;
+        if(objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK){
+            return new Vector3f(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
         }
         return null;
     }
