@@ -65,6 +65,7 @@ public class ConfigLoader {
             if (Cloud.INSTANCE.hudEditor.getHudMod(mod.getName()) != null) {
                 Cloud.INSTANCE.hudEditor.getHudMod(mod.getName()).setX(configArray.getConfig().get(i).getPositions()[0]);
                 Cloud.INSTANCE.hudEditor.getHudMod(mod.getName()).setY(configArray.getConfig().get(i).getPositions()[1]);
+                Cloud.INSTANCE.hudEditor.getHudMod(mod.getName()).setSize(configArray.getConfig().get(i).getSize());
             }
         }
 

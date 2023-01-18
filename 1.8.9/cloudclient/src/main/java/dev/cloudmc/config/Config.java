@@ -15,12 +15,14 @@ public class Config {
     private boolean toggled;
     private ArrayList<Setting> settings;
     private int[] positions;
+    private float size;
 
-    public Config(String name, boolean toggled, ArrayList<Setting> settings, int[] positions){
+    public Config(String name, boolean toggled, ArrayList<Setting> settings, int[] positions, float size){
         this.name = name;
         this.toggled = toggled;
         this.settings = settings;
         this.positions = positions;
+        this.size = size;
     }
 
     public String getName() {
@@ -53,5 +55,13 @@ public class Config {
 
     public void setPositions(int[] positions) {
         this.positions = positions;
+    }
+
+    public float getSize() {
+        return size;
+    }
+
+    public void setSize(float size) {
+        this.size = size;
     }
 }

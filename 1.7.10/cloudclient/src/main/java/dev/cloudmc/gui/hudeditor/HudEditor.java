@@ -22,6 +22,7 @@ import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -122,6 +123,14 @@ public class HudEditor extends GuiScreen {
         for (HudMod hudMod : hudModList) {
             hudMod.renderMod(mouseX, mouseY);
             hudMod.updatePosition(mouseX, mouseY);
+            if (hudMod.withinMod(mouseX, mouseY)) {
+                int scroll = Mouse.getDWheel();
+                if (scroll > 0 && hudMod.getSize() < 2) {
+                    hudMod.setSize(hudMod.getSize() + 0.1f);
+                } else if (scroll < 0 && hudMod.getSize() > 0.5f) {
+                    hudMod.setSize(hudMod.getSize() - 0.1f);
+                }
+            }
         }
 
         Helper2D.drawRoundedRectangle(

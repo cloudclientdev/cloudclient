@@ -23,6 +23,7 @@ public class CpsHud extends HudMod {
 
     @Override
     public void renderMod(int mouseX, int mouseY) {
+        Helper2D.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isModern()) {
                 if (isBackground()) {
@@ -48,10 +49,12 @@ public class CpsHud extends HudMod {
             }
             super.renderMod(mouseX, mouseY);
         }
+        Helper2D.endScale();
     }
 
     @SubscribeEvent
     public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
+        Helper2D.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             if (isModern()) {
                 if (isBackground()) {
@@ -76,6 +79,7 @@ public class CpsHud extends HudMod {
                 );
             }
         }
+        Helper2D.endScale();
     }
 
     private int getColor() {

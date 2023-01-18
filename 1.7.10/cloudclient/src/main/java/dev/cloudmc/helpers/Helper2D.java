@@ -279,4 +279,15 @@ public class Helper2D {
     public static void endScissor() {
         GL11.glDisable(GL_SCISSOR_TEST);
     }
+
+    public static void startScale(int x, int y, float scale) {
+        GL11.glPushMatrix();
+        GL11.glTranslatef(x, y, 1);
+        GL11.glScalef(scale, scale, 1);
+        GL11.glTranslatef(-x, -y, -1);
+    }
+
+    public static void endScale() {
+        GL11.glPopMatrix();
+    }
 }

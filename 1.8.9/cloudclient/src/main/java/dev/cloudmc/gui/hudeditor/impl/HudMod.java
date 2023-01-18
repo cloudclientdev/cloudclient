@@ -5,6 +5,7 @@
 
 package dev.cloudmc.gui.hudeditor.impl;
 
+import dev.cloudmc.Cloud;
 import dev.cloudmc.helpers.MathHelper;
 import dev.cloudmc.helpers.Helper2D;
 import net.minecraftforge.common.MinecraftForge;
@@ -15,22 +16,28 @@ public class HudMod {
     private int x, y, w, h;
     private int offsetX, offsetY;
     private boolean dragging;
+    private float size;
 
     public HudMod(String name, int x, int y) {
         this.name = name;
         this.x = x;
         this.y = y;
+        this.size = 1;
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     public void renderMod(int mouseX, int mouseY) {
         if (withinMod(mouseX, mouseY) || isDragging()) {
             Helper2D.drawOutlinedRectangle(getX() - 3, getY() - 3, getW() + 6, getH() + 6, 1, -1);
+            Cloud.INSTANCE.fontHelper.size20.drawString("Size:" + MathHelper.round(getSize(), 1),
+                    getX() + getW() / 2 - Cloud.INSTANCE.fontHelper.size20.getStringWidth("Size:" + MathHelper.round(getSize(), 1)) / 2,
+                    getY() + getH() + 10, -1
+            );
         }
     }
 
     public boolean withinMod(int mouseX, int mouseY) {
-        return MathHelper.withinBox(x, y, w, h, mouseX, mouseY);
+        return MathHelper.withinBox(x, y, (int) (w * size), (int) (h * size), mouseX, mouseY);
     }
 
     public void updatePosition(int mouseX, int mouseY) {
@@ -102,5 +109,13 @@ public class HudMod {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public float getSize() {
+        return size;
+    }
+
+    public void setSize(float size) {
+        this.size = size;
     }
 }

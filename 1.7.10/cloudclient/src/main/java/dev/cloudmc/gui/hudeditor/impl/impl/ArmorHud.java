@@ -29,6 +29,7 @@ public class ArmorHud extends HudMod {
 
     @Override
     public void renderMod(int mouseX, int mouseY) {
+        Helper2D.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isBackground()) {
                 if (isModern()) {
@@ -45,10 +46,12 @@ public class ArmorHud extends HudMod {
             renderItem(new ItemStack(Items.diamond_boots), getX() + 4, getY() + 51 + 2);
             super.renderMod(mouseX, mouseY);
         }
+        Helper2D.endScale();
     }
 
     @SubscribeEvent
     public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
+        Helper2D.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             if (isBackground()) {
                 if (isModern()) {
@@ -64,6 +67,7 @@ public class ArmorHud extends HudMod {
             renderItem(Cloud.INSTANCE.mc.thePlayer.inventory.armorInventory[1], getX() + 4, getY() + 34 + 2);
             renderItem(Cloud.INSTANCE.mc.thePlayer.inventory.armorInventory[0], getX() + 4, getY() + 51 + 2);
         }
+        Helper2D.endScale();
     }
 
     private void renderItem(ItemStack stack, int x, int y) {

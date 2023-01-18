@@ -32,6 +32,7 @@ public class BlockinfoHud extends HudMod {
 
     @Override
     public void renderMod(int mouseX, int mouseY) {
+        Helper2D.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isModern()) {
                 if (isBackground()) {
@@ -55,6 +56,7 @@ public class BlockinfoHud extends HudMod {
             }
             super.renderMod(mouseX, mouseY);
         }
+        Helper2D.endScale();
     }
 
     @SubscribeEvent
@@ -64,6 +66,7 @@ public class BlockinfoHud extends HudMod {
             return;
         }
 
+        Helper2D.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
 
             World world = Cloud.INSTANCE.mc.theWorld;
@@ -89,6 +92,7 @@ public class BlockinfoHud extends HudMod {
                 renderItem(finalItem);
             }
         }
+        Helper2D.endScale();
     }
 
     private BlockPos getLookingAtBlockPos() {

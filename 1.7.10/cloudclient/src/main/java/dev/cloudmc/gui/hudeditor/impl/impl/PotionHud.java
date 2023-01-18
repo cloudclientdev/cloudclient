@@ -36,6 +36,7 @@ public class PotionHud extends HudMod {
 
     @Override
     public void renderMod(int mouseX, int mouseY) {
+        Helper2D.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isModern()) {
                 if (isBackground()) {
@@ -55,6 +56,7 @@ public class PotionHud extends HudMod {
             super.renderMod(mouseX, mouseY);
             setH(90);
         }
+        Helper2D.endScale();
     }
 
     @SubscribeEvent
@@ -63,6 +65,7 @@ public class PotionHud extends HudMod {
         if(collection.isEmpty()){
             return;
         }
+        Helper2D.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             if (isModern()) {
                 if (isBackground()) {
@@ -90,6 +93,7 @@ public class PotionHud extends HudMod {
                 }
             }
         }
+        Helper2D.endScale();
     }
 
     private void drawPotion(Potion potion, PotionEffect effect, int y, boolean modern, boolean time) {

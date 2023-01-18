@@ -41,7 +41,9 @@ public class ConfigSaver {
                     Cloud.INSTANCE.settingManager.getSettingsByMod(mod),
                     Cloud.INSTANCE.hudEditor.getHudMod(mod.getName()) != null ?
                             new int[] { Cloud.INSTANCE.hudEditor.getHudMod(mod.getName()).getX(), Cloud.INSTANCE.hudEditor.getHudMod(mod.getName()).getY() } :
-                            new int[] { 0, 0 }
+                            new int[] { 0, 0 },
+                    Cloud.INSTANCE.hudEditor.getHudMod(mod.getName()) != null ?
+                            Cloud.INSTANCE.hudEditor.getHudMod(mod.getName()).getSize() : 1
             );
             configArray.addConfig(config);
         }

@@ -34,8 +34,7 @@ public class Helper2D {
     public static void drawRoundedRectangle(int x, int y, int w, int h, int radius, int color, int index) {
         if (index == -1) {
             drawRectangle(x, y, w, h, color);
-        }
-        else if (index == 0) {
+        } else if (index == 0) {
             drawRectangle(x + radius, y + radius, w - radius * 2, h - radius * 2, color);
             drawRectangle(x + radius, y, w - radius * 2, radius, color);
             drawRectangle(x + w - radius, y + radius, radius, h - radius * 2, color);
@@ -45,14 +44,12 @@ public class Helper2D {
             drawCircle(x + w - radius, y + radius, radius, 270, 360, color);
             drawCircle(x + radius, y + h - radius, radius, 90, 180, color);
             drawCircle(x + w - radius, y + h - radius, radius, 0, 90, color);
-        }
-        else if (index == 1) {
+        } else if (index == 1) {
             drawRectangle(x + radius, y, w - radius * 2, radius, color);
             drawRectangle(x, y + radius, w, h - radius, color);
             drawCircle(x + radius, y + radius, radius, 180, 270, color);
             drawCircle(x + w - radius, y + radius, radius, 270, 360, color);
-        }
-        else if (index == 2) {
+        } else if (index == 2) {
             drawRectangle(x, y, w, h - radius, color);
             drawRectangle(x + radius, y + h - radius, w - radius * 2, radius, color);
             drawCircle(x + radius, y + h - radius, radius, 90, 180, color);
@@ -88,8 +85,7 @@ public class Helper2D {
     public static void drawPicture(int x, int y, int w, int h, int color, String location) {
         if (color == 0) {
             GlStateManager.color(1, 1, 1);
-        }
-        else {
+        } else {
             color(color);
         }
         ResourceLocation resourceLocation = new ResourceLocation(Cloud.modID, location);
@@ -271,5 +267,16 @@ public class Helper2D {
 
     public static void endScissor() {
         GL11.glDisable(GL_SCISSOR_TEST);
+    }
+
+    public static void startScale(int x, int y, float scale) {
+        GL11.glPushMatrix();
+        GL11.glTranslatef(x, y, 1);
+        GL11.glScalef(scale, scale, 1);
+        GL11.glTranslatef(-x, -y, -1);
+    }
+
+    public static void endScale() {
+        GL11.glPopMatrix();
     }
 }

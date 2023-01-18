@@ -22,6 +22,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 
@@ -68,8 +69,8 @@ public class HudEditor extends GuiScreen {
     /**
      * Draws the Screen with the button to show the modmenu and all the hudMods
      *
-     * @param mouseX The current X position of the mouse
-     * @param mouseY The current Y position of the mouse
+     * @param mouseX       The current X position of the mouse
+     * @param mouseY       The current Y position of the mouse
      * @param partialTicks The partial ticks used for rendering
      */
 
@@ -122,6 +123,14 @@ public class HudEditor extends GuiScreen {
         for (HudMod hudMod : hudModList) {
             hudMod.renderMod(mouseX, mouseY);
             hudMod.updatePosition(mouseX, mouseY);
+            if (hudMod.withinMod(mouseX, mouseY)) {
+                int scroll = Mouse.getDWheel();
+                if (scroll > 0 && hudMod.getSize() < 2) {
+                    hudMod.setSize(hudMod.getSize() + 0.1f);
+                } else if (scroll < 0 && hudMod.getSize() > 0.5f) {
+                    hudMod.setSize(hudMod.getSize() - 0.1f);
+                }
+            }
         }
 
         Helper2D.drawRoundedRectangle(
@@ -139,8 +148,8 @@ public class HudEditor extends GuiScreen {
      * Sets the gui screen to the modmenu when the middle button is clicked
      * Toggles the Dark mode if the bottom left button is pressed
      *
-     * @param mouseX The current X position of the mouse
-     * @param mouseY The current Y position of the mouse
+     * @param mouseX      The current X position of the mouse
+     * @param mouseY      The current Y position of the mouse
      * @param mouseButton The current mouse button which is pressed
      */
 
@@ -203,6 +212,7 @@ public class HudEditor extends GuiScreen {
 
     /**
      * Adds a hudMod to the list
+     *
      * @param hudMod The hudMod which should be added
      */
 
@@ -217,6 +227,7 @@ public class HudEditor extends GuiScreen {
 
     /**
      * Returns a given hudMod using its name
+     *
      * @param name The name of the hudMod
      * @return The returned hudMod
      */
@@ -232,7 +243,7 @@ public class HudEditor extends GuiScreen {
 
     @SubscribeEvent
     public void onKey(InputEvent.KeyInputEvent e) {
-        if(Keyboard.isKeyDown(Cloud.INSTANCE.optionManager.getOptionByName("ModMenu Keybinding").getKey())) {
+        if (Keyboard.isKeyDown(Cloud.INSTANCE.optionManager.getOptionByName("ModMenu Keybinding").getKey())) {
             Cloud.INSTANCE.mc.displayGuiScreen(Cloud.INSTANCE.hudEditor);
         }
     }
