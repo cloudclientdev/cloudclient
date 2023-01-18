@@ -37,18 +37,18 @@ public class BlockinfoHud extends HudMod {
     public void renderMod(int mouseX, int mouseY) {
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isModern()) {
+                setW(Cloud.INSTANCE.fontHelper.size20.getStringWidth("Grass Block") + 42);
                 if (isBackground()) {
                     Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, ClientStyle.getBackgroundColor(50).getRGB(), 0);
                 }
-
                 Cloud.INSTANCE.fontHelper.size20.drawString("Grass Block", getX() + 35, getY() + 10, getColor());
                 renderItem(new ItemStack(Blocks.grass));
             }
             else {
+                setW(Cloud.INSTANCE.mc.fontRendererObj.getStringWidth("Grass Block") + 42);
                 if (isBackground()) {
                     Helper2D.drawRectangle(getX(), getY(), getW(), getH(), ClientStyle.getBackgroundColor(50).getRGB());
                 }
-
                 Cloud.INSTANCE.mc.fontRendererObj.drawString("Grass Block", getX() + 35, getY() + 10, getColor());
                 renderItem(new ItemStack(Blocks.grass));
             }
@@ -68,15 +68,21 @@ public class BlockinfoHud extends HudMod {
             Vector3f v = getLookingAtPosition();
             int id = Item.itemRegistry.getIDForObject(block.getItem(world, (int) v.x, (int) v.y, (int) v.z));
             ItemStack finalItem = new ItemStack(Item.getItemById(id), 1, block.getDamageValue(world, (int) v.x, (int) v.y, (int) v.z));
+            String blockName = getBlockName(id, block.getDamageValue(world, (int) v.x, (int) v.y, (int) v.z));
 
             if (isModern()) {
+                int width = Cloud.INSTANCE.fontHelper.size20.getStringWidth(blockName);
+                setW(width + 42);
                 if (isBackground()) {
                     Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, 0x50000000, 0);
                 }
-                Cloud.INSTANCE.fontHelper.size20.drawString(getBlockName(id, block.getDamageValue(world, (int) v.x, (int) v.y, (int) v.z)), getX() + 35, getY() + 10, getColor());
+
+                Cloud.INSTANCE.fontHelper.size20.drawString(blockName, getX() + 35, getY() + 10, getColor());
                 renderItem(finalItem);
             }
             else {
+                int width = Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(blockName);
+                setW(width + 42);
                 if (isBackground()) {
                     Helper2D.drawRectangle(getX(), getY(), getW(), getH(), 0x50000000);
                 }

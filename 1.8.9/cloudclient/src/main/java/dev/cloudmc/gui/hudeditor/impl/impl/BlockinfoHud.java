@@ -37,6 +37,7 @@ public class BlockinfoHud extends HudMod {
                 if (isBackground()) {
                     Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, ClientStyle.getBackgroundColor(50).getRGB(), 0);
                 }
+                setW(Cloud.INSTANCE.fontHelper.size20.getStringWidth("Grass Block") + 42);
                 Cloud.INSTANCE.fontHelper.size20.drawString("Grass Block", getX() + 35, getY() + 10, getColor());
 
                 ItemStack itemStack = new ItemStack(Blocks.grass);
@@ -46,6 +47,7 @@ public class BlockinfoHud extends HudMod {
                 if (isBackground()) {
                     Helper2D.drawRectangle(getX(), getY(), getW(), getH(), ClientStyle.getBackgroundColor(50).getRGB());
                 }
+                setW(Cloud.INSTANCE.mc.fontRendererObj.getStringWidth("Grass Block") + 42);
                 Cloud.INSTANCE.mc.fontRendererObj.drawString("Grass Block", getX() + 35, getY() + 10, getColor());
 
                 ItemStack itemStack = new ItemStack(Blocks.grass);
@@ -71,6 +73,7 @@ public class BlockinfoHud extends HudMod {
             ItemStack finalItem = new ItemStack(Item.getItemById(id), 1, meta);
 
             if (isModern()) {
+                setW(Cloud.INSTANCE.fontHelper.size20.getStringWidth(finalItem.getDisplayName()) + 42);
                 if (isBackground()) {
                     Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, 0x50000000, 0);
                 }
@@ -78,6 +81,7 @@ public class BlockinfoHud extends HudMod {
                 renderItem(finalItem);
             }
             else {
+                setW(Cloud.INSTANCE.fontHelper.size20.getStringWidth(finalItem.getDisplayName()) + 42);
                 if (isBackground()) {
                     Helper2D.drawRectangle(getX(), getY(), getW(), getH(), 0x50000000);
                 }
