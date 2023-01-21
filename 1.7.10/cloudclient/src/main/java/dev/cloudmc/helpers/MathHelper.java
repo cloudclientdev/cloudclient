@@ -33,4 +33,8 @@ public class MathHelper {
     public static boolean withinBox(int x, int y, int w, int h, int mouseX, int mouseY) {
         return mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h;
     }
+
+    public static boolean withinBoundsRange(float var, float var2, float range) {
+        return var >= var2 - range && var <= var2 + range;
+    }
 }

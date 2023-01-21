@@ -99,5 +99,6 @@ public class ConfigLoader {
         }
 
         ClientStyle.setDarkMode(configArray.isDarkMode());
+        ClientStyle.setSnapping(configArray.isSnapping());
     }
 }

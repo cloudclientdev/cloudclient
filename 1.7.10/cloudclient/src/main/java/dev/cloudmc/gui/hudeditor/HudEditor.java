@@ -18,6 +18,7 @@ import dev.cloudmc.helpers.MathHelper;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -36,6 +37,7 @@ public class HudEditor extends GuiScreen {
     private int counter;
     private int index;
     private final int offset;
+    private final int snapDistance = 5;
 
     public HudEditor() {
         hudModList = new ArrayList<>();
@@ -70,13 +72,14 @@ public class HudEditor extends GuiScreen {
     /**
      * Draws the Screen with the button to show the modmenu and all the hudMods
      *
-     * @param mouseX The current X position of the mouse
-     * @param mouseY The current Y position of the mouse
+     * @param mouseX       The current X position of the mouse
+     * @param mouseY       The current Y position of the mouse
      * @param partialTicks The partial ticks used for rendering
      */
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        ScaledResolution sr = new ScaledResolution(Cloud.INSTANCE.mc, Cloud.INSTANCE.mc.displayWidth, Cloud.INSTANCE.mc.displayHeight);
         Helper2D.drawRectangle(0, 0, width, height, 0x70000000);
 
         animateLogo
@@ -131,26 +134,63 @@ public class HudEditor extends GuiScreen {
                     hudMod.setSize(hudMod.getSize() - 0.1f);
                 }
             }
+
+            for (HudMod sHudMod : hudModList) {
+                if (Cloud.INSTANCE.modManager.getMod(sHudMod.getName()).isToggled() && hudMod.isDragging() && !sHudMod.equals(hudMod) && ClientStyle.isSnapping()) {
+                    if (!sHudMod.equals(hudMod)) {
+                        SnapPosition snap = new SnapPosition();
+                        snap.setSnapping(true);
+                        int snapRange = 5;
+                        if (MathHelper.withinBoundsRange(hudMod.getX(), sHudMod.getX(), snapRange))
+                            snap.setAll(sHudMod.getX(), sHudMod.getX(), false);
+                        else if (MathHelper.withinBoundsRange(hudMod.getX() + hudMod.getW() * hudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), snapRange))
+                            snap.setAll(sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize() - hudMod.getW() * hudMod.getSize(), false);
+                        else if (MathHelper.withinBoundsRange(hudMod.getX() + hudMod.getW() * hudMod.getSize(), sHudMod.getX(), snapRange))
+                            snap.setAll(sHudMod.getX(), sHudMod.getX() - hudMod.getW() * hudMod.getSize(), false);
+                        else if (MathHelper.withinBoundsRange(hudMod.getX(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), snapRange))
+                            snap.setAll(sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), false);
+                        else if (MathHelper.withinBoundsRange(hudMod.getY(), sHudMod.getY(), snapRange))
+                            snap.setAll(sHudMod.getY(), sHudMod.getY(), true);
+                        else if (MathHelper.withinBoundsRange(hudMod.getY() + hudMod.getH() * hudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), snapRange))
+                            snap.setAll(sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize() - hudMod.getH() * hudMod.getSize(), true);
+                        else if (MathHelper.withinBoundsRange(hudMod.getY() + hudMod.getH() * hudMod.getSize(), sHudMod.getY(), snapRange))
+                            snap.setAll(sHudMod.getY(), sHudMod.getY() - hudMod.getH() * hudMod.getSize(), true);
+                        else if (MathHelper.withinBoundsRange(hudMod.getY(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), snapRange))
+                            snap.setAll(sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), true);
+                        else
+                            snap.setSnapping(false);
+
+                        if (snap.isSnapping()) {
+                            if (!snap.isHorizontal()) {
+                                Helper2D.drawRectangle((int) snap.getsPos(), 0, 1, sr.getScaledHeight(), 0x60ffffff);
+                                hudMod.setX((int) snap.getPos());
+                            } else {
+                                Helper2D.drawRectangle(0, (int) snap.getsPos(), sr.getScaledWidth(), 1, 0x60ffffff);
+                                hudMod.setY((int) snap.getPos());
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        Helper2D.drawRoundedRectangle(
-                10,
-                height - 50,
-                40,
-                40,
-                2,
-                ClientStyle.getBackgroundColor(40).getRGB(),
-                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
-        );
-        Helper2D.drawPicture(15, height - 45, 30, 30, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), ClientStyle.isDarkMode() ? "icon/dark.png" : "icon/light.png");
+        Helper2D.drawRoundedRectangle(10, height - 50, 40, 40, 2,
+                ClientStyle.getBackgroundColor(40).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
+        Helper2D.drawPicture(15, height - 45, 30, 30, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(),
+                ClientStyle.isDarkMode() ? "icon/dark.png" : "icon/light.png");
+
+        Helper2D.drawRoundedRectangle(60, height - 50, 40, 40, 2,
+                ClientStyle.getBackgroundColor(40).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
+        Helper2D.drawPicture(65, height - 45, 30, 30, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(),
+                ClientStyle.isSnapping() ? "icon/grid.png" : "icon/nogrid.png");
     }
 
     /**
      * Sets the gui screen to the modmenu when the middle button is clicked
      * Toggles the Dark mode if the bottom left button is pressed
      *
-     * @param mouseX The current X position of the mouse
-     * @param mouseY The current Y position of the mouse
+     * @param mouseX      The current X position of the mouse
+     * @param mouseY      The current Y position of the mouse
      * @param mouseButton The current mouse button which is pressed
      */
 
@@ -171,13 +211,15 @@ public class HudEditor extends GuiScreen {
 
             if (MathHelper.withinBox(10, height - 50, 40, 40, mouseX, mouseY)) {
                 ClientStyle.setDarkMode(!ClientStyle.isDarkMode());
+            } else if (MathHelper.withinBox(60, height - 50, 40, 40, mouseX, mouseY)) {
+                ClientStyle.setSnapping(!ClientStyle.isSnapping());
             }
         }
     }
 
     @Override
     public void mouseReleased(int mouseX, int mouseY, int state) {
-        if(state == 1 || state == 0) {
+        if (state == 1 || state == 0) {
             for (HudMod hudMod : hudModList) {
                 hudMod.setDragging(false);
             }
@@ -227,6 +269,7 @@ public class HudEditor extends GuiScreen {
 
     /**
      * Adds a hudMod to the list
+     *
      * @param hudMod The hudMod which should be added
      */
 
@@ -241,6 +284,7 @@ public class HudEditor extends GuiScreen {
 
     /**
      * Returns a given hudMod using its name
+     *
      * @param name The name of the hudMod
      * @return The returned hudMod
      */
@@ -256,7 +300,7 @@ public class HudEditor extends GuiScreen {
 
     @SubscribeEvent
     public void onKey(InputEvent.KeyInputEvent e) {
-        if(Keyboard.isKeyDown(Cloud.INSTANCE.optionManager.getOptionByName("ModMenu Keybinding").getKey())) {
+        if (Keyboard.isKeyDown(Cloud.INSTANCE.optionManager.getOptionByName("ModMenu Keybinding").getKey())) {
             Cloud.INSTANCE.mc.displayGuiScreen(Cloud.INSTANCE.hudEditor);
         }
     }

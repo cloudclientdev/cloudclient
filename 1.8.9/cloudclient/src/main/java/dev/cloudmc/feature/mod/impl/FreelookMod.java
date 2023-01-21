@@ -37,7 +37,6 @@ public class FreelookMod extends Mod {
             cameraToggled = true;
             Cloud.INSTANCE.mc.gameSettings.thirdPersonView = 1;
         }
-        System.out.println(Keyboard.getKeyName(getKey()));
     }
 
     @SubscribeEvent

@@ -18,7 +18,6 @@ import dev.cloudmc.helpers.animation.Easing;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
@@ -131,17 +130,54 @@ public class HudEditor extends GuiScreen {
                     hudMod.setSize(hudMod.getSize() - 0.1f);
                 }
             }
+            for (HudMod sHudMod : hudModList) {
+                if (Cloud.INSTANCE.modManager.getMod(sHudMod.getName()).isToggled() && hudMod.isDragging() && !sHudMod.equals(hudMod)  && ClientStyle.isSnapping()) {
+                    if (!sHudMod.equals(hudMod)) {
+                        SnapPosition snap = new SnapPosition();
+                        snap.setSnapping(true);
+                        int snapRange = 5;
+                        if (MathHelper.withinBoundsRange(hudMod.getX(), sHudMod.getX(), snapRange))
+                            snap.setAll(sHudMod.getX(), sHudMod.getX(), false);
+                        else if (MathHelper.withinBoundsRange(hudMod.getX() + hudMod.getW() * hudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), snapRange))
+                            snap.setAll(sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize() - hudMod.getW() * hudMod.getSize(), false);
+                        else if (MathHelper.withinBoundsRange(hudMod.getX() + hudMod.getW() * hudMod.getSize(), sHudMod.getX(), snapRange))
+                            snap.setAll(sHudMod.getX(), sHudMod.getX() - hudMod.getW() * hudMod.getSize(), false);
+                        else if (MathHelper.withinBoundsRange(hudMod.getX(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), snapRange))
+                            snap.setAll(sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), false);
+                        else if (MathHelper.withinBoundsRange(hudMod.getY(), sHudMod.getY(), snapRange))
+                            snap.setAll(sHudMod.getY(), sHudMod.getY(), true);
+                        else if (MathHelper.withinBoundsRange(hudMod.getY() + hudMod.getH() * hudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), snapRange))
+                            snap.setAll(sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize() - hudMod.getH() * hudMod.getSize(), true);
+                        else if (MathHelper.withinBoundsRange(hudMod.getY() + hudMod.getH() * hudMod.getSize(), sHudMod.getY(), snapRange))
+                            snap.setAll(sHudMod.getY(), sHudMod.getY() - hudMod.getH() * hudMod.getSize(), true);
+                        else if (MathHelper.withinBoundsRange(hudMod.getY(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), snapRange))
+                            snap.setAll(sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), true);
+                        else
+                            snap.setSnapping(false);
+
+                        if (snap.isSnapping()) {
+                            if (!snap.isHorizontal()) {
+                                Helper2D.drawRectangle((int) snap.getsPos(), 0, 1, sr.getScaledHeight(), 0x60ffffff);
+                                hudMod.setX((int) snap.getPos());
+                            } else {
+                                Helper2D.drawRectangle(0, (int) snap.getsPos(), sr.getScaledWidth(), 1, 0x60ffffff);
+                                hudMod.setY((int) snap.getPos());
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        Helper2D.drawRoundedRectangle(
-                10,
-                height - 50,
-                40,
-                40,
-                2,
-                ClientStyle.getBackgroundColor(40).getRGB(),
-                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
-        Helper2D.drawPicture(15, height - 45, 30, 30, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), ClientStyle.isDarkMode() ? "icon/dark.png" : "icon/light.png");
+        Helper2D.drawRoundedRectangle(10, height - 50, 40, 40, 2,
+                ClientStyle.getBackgroundColor(40).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
+        Helper2D.drawPicture(15, height - 45, 30, 30, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(),
+                ClientStyle.isDarkMode() ? "icon/dark.png" : "icon/light.png");
+
+        Helper2D.drawRoundedRectangle(60, height - 50, 40, 40, 2,
+                ClientStyle.getBackgroundColor(40).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
+        Helper2D.drawPicture(65, height - 45, 30, 30, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(),
+                ClientStyle.isSnapping() ? "icon/grid.png" : "icon/nogrid.png");
     }
 
     /**
@@ -170,6 +206,8 @@ public class HudEditor extends GuiScreen {
 
             if (MathHelper.withinBox(10, height - 50, 40, 40, mouseX, mouseY)) {
                 ClientStyle.setDarkMode(!ClientStyle.isDarkMode());
+            } else if (MathHelper.withinBox(60, height - 50, 40, 40, mouseX, mouseY)) {
+                ClientStyle.setSnapping(!ClientStyle.isSnapping());
             }
         }
     }

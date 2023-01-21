@@ -10,6 +10,7 @@ import java.awt.*;
 public class ClientStyle {
 
     private static boolean darkMode = false;
+    private static boolean snapping = true;
 
     private static int guiScale = 1;
 
@@ -50,6 +51,14 @@ public class ClientStyle {
 
     public static void setDarkMode(boolean darkMode) {
         ClientStyle.darkMode = darkMode;
+    }
+
+    public static boolean isSnapping() {
+        return snapping;
+    }
+
+    public static void setSnapping(boolean snapping) {
+        ClientStyle.snapping = snapping;
     }
 
     public static int getGuiScale() {

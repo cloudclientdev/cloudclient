@@ -53,6 +53,7 @@ public class ConfigSaver {
         }
 
         configArray.setDarkMode(ClientStyle.isDarkMode());
+        configArray.setSnapping(ClientStyle.isSnapping());
 
         String json = new Gson().toJson(configArray);
         writer.write(json);
