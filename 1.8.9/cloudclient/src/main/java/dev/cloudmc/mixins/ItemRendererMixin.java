@@ -22,6 +22,9 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemRenderer.class)
 public abstract class ItemRendererMixin {
@@ -43,16 +46,37 @@ public abstract class ItemRendererMixin {
     @Shadow private void renderPlayerArm(AbstractClientPlayer clientPlayer, float equipProgress, float swingProgress) {}
 
     /**
+     * Makes the sword position and rotation to be more accurate to 1.7.10
+     */
+    @Inject(method = "doBlockTransformations", at = @At("HEAD"), cancellable = true)
+    public void swordBlockTransformations(CallbackInfo ci) {
+        if (Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Block Animation").isCheckToggled()) {
+//                                      -0.1F  0.085F
+//            GlStateManager.translate(-0.5F, 0.2F, 0.0F);
+            GlStateManager.translate(-0.24F, 0.17F, 0.0F);
+            GlStateManager.rotate(30.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(-80.0F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(60.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.translate(0.0F, 0.18F, 0.00F);
+
+            ci.cancel();
+        }
+    }
+
+    /**
      * @author DupliCAT
-     * @reason Freelook
+     * @reason Freelook and Animation
      */
     @Overwrite
     public void renderItemInFirstPerson(float partialTicks) {
+        boolean animationModToggled = Cloud.INSTANCE.modManager.getMod("Animation").isToggled();
         if (this.mc.thePlayer.getHeldItem() != null &&
-                Cloud.INSTANCE.modManager.getMod("Animation").isToggled() &&
-                Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Block Animation").isCheckToggled()
+                animationModToggled &&
+                (Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Block Animation").isCheckToggled() ||
+                Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Eat/Drink Animation").isCheckToggled() ||
+                Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Bow Animation").isCheckToggled())
         ) {
-            this.attemptSwing();
+            this.attemptSwing(); // having this here causes it to not work in third person view
         }
 
         float f = 1.0F - (this.prevEquippedProgress + (this.equippedProgress - this.prevEquippedProgress) * partialTicks);
@@ -71,27 +95,28 @@ public abstract class ItemRendererMixin {
                 this.renderItemMap(player, f2, f, f1);
             }
             else if (player.getItemInUseCount() > 0) {
-                EnumAction enumaction = this.itemToRender.getItemUseAction();
-
-                switch (enumaction) {
+                EnumAction action = this.itemToRender.getItemUseAction();
+                switch (action) {
                     case NONE:
                         this.transformFirstPersonItem(f, 0.0F);
                         break;
                     case EAT:
                     case DRINK:
                         this.performDrinking(player, partialTicks);
-                        this.transformFirstPersonItem(f, 0.0F);
+                        this.transformFirstPersonItem(f, animationModToggled &&
+                                Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Eat/Drink Animation").isCheckToggled()
+                                ? f1 : 0.0F);
                         break;
                     case BLOCK:
-                        this.transformFirstPersonItem(f,
-                                Cloud.INSTANCE.modManager.getMod("Animation").isToggled() &&
-                                        Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Block Animation").isCheckToggled()
-                                        ? f1 : 0.0F
-                        );
+                        this.transformFirstPersonItem(f, animationModToggled &&
+                                Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Block Animation").isCheckToggled()
+                                ? f1 : 0.0F);
                         this.doBlockTransformations();
                         break;
                     case BOW:
-                        this.transformFirstPersonItem(f, 0.0F);
+                        this.transformFirstPersonItem(f, animationModToggled &&
+                                Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Bow Animation").isCheckToggled()
+                                ? f1 : 0.0F);
                         this.doBowTransformations(partialTicks, player);
                 }
             }
@@ -111,17 +136,24 @@ public abstract class ItemRendererMixin {
         RenderHelper.disableStandardItemLighting();
     }
 
+    /**
+     * Swings the player's arm if you're holding the attack and use item keys at the same time and looking at a block.
+     */
     private void attemptSwing() {
         if (this.mc.thePlayer.getItemInUseCount() > 0) {
             final boolean mouseDown = this.mc.gameSettings.keyBindAttack.isKeyDown() &&
                     this.mc.gameSettings.keyBindUseItem.isKeyDown();
             if (mouseDown && this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                swingItem(this.mc.thePlayer);
+                forceSwing();
             }
         }
     }
 
-    private void swingItem(EntityPlayerSP player) {
+    /**
+     * Forces the player to swing their arm.
+     */
+    private void forceSwing() {
+        EntityPlayerSP player = this.mc.thePlayer;
         int swingEnd = player.isPotionActive(Potion.digSpeed) ?
                 (6 - (1 + player.getActivePotionEffect(Potion.digSpeed).getAmplifier())) : (player.isPotionActive(Potion.digSlowdown) ?
                 (6 + (1 + player.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2) : 6);
