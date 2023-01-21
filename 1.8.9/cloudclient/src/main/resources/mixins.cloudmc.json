@@ -8,7 +8,8 @@
     "FontRendererMixin",
     "GuiMainMenuMixin",
     "ItemRendererMixin",
-    "MinecraftMixin"
+    "MinecraftMixin",
+    "ModelBipedMixin"
   ],
   "mixins": [
     "GuiUtilsMixin"

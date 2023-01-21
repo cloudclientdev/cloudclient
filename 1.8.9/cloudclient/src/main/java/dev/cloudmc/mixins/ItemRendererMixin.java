@@ -14,14 +14,20 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
+import net.minecraft.item.ItemFishingRod;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.MovingObjectPosition;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemRenderer.class)
 public abstract class ItemRendererMixin {
@@ -42,19 +48,52 @@ public abstract class ItemRendererMixin {
     @Shadow public void renderItem(EntityLivingBase entityIn, ItemStack heldStack, ItemCameraTransforms.TransformType transform) {}
     @Shadow private void renderPlayerArm(AbstractClientPlayer clientPlayer, float equipProgress, float swingProgress) {}
 
+    @Inject(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/RenderItem;renderItemModelForEntity(Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;)V"))
+    public void renderItem(EntityLivingBase entity, ItemStack item, ItemCameraTransforms.TransformType transformType, CallbackInfo ci) {
+        if (!(item.getItem() instanceof ItemSword)) return;
+        if (!(entity instanceof EntityPlayer)) return;
+        if (!(((EntityPlayer)entity).getItemInUseCount() > 0)) return;
+        if (!(item.getItemUseAction() == EnumAction.BLOCK)) return;
+        if (transformType != ItemCameraTransforms.TransformType.THIRD_PERSON) return;
+        if (Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Block Animation").isCheckToggled()) {
+            GlStateManager.rotate(-45.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(-20.0F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(-60.0F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.translate(-0.04F, -0.04F, 0.0F);
+        }
+    }
+
+    /**
+     * Makes the sword position and rotation to be more accurate to 1.7.10
+     */
+    @Inject(method = "doBlockTransformations", at = @At("HEAD"), cancellable = true)
+    public void swordBlockTransformations(CallbackInfo ci) {
+        if (Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Block Animation").isCheckToggled()) {
+            GlStateManager.translate(-0.24F, 0.17F, 0.0F);
+            GlStateManager.rotate(30.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(-80.0F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(60.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.translate(0.0F, 0.18F, 0.00F);
+            ci.cancel();
+        }
+    }
+
     /**
      * @author DupliCAT
-     * @reason Freelook
+     * @reason Freelook and Animation mods
      */
     @Overwrite
     public void renderItemInFirstPerson(float partialTicks) {
-        if (this.mc.thePlayer.getHeldItem() != null &&
-                Cloud.INSTANCE.modManager.getMod("Animation").isToggled() &&
-                Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Block Animation").isCheckToggled()
-        ) {
-            this.attemptSwing();
-        }
-
+        boolean animationModToggled = Cloud.INSTANCE.modManager.getMod("Animation").isToggled();
+//        if (animationModToggled && this.mc.thePlayer.getHeldItem() != null) {
+//            if (Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Block Animation").isCheckToggled()) {
+//                this.forceSwingArm();
+//            } else if (Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Eat/Drink Animation").isCheckToggled()) {
+//                this.forceSwingArm();
+//            } else if (Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Bow Animation").isCheckToggled()) {
+//                this.forceSwingArm();
+//            }
+//        }
         float f = 1.0F - (this.prevEquippedProgress + (this.equippedProgress - this.prevEquippedProgress) * partialTicks);
         EntityPlayerSP player = this.mc.thePlayer;
         float f1 = player.getSwingProgress(partialTicks);
@@ -71,32 +110,37 @@ public abstract class ItemRendererMixin {
                 this.renderItemMap(player, f2, f, f1);
             }
             else if (player.getItemInUseCount() > 0) {
-                EnumAction enumaction = this.itemToRender.getItemUseAction();
-
-                switch (enumaction) {
+                EnumAction action = this.itemToRender.getItemUseAction();
+                switch (action) {
                     case NONE:
                         this.transformFirstPersonItem(f, 0.0F);
                         break;
                     case EAT:
                     case DRINK:
                         this.performDrinking(player, partialTicks);
-                        this.transformFirstPersonItem(f, 0.0F);
+                        this.transformFirstPersonItem(f, animationModToggled &&
+                                Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Eat/Drink Animation").isCheckToggled()
+                                ? f1 : 0.0F);
                         break;
                     case BLOCK:
-                        this.transformFirstPersonItem(f,
-                                Cloud.INSTANCE.modManager.getMod("Animation").isToggled() &&
-                                        Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Block Animation").isCheckToggled()
-                                        ? f1 : 0.0F
-                        );
+                        this.transformFirstPersonItem(f, animationModToggled &&
+                                Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Block Animation").isCheckToggled()
+                                ? f1 : 0.0F);
                         this.doBlockTransformations();
                         break;
                     case BOW:
-                        this.transformFirstPersonItem(f, 0.0F);
+                        this.transformFirstPersonItem(f, animationModToggled &&
+                                Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Bow Animation").isCheckToggled()
+                                ? f1 : 0.0F);
                         this.doBowTransformations(partialTicks, player);
                 }
             }
             else {
                 this.doItemUsedTransformations(f1);
+                if (this.itemToRender.getItem() instanceof ItemFishingRod && animationModToggled &&
+                        Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Fishing Rod").isCheckToggled()) {
+                    GlStateManager.translate(0.0F, 0.0F, -0.35F);
+                }
                 this.transformFirstPersonItem(f, f1);
             }
 
@@ -111,23 +155,30 @@ public abstract class ItemRendererMixin {
         RenderHelper.disableStandardItemLighting();
     }
 
-    private void attemptSwing() {
-        if (this.mc.thePlayer.getItemInUseCount() > 0) {
-            final boolean mouseDown = this.mc.gameSettings.keyBindAttack.isKeyDown() &&
-                    this.mc.gameSettings.keyBindUseItem.isKeyDown();
-            if (mouseDown && this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                swingItem(this.mc.thePlayer);
-            }
-        }
-    }
-
-    private void swingItem(EntityPlayerSP player) {
-        int swingEnd = player.isPotionActive(Potion.digSpeed) ?
-                (6 - (1 + player.getActivePotionEffect(Potion.digSpeed).getAmplifier())) : (player.isPotionActive(Potion.digSlowdown) ?
-                (6 + (1 + player.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2) : 6);
-        if (!player.isSwingInProgress || player.swingProgressInt >= swingEnd / 2 || player.swingProgressInt < 0) {
-            player.swingProgressInt = -1;
-            player.isSwingInProgress = true;
-        }
-    }
+//    /**
+//     * Swings the player's arm if you're holding the attack and use item keys at the same time and looking at a block.
+//     */
+//    private void attemptSwing() {
+//        if (this.mc.thePlayer.getItemInUseCount() > 0) {
+//            final boolean mouseDown = this.mc.gameSettings.keyBindAttack.isKeyDown() &&
+//                    this.mc.gameSettings.keyBindUseItem.isKeyDown();
+//            if (mouseDown && this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+//                forceSwingArm();
+//            }
+//        }
+//    }
+//
+//    /**
+//     * Forces the player to swing their arm.
+//     */
+//    private void forceSwingArm() {
+//        EntityPlayerSP player = this.mc.thePlayer;
+//        int swingEnd = player.isPotionActive(Potion.digSpeed) ?
+//                (6 - (1 + player.getActivePotionEffect(Potion.digSpeed).getAmplifier())) : (player.isPotionActive(Potion.digSlowdown) ?
+//                (6 + (1 + player.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2) : 6);
+//        if (!player.isSwingInProgress || player.swingProgressInt >= swingEnd / 2 || player.swingProgressInt < 0) {
+//            player.swingProgressInt = -1;
+//            player.isSwingInProgress = true;
+//        }
+//    }
 }
