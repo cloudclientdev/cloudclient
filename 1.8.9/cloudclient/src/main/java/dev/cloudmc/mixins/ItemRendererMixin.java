@@ -144,7 +144,7 @@ public abstract class ItemRendererMixin {
             final boolean mouseDown = this.mc.gameSettings.keyBindAttack.isKeyDown() &&
                     this.mc.gameSettings.keyBindUseItem.isKeyDown();
             if (mouseDown && this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                forceSwing();
+                forceSwingArm();
             }
         }
     }
@@ -152,7 +152,7 @@ public abstract class ItemRendererMixin {
     /**
      * Forces the player to swing their arm.
      */
-    private void forceSwing() {
+    private void forceSwingArm() {
         EntityPlayerSP player = this.mc.thePlayer;
         int swingEnd = player.isPotionActive(Potion.digSpeed) ?
                 (6 - (1 + player.getActivePotionEffect(Potion.digSpeed).getAmplifier())) : (player.isPotionActive(Potion.digSlowdown) ?
