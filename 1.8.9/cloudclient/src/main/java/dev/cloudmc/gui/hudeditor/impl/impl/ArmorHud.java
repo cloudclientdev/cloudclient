@@ -19,6 +19,8 @@ import java.util.Arrays;
 
 public class ArmorHud extends HudMod {
 
+    ItemStack[] emptyArmorInventory = new ItemStack[4];
+
     public ArmorHud(String name, int x, int y) {
         super(name, x, y);
         setW(25);
@@ -46,12 +48,11 @@ public class ArmorHud extends HudMod {
         }
         Helper2D.endScale();
     }
-
     @SubscribeEvent
     public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
         Helper2D.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
-            if (!Arrays.equals(Cloud.INSTANCE.mc.thePlayer.inventory.armorInventory, new ItemStack[4])) {
+            if (!Arrays.equals(Cloud.INSTANCE.mc.thePlayer.inventory.armorInventory, emptyArmorInventory)) {
                 if (isBackground()) {
                     if (isModern()) {
                         Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, 0x50000000, 0);
