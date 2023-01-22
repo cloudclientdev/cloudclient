@@ -85,15 +85,6 @@ public abstract class ItemRendererMixin {
     @Overwrite
     public void renderItemInFirstPerson(float partialTicks) {
         boolean animationModToggled = Cloud.INSTANCE.modManager.getMod("Animation").isToggled();
-//        if (animationModToggled && this.mc.thePlayer.getHeldItem() != null) {
-//            if (Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Block Animation").isCheckToggled()) {
-//                this.forceSwingArm();
-//            } else if (Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Eat/Drink Animation").isCheckToggled()) {
-//                this.forceSwingArm();
-//            } else if (Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Bow Animation").isCheckToggled()) {
-//                this.forceSwingArm();
-//            }
-//        }
         float f = 1.0F - (this.prevEquippedProgress + (this.equippedProgress - this.prevEquippedProgress) * partialTicks);
         EntityPlayerSP player = this.mc.thePlayer;
         float f1 = player.getSwingProgress(partialTicks);
@@ -154,31 +145,4 @@ public abstract class ItemRendererMixin {
         GlStateManager.disableRescaleNormal();
         RenderHelper.disableStandardItemLighting();
     }
-
-//    /**
-//     * Swings the player's arm if you're holding the attack and use item keys at the same time and looking at a block.
-//     */
-//    private void attemptSwing() {
-//        if (this.mc.thePlayer.getItemInUseCount() > 0) {
-//            final boolean mouseDown = this.mc.gameSettings.keyBindAttack.isKeyDown() &&
-//                    this.mc.gameSettings.keyBindUseItem.isKeyDown();
-//            if (mouseDown && this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-//                forceSwingArm();
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Forces the player to swing their arm.
-//     */
-//    private void forceSwingArm() {
-//        EntityPlayerSP player = this.mc.thePlayer;
-//        int swingEnd = player.isPotionActive(Potion.digSpeed) ?
-//                (6 - (1 + player.getActivePotionEffect(Potion.digSpeed).getAmplifier())) : (player.isPotionActive(Potion.digSlowdown) ?
-//                (6 + (1 + player.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2) : 6);
-//        if (!player.isSwingInProgress || player.swingProgressInt >= swingEnd / 2 || player.swingProgressInt < 0) {
-//            player.swingProgressInt = -1;
-//            player.isSwingInProgress = true;
-//        }
-//    }
 }

@@ -72,7 +72,5 @@ public class AnimationMod extends Mod {
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Eat/Drink Animation", this, true));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Bow Animation", this, true));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Fishing Rod", this, true));
-
-
     }
 }
