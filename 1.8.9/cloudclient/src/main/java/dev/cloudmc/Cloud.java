@@ -8,6 +8,7 @@ package dev.cloudmc;
 import dev.cloudmc.config.ConfigLoader;
 import dev.cloudmc.config.ConfigSaver;
 import dev.cloudmc.feature.mod.ModManager;
+import dev.cloudmc.feature.mod.impl.AnimationMod;
 import dev.cloudmc.feature.option.OptionManager;
 import dev.cloudmc.feature.setting.SettingManager;
 import dev.cloudmc.gui.hudeditor.HudEditor;
@@ -57,7 +58,6 @@ public class Cloud {
         MinecraftForge.EVENT_BUS.register((optionManager = new OptionManager()));
         MinecraftForge.EVENT_BUS.register((hudEditor = new HudEditor()));
         MinecraftForge.EVENT_BUS.register((fontHelper = new FontHelper()));
-
         Display.setTitle(Cloud.modName + " Client " + Cloud.modVersion);
 
         if (!ConfigSaver.configExists()) {
