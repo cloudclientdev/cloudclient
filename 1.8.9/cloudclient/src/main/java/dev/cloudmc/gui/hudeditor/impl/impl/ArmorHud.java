@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 public class ArmorHud extends HudMod {
 
-    ItemStack[] emptyArmorInventory = new ItemStack[4];
+    private final ItemStack[] emptyArmorInventory = new ItemStack[4];
 
     public ArmorHud(String name, int x, int y) {
         super(name, x, y);
