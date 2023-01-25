@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
 import javax.vecmath.Vector3f;
 
 public class BlockinfoHud extends HudMod {
@@ -72,7 +73,10 @@ public class BlockinfoHud extends HudMod {
             int id = Item.itemRegistry.getIDForObject(block.getItem(world, (int) v.x, (int) v.y, (int) v.z));
             ItemStack finalItem = new ItemStack(Item.getItemById(id), 1, block.getDamageValue(world, (int) v.x, (int) v.y, (int) v.z));
             String blockName = getBlockName(id, block.getDamageValue(world, (int) v.x, (int) v.y, (int) v.z));
-
+            if (blockName == null) {
+                Helper2D.endScale();
+                return;
+            }
             if (isModern()) {
                 int width = Cloud.INSTANCE.fontHelper.size20.getStringWidth(blockName);
                 setW(width + 42);
@@ -127,7 +131,11 @@ public class BlockinfoHud extends HudMod {
     }
 
     private String getBlockName(int itemId, int damageValue) {
-        return new ItemStack(Item.getItemById(itemId), 1, damageValue).getDisplayName();
+        try {
+            return new ItemStack(Item.getItemById(itemId), 1, damageValue).getDisplayName();
+        }catch (NullPointerException e) {
+            return null;
+        }
     }
 
     private Block getLookingAtBlock() {
