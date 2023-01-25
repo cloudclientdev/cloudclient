@@ -10,7 +10,6 @@ import dev.cloudmc.gui.ClientStyle;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
 import dev.cloudmc.helpers.Helper2D;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.init.Blocks;

@@ -21,7 +21,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nullable;
 import javax.vecmath.Vector3f;
 
 public class BlockinfoHud extends HudMod {
