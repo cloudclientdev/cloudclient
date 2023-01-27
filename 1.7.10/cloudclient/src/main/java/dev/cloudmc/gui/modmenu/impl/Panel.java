@@ -153,6 +153,8 @@ public class Panel {
                 int count = 0;
                 for (Button button : buttonList) {
                     float position = scrollHelperMods.getCalculatedScroll();
+
+
                     position += count * (button.getH() + 3);
                     button.setY((int) position);
                     index++;
@@ -179,10 +181,7 @@ public class Panel {
 
                 scrollHelperOptions.setHeight(height);
                 scrollHelperOptions.updateScroll();
-
-
-                Cloud.INSTANCE.mc.fontRendererObj.drawString("" + (scrollHelperOptions.getScrollStep() * 35 + scrollHelperOptions.getHeight()), 10, 10, -1);
-                Cloud.INSTANCE.mc.fontRendererObj.drawString("" + scrollHelperOptions.getMaxScroll(), 10, 20, -1);
+                
 
                 int totalHeight = 0;
                 for (Options options : optionsList) {
