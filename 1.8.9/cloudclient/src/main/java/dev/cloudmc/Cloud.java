@@ -8,11 +8,11 @@ package dev.cloudmc;
 import dev.cloudmc.config.ConfigLoader;
 import dev.cloudmc.config.ConfigSaver;
 import dev.cloudmc.feature.mod.ModManager;
-import dev.cloudmc.feature.mod.impl.AnimationMod;
 import dev.cloudmc.feature.option.OptionManager;
 import dev.cloudmc.feature.setting.SettingManager;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.helpers.CpsHelper;
+import dev.cloudmc.helpers.WarningHelper;
 import dev.cloudmc.helpers.font.FontHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
@@ -46,6 +46,7 @@ public class Cloud {
     public OptionManager optionManager;
     public FontHelper fontHelper;
     public CpsHelper cpsHelper;
+    public WarningHelper warningHelper;
 
     /**
      * Initializes the client
@@ -58,6 +59,7 @@ public class Cloud {
         MinecraftForge.EVENT_BUS.register((optionManager = new OptionManager()));
         MinecraftForge.EVENT_BUS.register((hudEditor = new HudEditor()));
         MinecraftForge.EVENT_BUS.register((fontHelper = new FontHelper()));
+        MinecraftForge.EVENT_BUS.register((warningHelper = new WarningHelper()));
         Display.setTitle(Cloud.modName + " Client " + Cloud.modVersion);
 
         if (!ConfigSaver.configExists()) {

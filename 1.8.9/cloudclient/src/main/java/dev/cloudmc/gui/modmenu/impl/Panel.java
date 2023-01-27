@@ -109,6 +109,7 @@ public class Panel {
      */
 
     public void renderPanel(int mouseX, int mouseY) {
+
         Helper2D.drawRoundedRectangle(x, y, w, h, 2, ClientStyle.getBackgroundColor(70).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 1 : -1);
         Helper2D.drawRoundedRectangle(x, y + 30, w, h + 270, 2, ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 2 : -1);
         Helper2D.drawRoundedRectangle(x + w - 25, y + 5, 20, 20, 2, MathHelper.withinBox(x + w - 25, y + 5, 20, 20, mouseX, mouseY) ? ClientStyle.getBackgroundColor(70).getRGB() : ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
@@ -123,6 +124,8 @@ public class Panel {
         animateTransition.update();
         scrollHelperMods.update();
         scrollHelperOptions.update();
+
+        Cloud.INSTANCE.warningHelper.renderWarning();
 
         if (selected == 0) {
             Helper2D.startScissor(x, y + 30, w, h + 270);
@@ -231,6 +234,7 @@ public class Panel {
      */
 
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+
         if (MathHelper.withinBox(x + w - 25, y + 5, 20, 20, mouseX, mouseY)) {
             Cloud.INSTANCE.mc.displayGuiScreen(Cloud.INSTANCE.hudEditor);
         }

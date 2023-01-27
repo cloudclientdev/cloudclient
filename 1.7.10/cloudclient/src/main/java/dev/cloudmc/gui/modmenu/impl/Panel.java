@@ -124,6 +124,8 @@ public class Panel {
         scrollHelperMods.update();
         scrollHelperOptions.update();
 
+        Cloud.INSTANCE.warningHelper.renderWarning();
+
         if (selected == 0) {
             Helper2D.startScissor(x, y + 30, w, h + 270);
             GL11.glPushMatrix();
@@ -146,9 +148,6 @@ public class Panel {
 
                 scrollHelperMods.setHeight(height);
                 scrollHelperMods.updateScroll();
-
-                Cloud.INSTANCE.mc.fontRendererObj.drawString("" + (scrollHelperMods.getScrollStep() * 35 + scrollHelperMods.getHeight()), 10, 10, -1);
-                Cloud.INSTANCE.mc.fontRendererObj.drawString("" + scrollHelperMods.getMaxScroll(), 10, 20, -1);
 
                 int index = 0;
                 int count = 0;

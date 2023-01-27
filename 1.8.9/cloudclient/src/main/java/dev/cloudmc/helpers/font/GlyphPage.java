@@ -10,6 +10,7 @@
 
 package dev.cloudmc.helpers.font;
 
+import dev.cloudmc.Cloud;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 
@@ -95,7 +96,7 @@ public class GlyphPage {
             glyph.height = bounds.getBounds().height;
 
             if (posY + glyph.height >= imgSize) {
-                throw new IllegalStateException("Not all characters will fit");
+                Cloud.INSTANCE.warningHelper.showWarning("Font", "Selected Font might not work as expected!");
             }
 
             if (posX + glyph.width >= imgSize) {

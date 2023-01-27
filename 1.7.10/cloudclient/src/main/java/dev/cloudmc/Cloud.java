@@ -14,6 +14,7 @@ import dev.cloudmc.feature.option.OptionManager;
 import dev.cloudmc.feature.setting.SettingManager;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.helpers.CpsHelper;
+import dev.cloudmc.helpers.WarningHelper;
 import dev.cloudmc.helpers.font.FontHelper;
 import net.minecraft.client.Minecraft;
 import cpw.mods.fml.common.Mod;
@@ -47,6 +48,7 @@ public class Cloud {
     public OptionManager optionManager;
     public FontHelper fontHelper;
     public CpsHelper cpsHelper;
+    public WarningHelper warningHelper;
 
     /**
      * Initializes the client
@@ -59,12 +61,14 @@ public class Cloud {
         MinecraftForge.EVENT_BUS.register((hudEditor = new HudEditor()));
         MinecraftForge.EVENT_BUS.register((optionManager = new OptionManager()));
         MinecraftForge.EVENT_BUS.register((fontHelper = new FontHelper()));
+        MinecraftForge.EVENT_BUS.register((warningHelper = new WarningHelper()));
         FMLCommonHandler.instance().bus().register(cpsHelper);
         FMLCommonHandler.instance().bus().register(settingManager);
         FMLCommonHandler.instance().bus().register(modManager);
         FMLCommonHandler.instance().bus().register(hudEditor);
         FMLCommonHandler.instance().bus().register(optionManager);
         FMLCommonHandler.instance().bus().register(fontHelper);
+        FMLCommonHandler.instance().bus().register(warningHelper);
 
         Display.setTitle(Cloud.modName + " Client " + Cloud.modVersion);
 
