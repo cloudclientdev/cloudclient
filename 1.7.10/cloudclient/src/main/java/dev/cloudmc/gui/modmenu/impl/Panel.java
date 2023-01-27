@@ -181,7 +181,6 @@ public class Panel {
 
                 scrollHelperOptions.setHeight(height);
                 scrollHelperOptions.updateScroll();
-                
 
                 int totalHeight = 0;
                 for (Options options : optionsList) {
