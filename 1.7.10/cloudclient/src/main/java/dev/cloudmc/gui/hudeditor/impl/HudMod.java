@@ -31,8 +31,8 @@ public class HudMod {
     public void renderMod(int mouseX, int mouseY) {
         if (withinMod(mouseX, mouseY) || isDragging()) {
             Helper2D.drawOutlinedRectangle(getX() - 3, getY() - 3, getW() + 6, getH() + 6, 1, -1);
-            Cloud.INSTANCE.fontHelper.size20.drawString("Size:" + MathHelper.round(getSize(), 1),
-                    getX() + getW() / 2 - Cloud.INSTANCE.fontHelper.size20.getStringWidth("Size: " + MathHelper.round(getSize(), 1)) / 2,
+            Cloud.INSTANCE.fontHelper.size20.drawString("Size: " + MathHelper.round(getSize(), 1),
+                    getX() + getW() / 2f - Cloud.INSTANCE.fontHelper.size20.getStringWidth("Size: " + MathHelper.round(getSize(), 1)) / 2f,
                     getY() + getH() + 10, -1
             );
         }

@@ -6,16 +6,19 @@
 package dev.cloudmc.gui.titlescreen;
 
 import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.ClientStyle;
 import dev.cloudmc.helpers.MathHelper;
 import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.animation.Animate;
+import dev.cloudmc.helpers.animation.Easing;
+
+import java.awt.*;
 
 public class Button {
 
     private final String text;
     private int x, y;
     private final int w, h;
-    private final int color, colorPressed;
+    private Animate animate = new Animate();
 
     public Button(String text, int x, int y) {
         this.text = text;
@@ -23,8 +26,7 @@ public class Button {
         this.y = y;
         this.w = 150;
         this.h = 20;
-        this.color = 0x20ffffff;
-        this.colorPressed = 0x30ffffff;
+        animate.setEase(Easing.LINEAR).setMin(0).setMax(25).setSpeed(200);
     }
 
     /**
@@ -38,21 +40,27 @@ public class Button {
         this.x = x;
         this.y = y;
 
+        animate.update().setReversed(!isHovered(mouseX, mouseY));
+
         Helper2D.drawRoundedRectangle(x, y, w, h, 2,
-                MathHelper.withinBox(x, y, w, h, mouseX, mouseY) ? colorPressed : color,
+                new Color(255, 255, 255, animate.getValueI() + 30).getRGB(),
                 Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
 
         Cloud.INSTANCE.fontHelper.size20.drawString(
                 text,
-                x + w / 2 - Cloud.INSTANCE.fontHelper.size20.getStringWidth(text) / 2,
-                y + h / 2 - 4,
+                x + w / 2f - Cloud.INSTANCE.fontHelper.size20.getStringWidth(text) / 2f,
+                y + h / 2f - 4,
                 -1
         );
     }
 
-    public boolean isPressed(int mouseX, int mouseY){
+    public boolean isPressed(int mouseX, int mouseY) {
         return MathHelper.withinBox(getX(), getY(), getW(), getH(), mouseX, mouseY);
+    }
+
+    private boolean isHovered(int mouseX, int mouseY) {
+        return MathHelper.withinBox(x, y, w, h, mouseX, mouseY);
     }
 
     public int getW() {

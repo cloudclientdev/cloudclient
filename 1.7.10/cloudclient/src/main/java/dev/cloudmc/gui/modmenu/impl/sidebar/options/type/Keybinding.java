@@ -54,7 +54,7 @@ public class Keybinding extends Options {
         Cloud.INSTANCE.fontHelper.size20.drawString(
                 active ? "?" : Keyboard.getKeyName(option.getKey()),
                 panel.getX() + panel.getW() - 55 -
-                        Cloud.INSTANCE.fontHelper.size20.getStringWidth(active ? "?" : Keyboard.getKeyName(option.getKey())) / 2,
+                        Cloud.INSTANCE.fontHelper.size20.getStringWidth(active ? "?" : Keyboard.getKeyName(option.getKey())) / 2f,
                 panel.getY() + panel.getH() + 8 + getY(),
                 Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );

@@ -27,8 +27,7 @@ public class Animate {
     public Animate update() {
         if (reversed) {
             if (time > min) time -= (DeltaTime.getDeltaTime() * .001F * speed);
-        }
-        else {
+        } else {
             if (time < max) time += (DeltaTime.getDeltaTime() * .001F * speed);
         }
         time = clamp(time, min, max);
@@ -44,8 +43,7 @@ public class Animate {
     public boolean hasFinished() {
         if (reversed) {
             return value == getMin();
-        }
-        else {
+        } else {
             return value == getMax();
         }
     }
@@ -54,7 +52,7 @@ public class Animate {
         return (int) value;
     }
 
-    public float getValueF(){
+    public float getValueF() {
         return value;
     }
 

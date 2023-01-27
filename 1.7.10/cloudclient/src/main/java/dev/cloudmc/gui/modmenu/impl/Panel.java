@@ -14,8 +14,11 @@ import dev.cloudmc.gui.modmenu.impl.sidebar.options.Options;
 import dev.cloudmc.gui.modmenu.impl.sidebar.options.type.*;
 import dev.cloudmc.helpers.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
+import dev.cloudmc.helpers.ScrollHelper;
+import dev.cloudmc.helpers.animation.Animate;
+import dev.cloudmc.helpers.animation.Easing;
 import net.minecraft.client.gui.ScaledResolution;
-import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 
@@ -23,19 +26,18 @@ public class Panel {
 
     private final ArrayList<Button> buttonList = new ArrayList<>();
     private final ArrayList<Options> optionsList = new ArrayList<>();
-
+    private Animate animateSideBar = new Animate();
+    private Animate animateTransition = new Animate();
     private int x, y, w, h;
     private int offsetX, offsetY;
     private boolean dragging;
     private boolean anyButtonOpen;
     private int selected = 0;
+    private ScrollHelper scrollHelperMods = new ScrollHelper(0, 250);
+    private ScrollHelper scrollHelperOptions = new ScrollHelper(0, 250);
 
     public Panel() {
-        ScaledResolution sr = new ScaledResolution(
-                Cloud.INSTANCE.mc,
-                Cloud.INSTANCE.mc.displayWidth,
-                Cloud.INSTANCE.mc.displayHeight
-        );
+        ScaledResolution sr = new ScaledResolution(Cloud.INSTANCE.mc, Cloud.INSTANCE.mc.displayWidth, Cloud.INSTANCE.mc.displayHeight);
         this.x = sr.getScaledWidth() / 2 - 250;
         this.y = sr.getScaledHeight() / 2 - 150;
         this.w = 500;
@@ -60,8 +62,8 @@ public class Panel {
 
         int addOptionY = 10;
 
-        for(Option option : Cloud.INSTANCE.optionManager.getOptions()){
-            switch (option.getMode()){
+        for (Option option : Cloud.INSTANCE.optionManager.getOptions()) {
+            switch (option.getMode()) {
                 case "CheckBox":
                     CheckBox checkBox = new CheckBox(option, this, addOptionY);
                     optionsList.add(checkBox);
@@ -94,6 +96,9 @@ public class Panel {
                     break;
             }
         }
+
+        animateSideBar.setEase(Easing.CUBIC_IN_OUT).setMin(0).setMax(40).setSpeed(200);
+        animateTransition.setEase(Easing.CUBIC_IN_OUT).setMin(0).setMax(300).setSpeed(500);
     }
 
     /**
@@ -115,75 +120,77 @@ public class Panel {
         Buttons are only drawn if the Sidebar is on the mods tab
          */
 
+        animateTransition.update();
+        scrollHelperMods.update();
+        scrollHelperOptions.update();
+
         if (selected == 0) {
             Helper2D.startScissor(x, y + 30, w, h + 270);
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0, 300 - animateTransition.getValueI(), 0);
             for (Button button : buttonList) {
                 button.renderButton(mouseX, mouseY);
             }
+            GL11.glPopMatrix();
             Helper2D.endScissor();
 
-            int buttonFirstY = buttonList.get(0).getY();
-            int buttonLastY = buttonList.get(buttonList.size() - 1).getY();
-            int buttonLastH = buttonList.get(buttonList.size() - 1).getH();
-
-            int scroll = Mouse.getDWheel();
             if (MathHelper.withinBox(x, y + 30, w, h + 270, mouseX, mouseY)) {
+                int height = 0;
+                int index2 = 0;
                 for (Button button : buttonList) {
-                    if(scroll > 0){
-                        if(buttonFirstY < 0) {
-                            button.setY(button.getY() + 13);
-                        }
+                    index2++;
+                    if (index2 % 4 == 0) {
+                        height += button.getH() + 3;
                     }
-                    else if(scroll < 0){
-                        if((buttonLastY + buttonLastH) > 300){
-                            button.setY(button.getY() - 13);
-                        }
+                }
+
+                scrollHelperMods.setHeight(height);
+                scrollHelperMods.updateScroll();
+
+                Cloud.INSTANCE.mc.fontRendererObj.drawString("" + (scrollHelperMods.getScrollStep() * 35 + scrollHelperMods.getHeight()), 10, 10, -1);
+                Cloud.INSTANCE.mc.fontRendererObj.drawString("" + scrollHelperMods.getMaxScroll(), 10, 20, -1);
+
+                int index = 0;
+                int count = 0;
+                for (Button button : buttonList) {
+                    float position = scrollHelperMods.getCalculatedScroll();
+                    position += count * (button.getH() + 3);
+                    button.setY((int) position);
+                    index++;
+                    if (index % 4 == 0) {
+                        count++;
                     }
                 }
             }
-        }
-        else {
+        } else if (selected == 1) {
             Helper2D.startScissor(x, y + 30, w, h + 270);
-            for(Options option : optionsList){
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0, 300 - animateTransition.getValueI(), 0);
+            for (Options option : optionsList) {
                 option.renderOption(mouseX, mouseY);
             }
+            GL11.glPopMatrix();
             Helper2D.endScissor();
 
-            int optionFirstY = optionsList.get(0).getY();
-            int optionLastY = optionsList.get(optionsList.size() - 1).getY();
-            int optionLastH = optionsList.get(optionsList.size() - 1).getH();
-
-            int scroll = Mouse.getDWheel();
-            if(MathHelper.withinBox(x, y + 30, w, h + 270, mouseX, mouseY)){
-                for(Options option : optionsList){
-                    if(scroll > 0){
-                        if(optionFirstY < 10) {
-                            option.setY(option.getY() + 13);
-                        }
-                    }
-                    else if(scroll < 0){
-                        if((optionLastY + optionLastH) > 300){
-                            option.setY(option.getY() - 13);
-                        }
-                    }
+            if (MathHelper.withinBox(x, y + 30, w, h + 270, mouseX, mouseY)) {
+                int height = 0;
+                for (Options options : optionsList) {
+                    height += options.getH();
                 }
-            }
 
-            for (int i = 0; i < optionsList.size(); i++) {
-                Options currentOptions = optionsList.get(i);
-                if (currentOptions.isOpen() && !currentOptions.isUpdated()) {
-                    currentOptions.setUpdated(true);
-                    for (int j = i + 1; j < optionsList.size(); j++) {
-                        Options settings = optionsList.get(j);
-                        settings.setY(settings.getY() + currentOptions.getOptionHeight());
-                    }
-                }
-                if (!currentOptions.isOpen() && currentOptions.isUpdated()) {
-                    currentOptions.setUpdated(false);
-                    for (int j = i + 1; j < optionsList.size(); j++) {
-                        Options options = optionsList.get(j);
-                        options.setY(options.getY() - currentOptions.getOptionHeight());
-                    }
+                scrollHelperOptions.setHeight(height);
+                scrollHelperOptions.updateScroll();
+
+
+                Cloud.INSTANCE.mc.fontRendererObj.drawString("" + (scrollHelperOptions.getScrollStep() * 35 + scrollHelperOptions.getHeight()), 10, 10, -1);
+                Cloud.INSTANCE.mc.fontRendererObj.drawString("" + scrollHelperOptions.getMaxScroll(), 10, 20, -1);
+
+                int totalHeight = 0;
+                for (Options options : optionsList) {
+                    float position = totalHeight;
+                    position += scrollHelperOptions.getCalculatedScroll() + 10;
+                    options.setY((int) position);
+                    totalHeight += options.getH();
                 }
             }
         }
@@ -192,13 +199,32 @@ public class Panel {
         Draws the sidebar with the mods and settings tab
          */
 
-        Helper2D.drawRoundedRectangle(x - 50, y, 40, h + 300, 2, ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
-        Helper2D.drawRoundedRectangle(x - 50, y + selected * 40, 40, 40, 2, ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
+        animateSideBar.update();
+
+        Helper2D.drawRoundedRectangle(
+                x - 50, y, 40, h + 300, 2,
+                ClientStyle.getBackgroundColor(50).getRGB(),
+                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+        );
+        Helper2D.drawRoundedRectangle(
+                x - 50, selected == 1 ? y + animateSideBar.getValueI() : y + 40 - animateSideBar.getValueI(), 40, 40, 2,
+                ClientStyle.getBackgroundColor(50).getRGB(),
+                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+        );
 
         String[] buttons = {"Mods", "Settings"};
         for (int i = 0; i < buttons.length; i++) {
-            Cloud.INSTANCE.fontHelper.size15.drawString(buttons[i], x - 30 - Cloud.INSTANCE.fontHelper.size15.getStringWidth(buttons[i]) / 2, y + 30 + i * 40, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
-            Helper2D.drawPicture(x - 40, y + 5 + i * 40, 20, 20, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), "icon/button/sidebar/icon" + i + ".png");
+            Cloud.INSTANCE.fontHelper.size15.drawString(
+                    buttons[i],
+                    x - 30 - Cloud.INSTANCE.fontHelper.size15.getStringWidth(buttons[i]) / 2f,
+                    y + 30 + i * 40,
+                    Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
+            );
+            Helper2D.drawPicture(
+                    x - 40, y + 5 + i * 40, 20, 20,
+                    Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(),
+                    "icon/button/sidebar/icon" + i + ".png"
+            );
         }
     }
 
@@ -206,8 +232,8 @@ public class Panel {
      * Closes the modmenu and opens the editor if the close button is pressed
      * Sets the "selected" variable to whatever tab is pressed in the sidebar
      *
-     * @param mouseX The current X position of the mouse
-     * @param mouseY The current Y position of the mouse
+     * @param mouseX      The current X position of the mouse
+     * @param mouseY      The current Y position of the mouse
      * @param mouseButton The current mouse button which is pressed
      */
 
@@ -216,39 +242,41 @@ public class Panel {
             Cloud.INSTANCE.mc.displayGuiScreen(Cloud.INSTANCE.hudEditor);
         }
 
-        if(selected == 0){
+        if (selected == 0) {
             for (Button button : buttonList) {
                 button.mouseClicked(mouseX, mouseY, mouseButton);
             }
-        }
-        else {
-            for(Options option : optionsList){
+        } else {
+            for (Options option : optionsList) {
                 option.mouseClicked(mouseX, mouseY, mouseButton);
             }
         }
 
         String[] buttons = {"Mods", "Settings"};
         for (int i = 0; i < buttons.length; i++) {
-            if (MathHelper.withinBox(x - 50, y + i * 40, 40, 40, mouseX, mouseY)) {
+            if (MathHelper.withinBox(x - 50, y + i * 40, 40, 39, mouseX, mouseY)) {
+                if (selected != i) {
+                    animateSideBar.reset();
+                    animateTransition.reset();
+                }
                 selected = i;
             }
         }
     }
 
     public void mouseReleased(int mouseX, int mouseY, int state) {
-        if(selected == 0){
+        if (selected == 0) {
             for (Button button : buttonList) {
                 button.mouseReleased(mouseX, mouseY, state);
             }
-        }
-        else {
-            for(Options option : optionsList){
+        } else {
+            for (Options option : optionsList) {
                 option.mouseReleased(mouseX, mouseY, state);
             }
         }
     }
-    
-    public void initGui(){
+
+    public void initGui() {
         ScaledResolution sr = new ScaledResolution(Cloud.INSTANCE.mc, Cloud.INSTANCE.mc.displayWidth, Cloud.INSTANCE.mc.displayHeight);
         setX(sr.getScaledWidth() / 2 - 250);
     }

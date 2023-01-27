@@ -23,13 +23,16 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class HudEditor extends GuiScreen {
 
     private final ArrayList<HudMod> hudModList;
 
-    Animate animateLogo = new Animate();
+    private Animate animateLogo = new Animate();
+    private Animate animateSnapping = new Animate();
+    private Animate animate = new Animate();
 
     private int counter;
     private int index;
@@ -41,6 +44,9 @@ public class HudEditor extends GuiScreen {
         index = 10;
         offset = 10;
         init();
+        animateLogo.setEase(Easing.CUBIC_OUT).setMin(0).setMax(70).setSpeed(100).setReversed(false);
+        animateSnapping.setEase(Easing.CUBIC_OUT).setMin(0).setMax(50).setSpeed(100).setReversed(false);
+        animate.setEase(Easing.LINEAR).setMin(0).setMax(25).setSpeed(200);
     }
 
     /**
@@ -78,13 +84,7 @@ public class HudEditor extends GuiScreen {
         ScaledResolution sr = new ScaledResolution(Cloud.INSTANCE.mc);
         Helper2D.drawRectangle(0, 0, width, height, 0x70000000);
 
-        animateLogo
-                .setEase(Easing.CUBIC_OUT)
-                .setMin(0)
-                .setMax(70)
-                .setSpeed(100)
-                .setReversed(false)
-                .update();
+        animateLogo.update();
 
         Helper2D.startScissor(0, height / 2 - 78, width, 73);
         Cloud.INSTANCE.fontHelper.size40.drawString(
@@ -100,16 +100,15 @@ public class HudEditor extends GuiScreen {
         );
         Helper2D.endScissor();
 
+        animate.update();
+
+        animate.update().setReversed(!MathHelper.withinBox(width / 2 - 50, height / 2 - 6, 100, 20, mouseX, mouseY));
+
         Helper2D.drawRoundedRectangle(
                 width / 2 - 50,
                 height / 2 - 6,
                 100, 20, 2,
-                MathHelper.withinBox(
-                        width / 2 - 50,
-                        height / 2 - 6,
-                        100, 20, mouseX, mouseY
-                ) ? ClientStyle.getBackgroundColor(70).getRGB() :
-                        ClientStyle.getBackgroundColor(50).getRGB(),
+                ClientStyle.getBackgroundColor(animate.getValueI() + 30).getRGB(),
                 Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
         Cloud.INSTANCE.fontHelper.size20.drawString(
@@ -174,9 +173,11 @@ public class HudEditor extends GuiScreen {
         Helper2D.drawPicture(15, height - 45, 30, 30, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(),
                 ClientStyle.isDarkMode() ? "icon/dark.png" : "icon/light.png");
 
-        Helper2D.drawRoundedRectangle(60, height - 50, 40, 40, 2,
+        animateSnapping.update();
+
+        Helper2D.drawRoundedRectangle(60, height - animateSnapping.getValueI(), 40, 40, 2,
                 ClientStyle.getBackgroundColor(40).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
-        Helper2D.drawPicture(65, height - 45, 30, 30, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(),
+        Helper2D.drawPicture(65, height + 5 - animateSnapping.getValueI(), 30, 30, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(),
                 ClientStyle.isSnapping() ? "icon/grid.png" : "icon/nogrid.png");
     }
 
@@ -227,6 +228,7 @@ public class HudEditor extends GuiScreen {
     public void initGui() {
         mc.entityRenderer.loadShader(new ResourceLocation("shaders/post/blur.json"));
         animateLogo.reset();
+        animateSnapping.reset();
     }
 
     /**

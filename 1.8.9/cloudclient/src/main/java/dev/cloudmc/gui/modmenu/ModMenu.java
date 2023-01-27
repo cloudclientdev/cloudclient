@@ -25,9 +25,13 @@ public class ModMenu extends GuiScreen {
 
     Animate animateModMenu = new Animate();
     Animate animateClock = new Animate();
+    Animate animateSnapping = new Animate();
 
     public ModMenu() {
         panel = new Panel();
+        animateModMenu.setEase(Easing.CUBIC_OUT).setMin(0).setSpeed(1000).setReversed(false);
+        animateClock.setEase(Easing.CUBIC_OUT).setMin(0).setMax(50).setSpeed(100).setReversed(false);
+        animateSnapping.setEase(Easing.CUBIC_IN).setMin(0).setMax(50).setSpeed(100).setReversed(false);
     }
 
     /**
@@ -43,13 +47,9 @@ public class ModMenu extends GuiScreen {
         Helper2D.drawRectangle(0, 0, width, height, 0x70000000);
         ScaledResolution sr = new ScaledResolution(mc);
 
+        float max = sr.getScaledHeight() / 2f + 150;
+        animateModMenu.setMax(max).update();
         animationFinish = animateModMenu.hasFinished();
-        animateModMenu
-                .setEase(Easing.CUBIC_OUT)
-                .setMin(0).setMax(sr.getScaledHeight() / 1.2f)
-                .setSpeed(1000)
-                .setReversed(false)
-                .update();
 
         /*
         Draws and updates the panel
@@ -60,13 +60,7 @@ public class ModMenu extends GuiScreen {
         panel.renderPanel(mouseX, mouseY);
         panel.updatePosition(mouseX, mouseY);
 
-        animateClock
-                .setEase(Easing.CUBIC_OUT)
-                .setMin(0)
-                .setMax(50)
-                .setSpeed(100)
-                .setReversed(false)
-                .update();
+        animateClock.update();
 
         /*
         Draws the time at the top right
@@ -83,6 +77,13 @@ public class ModMenu extends GuiScreen {
 
         Helper2D.drawRoundedRectangle(10, height - 50, 40, 40, 2, ClientStyle.getBackgroundColor(40).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
         Helper2D.drawPicture(15, height - 45, 30, 30, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), ClientStyle.isDarkMode() ? "icon/dark.png" : "icon/light.png");
+
+        animateSnapping.update();
+
+        Helper2D.drawRoundedRectangle(60, height - 50 + animateSnapping.getValueI(), 40, 40, 2,
+                ClientStyle.getBackgroundColor(40).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
+        Helper2D.drawPicture(65, height - 45 + animateSnapping.getValueI(), 30, 30, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(),
+                ClientStyle.isSnapping() ? "icon/grid.png" : "icon/nogrid.png");
     }
 
     /**

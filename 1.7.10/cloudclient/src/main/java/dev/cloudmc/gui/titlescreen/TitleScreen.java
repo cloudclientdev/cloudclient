@@ -6,14 +6,15 @@
 package dev.cloudmc.gui.titlescreen;
 
 import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.ClientStyle;
 import dev.cloudmc.helpers.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
+import dev.cloudmc.helpers.animation.Animate;
+import dev.cloudmc.helpers.animation.Easing;
 import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiOptions;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSelectWorld;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -25,18 +26,16 @@ public class TitleScreen extends Panorama {
     private final Button multiPlayerButton;
     private final Button settingsButton;
 
+    private Animate animate = new Animate();
+
     public TitleScreen() {
-        singlePlayerButton =
-                new Button("Singleplayer", width / 2 - 75, height / 2);
+        singlePlayerButton = new Button("Singleplayer", width / 2 - 75, height / 2);
         addButton(singlePlayerButton);
-
-        multiPlayerButton =
-                new Button("Multiplayer", width / 2 - 75, height / 2 + 25);
+        multiPlayerButton = new Button("Multiplayer", width / 2 - 75, height / 2 + 25);
         addButton(multiPlayerButton);
-
-        settingsButton =
-                new Button("Settings", width / 2 - 75, height / 2 + 50);
+        settingsButton = new Button("Settings", width / 2 - 75, height / 2 + 50);
         addButton(settingsButton);
+        animate.setEase(Easing.LINEAR).setMin(0).setMax(25).setSpeed(200);
     }
 
     /**
@@ -99,8 +98,8 @@ public class TitleScreen extends Panorama {
     private void drawLogo() {
         Cloud.INSTANCE.fontHelper.size40.drawString(
                 Cloud.modName,
-                width / 2 - Cloud.INSTANCE.fontHelper.size40.getStringWidth(Cloud.modName) / 2,
-                height / 2 - 27.5f,
+                width / 2f - Cloud.INSTANCE.fontHelper.size40.getStringWidth(Cloud.modName) / 2f,
+                height / 2f - 27.5f,
                 -1
         );
         Helper2D.drawPicture(width / 2 - 30, height / 2 - 78, 60, 60, 0x40ffffff, "cloudlogo.png");
@@ -133,13 +132,14 @@ public class TitleScreen extends Panorama {
      */
 
     private void drawExit(int mouseX, int mouseY) {
+        animate.update().setReversed(!MathHelper.withinBox(width - 25, 5, 20, 20, mouseX, mouseY));
         Helper2D.drawRoundedRectangle(
                 width - 25,
                 5,
                 20,
                 20,
                 2,
-                MathHelper.withinBox(width - 25, 5, 20, 20, mouseX, mouseY) ? 0x30ffffff : 0x20ffffff,
+                new Color(255, 255, 255, animate.getValueI() + 30).getRGB(),
                 Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
         Helper2D.drawPicture(width - 25, 5, 20, 20, 0xffffffff, "icon/cross.png");

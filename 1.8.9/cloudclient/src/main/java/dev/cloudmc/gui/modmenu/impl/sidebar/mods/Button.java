@@ -14,10 +14,9 @@ import dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.Settings;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.type.*;
 import dev.cloudmc.helpers.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
+import dev.cloudmc.helpers.ScrollHelper;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 
@@ -32,6 +31,7 @@ public class Button {
     private Mod mod;
     private int x, y, w, h;
     private boolean open;
+    private ScrollHelper scrollHelper = new ScrollHelper(0, 240);
 
     public Button(Mod mod, Panel panel, int x, int y) {
         this.mod = mod;
@@ -79,6 +79,9 @@ public class Button {
                 }
             }
         }
+
+        animatePanel.setEase(Easing.CUBIC_OUT).setMin(0).setMax(300).setSpeed(1000).setReversed(false);
+        animateButton.setMin(0).setMax(15).setSpeed(50);
     }
 
     /**
@@ -92,13 +95,8 @@ public class Button {
 
     public void renderButton(int mouseX, int mouseY) {
 
-        animateButton
-                .setMin(0)
-                .setMax(15)
-                .setSpeed(50)
-                .setReversed(!mod.isToggled())
-                .setEase(mod.isToggled() ? Easing.CUBIC_OUT : Easing.CUBIC_IN)
-                .update();
+        animateButton.setReversed(!mod.isToggled()).setEase(mod.isToggled() ? Easing.CUBIC_OUT : Easing.CUBIC_IN).update();
+        scrollHelper.update();
 
         /*
         Renders the button
@@ -114,12 +112,8 @@ public class Button {
         }
 
         if (open) {
-            animatePanel
-                    .setEase(Easing.CUBIC_OUT)
-                    .setMin(0).setMax(300)
-                    .setSpeed(1000)
-                    .setReversed(false)
-                    .update();
+
+            animatePanel.update();
 
             Helper2D.drawRoundedRectangle(panel.getX() + 5, panel.getY() + panel.getH() + 5 + 300 - animatePanel.getValueI(), panel.getW() - 10, panel.getH(), 2, ClientStyle.getBackgroundColor(80).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 1 : -1);
             Helper2D.drawRectangle(panel.getX() + 5, panel.getY() + panel.getH() + 35 + 300 - animatePanel.getValueI(), panel.getW() - 10, 265, ClientStyle.getBackgroundColor(40).getRGB());
@@ -127,28 +121,6 @@ public class Button {
             Helper2D.drawPicture(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10 + 300 - animatePanel.getValueI(), 20, 20, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), "icon/cross.png");
             Cloud.INSTANCE.fontHelper.size30.drawString(mod.getName(), panel.getX() + 5 + 7, panel.getY() + panel.getH() + 5 + 8 + 300 - animatePanel.getValueI(), Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
             Cloud.INSTANCE.fontHelper.size20.drawString(mod.getDescription(), panel.getX() + 20 + Cloud.INSTANCE.fontHelper.size30.getStringWidth(mod.getName()), panel.getY() + panel.getH() + 316 - animatePanel.getValueI(), Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
-
-            /*
-            Updates settings if they change their height
-             */
-
-            for (int i = 0; i < settingsList.size(); i++) {
-                Settings currentSettings = settingsList.get(i);
-                if (currentSettings.isOpen() && !currentSettings.isUpdated()) {
-                    currentSettings.setUpdated(true);
-                    for (int j = i + 1; j < settingsList.size(); j++) {
-                        Settings settings = settingsList.get(j);
-                        settings.setY(settings.getY() + currentSettings.getSettingHeight());
-                    }
-                }
-                if (!currentSettings.isOpen() && currentSettings.isUpdated()) {
-                    currentSettings.setUpdated(false);
-                    for (int j = i + 1; j < settingsList.size(); j++) {
-                        Settings settings = settingsList.get(j);
-                        settings.setY(settings.getY() - currentSettings.getSettingHeight());
-                    }
-                }
-            }
 
             /*
             Renders the settings
@@ -165,23 +137,21 @@ public class Button {
              */
 
             if(settingsList.size() != 0) {
-                int settingFirstY = settingsList.get(0).getY();
-                int settingLastY = settingsList.get(settingsList.size() - 1).getY();
-                int settingLastH = settingsList.get(settingsList.size() - 1).getH();
-
                 if (MathHelper.withinBox(panel.getX() + 5, panel.getY() + panel.getH() + 35, panel.getW() - 10, 260, mouseX, mouseY)) {
-                    int scroll = Mouse.getDWheel();
-                    for (Settings setting : settingsList) {
-                        if (scroll > 0) {
-                            if (settingFirstY < 40) {
-                                setting.setY(setting.getY() + 13);
-                            }
-                        }
-                        else if (scroll < 0) {
-                            if ((settingLastY + settingLastH) > 300) {
-                                setting.setY(setting.getY() - 13);
-                            }
-                        }
+                    int height = 0;
+                    for (Settings settings : settingsList) {
+                        height += settings.getH();
+                    }
+
+                    scrollHelper.setHeight(height);
+                    scrollHelper.updateScroll();
+
+                    int totalHeight = 0;
+                    for (Settings settings : settingsList) {
+                        float position = totalHeight;
+                        position += scrollHelper.getCalculatedScroll() + 40;
+                        settings.setY((int) position);
+                        totalHeight += settings.getH();
                     }
                 }
             }

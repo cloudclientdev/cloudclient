@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ModelBiped.class)
-public class ModelBipedMixin extends ModelBase {
+public abstract class ModelBipedMixin extends ModelBase {
 
     @Shadow public ModelRenderer bipedBody;
 
