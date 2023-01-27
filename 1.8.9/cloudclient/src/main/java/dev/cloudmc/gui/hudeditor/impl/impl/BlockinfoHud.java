@@ -74,6 +74,12 @@ public class BlockinfoHud extends HudMod {
             int meta = blockState.getBlock().getDamageValue(world, blockPos);
             int id = Item.itemRegistry.getIDForObject(blockState.getBlock().getItem(world, blockPos));
             ItemStack finalItem = new ItemStack(Item.getItemById(id), 1, meta);
+            if (finalItem.getItem() == null)
+                finalItem = new ItemStack(blockState.getBlock());
+            if (finalItem.getItem() == null) {
+                Helper2D.endScale();
+                return;
+            }
 
             if (isModern()) {
                 setW(Cloud.INSTANCE.fontHelper.size20.getStringWidth(finalItem.getDisplayName()) + 42);
