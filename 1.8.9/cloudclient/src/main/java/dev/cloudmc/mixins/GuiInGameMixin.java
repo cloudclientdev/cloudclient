@@ -24,4 +24,11 @@ public abstract class GuiInGameMixin extends Gui {
             ci.cancel();
         }
     }
+
+    @Inject(method = "renderBossHealth", at = @At("HEAD"), cancellable = true)
+    public void renderBossHealth(CallbackInfo ci) {
+        if (Cloud.INSTANCE.modManager.getMod("Bossbar").isToggled()) {
+            ci.cancel();
+        }
+    }
 }

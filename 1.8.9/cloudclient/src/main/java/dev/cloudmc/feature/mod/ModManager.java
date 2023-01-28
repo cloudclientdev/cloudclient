@@ -53,6 +53,7 @@ public class ModManager {
         addMod(new ParticleMultiplierMod());
         addMod(new NickHiderMod());
         addMod(new ScoreboardMod());
+        addMod(new BossbarMod());
     }
 
     /**

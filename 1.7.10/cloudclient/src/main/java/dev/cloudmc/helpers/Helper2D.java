@@ -206,6 +206,19 @@ public class Helper2D {
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 
+    public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height)
+    {
+        float f = 0.00390625F;
+        float f1 = 0.00390625F;
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV(x, y + height, 0, (float)(textureX) * f, (float)(textureY + height) * f1);
+        tessellator.addVertexWithUV(x + width, y + height, 0, (float)(textureX + width) * f, (float)(textureY + height) * f1);
+        tessellator.addVertexWithUV(x + width, y, 0, (float)(textureX + width) * f, (float)(textureY) * f1);
+        tessellator.addVertexWithUV(x, y, 0, (float)(textureX) * f, (float)(textureY) * f1);
+        tessellator.draw();
+    }
+
     /**
      * Draws a circle
      *
