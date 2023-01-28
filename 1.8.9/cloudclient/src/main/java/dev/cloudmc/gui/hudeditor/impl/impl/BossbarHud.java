@@ -6,11 +6,14 @@
 package dev.cloudmc.gui.hudeditor.impl.impl;
 
 import dev.cloudmc.Cloud;
+import dev.cloudmc.gui.ClientStyle;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
 import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.font.GlyphPageFontRenderer;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.boss.BossStatus;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -26,7 +29,7 @@ public class BossbarHud extends HudMod {
         Helper2D.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if(BossStatus.bossName != null && BossStatus.statusBarTime > 0) {
-                renderBossHealth();
+                renderBossHealth(isModern());
             } else {
                 Helper2D.endScale();
                 return;
@@ -41,19 +44,19 @@ public class BossbarHud extends HudMod {
         Helper2D.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             if(BossStatus.bossName != null && BossStatus.statusBarTime > 0) {
-                renderBossHealth();
+                renderBossHealth(isModern());
             }
         }
         Helper2D.endScale();
     }
 
-    private void renderBossHealth() {
+    private void renderBossHealth(boolean modern) {
         BossStatus.statusBarTime--;
-        FontRenderer fontrenderer = Cloud.INSTANCE.mc.fontRendererObj;
         int x = getX();
         int y = getY();
         int width = 182;
         int health = (int) (BossStatus.healthScale * (float) (width + 1));
+
         Cloud.INSTANCE.mc.getTextureManager().bindTexture(Gui.icons);
         Helper2D.drawTexturedModalRect(x, y + 10, 0, 74, width, 5);
         Helper2D.drawTexturedModalRect(x, y + 10, 0, 74, width, 5);
@@ -63,9 +66,17 @@ public class BossbarHud extends HudMod {
         }
 
         String s = BossStatus.bossName;
-        fontrenderer.drawStringWithShadow(s, (float) (x + width / 2 - fontrenderer.getStringWidth(s) / 2), y, 16777215);
+        if(modern) {
+            Cloud.INSTANCE.fontHelper.size20.drawString(s, (float) (x + width / 2 - Cloud.INSTANCE.fontHelper.size20.getStringWidth(s) / 2 + 5), y, 16777215);
+        } else {
+            Cloud.INSTANCE.mc.fontRendererObj.drawString(s, x + width / 2 - Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(s) / 2, y, 16777215);
+        }
 
         setW(width);
         setH(15);
+    }
+
+    private boolean isModern() {
+        return Cloud.INSTANCE.settingManager.getSettingByModAndName(getName(), "Mode").getCurrentMode().equalsIgnoreCase("Modern");
     }
 }
