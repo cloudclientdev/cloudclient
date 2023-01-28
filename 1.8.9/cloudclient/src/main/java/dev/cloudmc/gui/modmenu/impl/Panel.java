@@ -33,7 +33,7 @@ public class Panel {
     private boolean dragging;
     private boolean anyButtonOpen;
     private int selected = 0;
-    private ScrollHelper scrollHelperMods = new ScrollHelper(0, 320);
+    private ScrollHelper scrollHelperMods = new ScrollHelper(0, 300);
     private ScrollHelper scrollHelperOptions = new ScrollHelper(0, 300);
 
     public Panel() {
@@ -141,10 +141,10 @@ public class Panel {
                 int height = 0;
                 int index2 = 0;
                 for (Button button : buttonList) {
-                    index2++;
                     if (index2 % 4 == 0) {
                         height += button.getH() + 3;
                     }
+                    index2++;
                 }
 
                 scrollHelperMods.setHeight(height);

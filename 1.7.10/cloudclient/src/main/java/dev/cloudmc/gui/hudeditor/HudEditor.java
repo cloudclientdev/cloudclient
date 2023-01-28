@@ -70,6 +70,7 @@ public class HudEditor extends GuiScreen {
         addHudMod(new BlockinfoHud("BlockInfo", index, offset));
         addHudMod(new ReachdisplayHud("ReachDisplay", index, offset));
         addHudMod(new DayCounterHud("Day Counter", index, offset));
+        addHudMod(new ScoreboardHud("Scoreboard", index, offset));
     }
 
     /**
