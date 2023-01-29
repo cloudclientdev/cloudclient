@@ -12,16 +12,23 @@ import dev.cloudmc.gui.modmenu.impl.Panel;
 import dev.cloudmc.gui.modmenu.impl.sidebar.options.Options;
 import dev.cloudmc.helpers.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
+import dev.cloudmc.helpers.animation.Animate;
+import dev.cloudmc.helpers.animation.Easing;
 
 public class Slider extends Options {
 
     private boolean drag;
+    private float difference;
+    private boolean direction = false;
+    private float sliderPos;
+    private final int sliderWidth = 150;
+    private Animate animate = new Animate();
 
     public Slider(Option option, Panel panel, int y) {
         super(option, panel, y);
+        animate.setEase(Easing.CUBIC_OUT).setMin(0).setSpeed(125);
+        sliderPos = option.getCurrentNumber() / (option.getMaxNumber() / sliderWidth);
     }
-
-    private final int sliderWidth = 150;
 
     /**
      * Renders the Slider Setting
@@ -29,7 +36,7 @@ public class Slider extends Options {
      * @param mouseX The current X position of the mouse
      * @param mouseY The current Y position of the mouse
      */
-    
+
     @Override
     public void renderOption(int mouseX, int mouseY) {
 
@@ -54,26 +61,41 @@ public class Slider extends Options {
                 Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
 
+        float preMove = sliderPos;
+
+        if (drag) {
+            sliderPos = mouseX - (panel.getX() + panel.getW() - sliderWidth - 20);
+            if(sliderPos < 0) {
+                sliderPos = 0;
+            } else if(sliderPos > sliderWidth){
+                sliderPos = sliderWidth;
+            }
+            option.setCurrentNumber(sliderPos * (option.getMaxNumber() / sliderWidth));
+        }
+
+        float move = sliderPos;
+
+        if(move != preMove) {
+            difference = move - preMove;
+            if(difference > 0) {
+                direction = false;
+                animate.setMax(difference);
+            } else if (difference < 0) {
+                direction = true;
+                animate.setMax(-difference);
+            }
+            animate.reset();
+        }
+
+        animate.update();
+
+        float xPos = (panel.getX() + panel.getW() - sliderWidth - 20) + sliderPos - 3;
         Helper2D.drawRoundedRectangle(
-                panel.getX() + panel.getW() - sliderWidth - 20 +
-                        (int) (option.getCurrentNumber() * 150 / option.getMaxNumber() - 3),
+                (int) (direction ? xPos - difference - animate.getValueI() : xPos - difference + animate.getValueI()),
                 panel.getY() + panel.getH() + getY() + 5,
                 7, 16, 1, ClientStyle.getBackgroundColor(80).getRGB(),
                 Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
-
-        if (drag) {
-            option.setCurrentNumber(
-                    (mouseX - (panel.getX() + panel.getW() - sliderWidth - 20))
-                            * (option.getMaxNumber() / sliderWidth)
-            );
-            if (option.getCurrentNumber() < 0) {
-                option.setCurrentNumber(0);
-            }
-            if (option.getCurrentNumber() > option.getMaxNumber()) {
-                option.setCurrentNumber(option.getMaxNumber());
-            }
-        }
     }
 
     /**
