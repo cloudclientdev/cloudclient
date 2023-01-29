@@ -67,7 +67,7 @@ public class BossbarHud extends HudMod {
 
         String s = BossStatus.bossName;
         if(modern) {
-            Cloud.INSTANCE.fontHelper.size20.drawString(s, (float) (x + width / 2 - Cloud.INSTANCE.fontHelper.size20.getStringWidth(s) / 2 + 5), y, 16777215);
+            Cloud.INSTANCE.fontHelper.size20.drawString(s, (float) (x + width / 2 - Cloud.INSTANCE.fontHelper.size20.getStringWidth(s) / 2), y, 16777215);
         } else {
             Cloud.INSTANCE.mc.fontRendererObj.drawString(s, x + width / 2 - Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(s) / 2, y, 16777215);
         }

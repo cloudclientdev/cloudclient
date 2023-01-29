@@ -12,6 +12,6 @@ public class BossbarMod extends Mod {
         );
 
         String[] mode = {"Modern", "Legacy"};
-        Cloud.INSTANCE.settingManager.addSetting(new Setting("Mode", this, "Modern", 0, mode));
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Mode", this, "Legacy", 1, mode));
     }
 }

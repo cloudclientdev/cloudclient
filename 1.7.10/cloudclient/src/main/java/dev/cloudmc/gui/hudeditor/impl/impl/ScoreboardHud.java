@@ -136,18 +136,18 @@ public class ScoreboardHud extends HudMod {
             collection = list;
         }
 
-        int displayText = Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(objective.getDisplayName()) + 2;
+        int displayText = Cloud.INSTANCE.fontHelper.size20.getStringWidth(objective.getDisplayName()) + 2;
 
         for (Score score : collection) {
             ScorePlayerTeam scoreplayerteam = scoreboard.getPlayersTeam(score.getPlayerName());
             String text = ScorePlayerTeam.formatPlayerName(scoreplayerteam, score.getPlayerName()) + ": " + EnumChatFormatting.RED + score.getScorePoints();
-            displayText = Math.max(displayText, Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(text));
+            displayText = Math.max(displayText, Cloud.INSTANCE.fontHelper.size20.getStringWidth(text)) + 1;
         }
 
         int y = getY();
         int x = getX();
 
-        int textHeight = Cloud.INSTANCE.mc.fontRendererObj.FONT_HEIGHT;
+        int textHeight = 9;
 
         int index = collection.size() - 1;
         for (Score score1 : collection) {
@@ -162,7 +162,7 @@ public class ScoreboardHud extends HudMod {
                     Helper2D.drawRoundedRectangle(x, calculatedY, displayText + 4, textHeight, 2, 1610612736, 1);
                     Helper2D.drawRectangle(x, calculatedY + textHeight, displayText + 4, 1, 1342177280);
                 }
-                Cloud.INSTANCE.fontHelper.size20.drawString(topText, x + 2 + displayText / 2f - Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(topText) / 2f, calculatedY + 1, -1);
+                Cloud.INSTANCE.fontHelper.size20.drawString(topText, x + 2 + displayText / 2f - Cloud.INSTANCE.fontHelper.size20.getStringWidth(topText) / 2f, calculatedY + 1, -1);
             }
 
             if(background) {
@@ -174,7 +174,7 @@ public class ScoreboardHud extends HudMod {
             }
             Cloud.INSTANCE.fontHelper.size20.drawString(mainText, x + 2, calculatedY + textHeight + 1, -1);
             if (!numbers) {
-                Cloud.INSTANCE.fontHelper.size20.drawString(redNumbers, x + 4 + displayText - Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(redNumbers), calculatedY + textHeight + 1, -1);
+                Cloud.INSTANCE.fontHelper.size20.drawString(redNumbers, x + 4 + displayText - Cloud.INSTANCE.fontHelper.size20.getStringWidth(redNumbers) - 5, calculatedY + textHeight + 1, -1);
             }
 
             index--;
