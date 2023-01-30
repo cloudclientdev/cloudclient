@@ -43,6 +43,8 @@ public class ColorPicker extends Options {
         int getYH = panel.getY() + panel.getH() + getY();
         boolean rounded = Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled();
 
+        Cloud.INSTANCE.fontHelper.size30.drawString(option.getName(), panel.getX() + 20, getYH + 6, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
+
         if(open) {
             Helper2D.drawRoundedRectangle(getXW - 40, getYH + 25, 20, 70, 2, ClientStyle.getBackgroundColor(50).getRGB(), rounded ? 0 : -1);
             Helper2D.drawRoundedRectangle(getXW - 193, getYH + 25, 150, 70, 2, ClientStyle.getBackgroundColor(50).getRGB(), rounded ? 0 : -1);
