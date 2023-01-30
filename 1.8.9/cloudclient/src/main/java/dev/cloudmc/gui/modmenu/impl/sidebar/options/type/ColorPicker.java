@@ -91,6 +91,8 @@ public class ColorPicker extends Options {
             option.setColor(mainColor);
         }
 
+        String color = "R" + option.getColor().getRed() + " G" + option.getColor().getGreen() + " B" + option.getColor().getBlue();
+        Cloud.INSTANCE.fontHelper.size20.drawString(color, getXW - 45 - Cloud.INSTANCE.fontHelper.size20.getStringWidth(color), getYH + 9, -1);
         Helper2D.drawRoundedRectangle(getXW - 40, getYH + 2, 20, 20, 2, ClientStyle.getBackgroundColor(50).getRGB(), rounded ? 0 : -1);
         Helper2D.drawRectangle(getXW - 38, getYH + 4, 16, 16, option.getColor().getRGB());
     }
