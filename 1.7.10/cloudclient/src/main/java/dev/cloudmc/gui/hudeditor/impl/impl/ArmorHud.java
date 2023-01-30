@@ -10,6 +10,7 @@ import dev.cloudmc.Cloud;
 import dev.cloudmc.gui.ClientStyle;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
+import dev.cloudmc.helpers.GLHelper;
 import dev.cloudmc.helpers.Helper2D;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -33,7 +34,7 @@ public class ArmorHud extends HudMod {
 
     @Override
     public void renderMod(int mouseX, int mouseY) {
-        Helper2D.startScale(getX(), getY(), getSize());
+        GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isBackground()) {
                 if (isModern()) {
@@ -50,12 +51,12 @@ public class ArmorHud extends HudMod {
             renderItem(new ItemStack(Items.diamond_boots), getX() + 4, getY() + 51 + 2);
             super.renderMod(mouseX, mouseY);
         }
-        Helper2D.endScale();
+        GLHelper.endScale();
     }
 
     @SubscribeEvent
     public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
-        Helper2D.startScale(getX(), getY(), getSize());
+        GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             if (!Arrays.equals(Cloud.INSTANCE.mc.thePlayer.inventory.armorInventory, emptyArmorInventory) ||
                     Cloud.INSTANCE.settingManager.getSettingByModAndName("Armor Status", "No Armor Background").isCheckToggled()) {
@@ -73,7 +74,7 @@ public class ArmorHud extends HudMod {
                 renderItem(Cloud.INSTANCE.mc.thePlayer.inventory.armorInventory[0], getX() + 4, getY() + 51 + 2);
             }
         }
-        Helper2D.endScale();
+        GLHelper.endScale();
     }
 
     private void renderItem(ItemStack stack, int x, int y) {

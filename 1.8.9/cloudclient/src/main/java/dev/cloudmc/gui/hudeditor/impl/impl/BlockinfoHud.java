@@ -9,6 +9,7 @@ import dev.cloudmc.Cloud;
 import dev.cloudmc.gui.ClientStyle;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
+import dev.cloudmc.helpers.GLHelper;
 import dev.cloudmc.helpers.Helper2D;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.RenderHelper;
@@ -32,7 +33,7 @@ public class BlockinfoHud extends HudMod {
 
     @Override
     public void renderMod(int mouseX, int mouseY) {
-        Helper2D.startScale(getX(), getY(), getSize());
+        GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isModern()) {
                 if (isBackground()) {
@@ -56,7 +57,7 @@ public class BlockinfoHud extends HudMod {
             }
             super.renderMod(mouseX, mouseY);
         }
-        Helper2D.endScale();
+        GLHelper.endScale();
     }
 
     @SubscribeEvent
@@ -66,7 +67,7 @@ public class BlockinfoHud extends HudMod {
             return;
         }
 
-        Helper2D.startScale(getX(), getY(), getSize());
+        GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
 
             World world = Cloud.INSTANCE.mc.theWorld;
@@ -77,7 +78,7 @@ public class BlockinfoHud extends HudMod {
             if (finalItem.getItem() == null)
                 finalItem = new ItemStack(blockState.getBlock());
             if (finalItem.getItem() == null) {
-                Helper2D.endScale();
+                GLHelper.endScale();
                 return;
             }
 
@@ -98,7 +99,7 @@ public class BlockinfoHud extends HudMod {
                 renderItem(finalItem);
             }
         }
-        Helper2D.endScale();
+        GLHelper.endScale();
     }
 
     private BlockPos getLookingAtBlockPos() {

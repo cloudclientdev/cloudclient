@@ -12,6 +12,7 @@ import dev.cloudmc.gui.ClientStyle;
 import dev.cloudmc.gui.modmenu.impl.Panel;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.Settings;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.type.*;
+import dev.cloudmc.helpers.GLHelper;
 import dev.cloudmc.helpers.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
 import dev.cloudmc.helpers.ScrollHelper;
@@ -126,11 +127,11 @@ public class Button {
             Renders the settings
              */
 
-            Helper2D.startScissor(panel.getX() + 5, panel.getY() + panel.getH() + 35 + 300 - animatePanel.getValueI(), panel.getW() - 10, animatePanel.getValueI() - 35);
+            GLHelper.startScissor(panel.getX() + 5, panel.getY() + panel.getH() + 35 + 300 - animatePanel.getValueI(), panel.getW() - 10, animatePanel.getValueI() - 35);
             for (Settings settings : settingsList) {
                 settings.renderSetting(mouseX, mouseY);
             }
-            Helper2D.endScissor();
+            GLHelper.endScissor();
 
             /*
             Makes the settings scrollable

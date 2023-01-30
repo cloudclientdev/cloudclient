@@ -21,6 +21,8 @@ public class Setting {
     private int modeIndex;
 
     private Color color;
+    private float sideSlider;
+    private float[] mainSlider;
 
     private boolean checkToggled;
 
@@ -78,6 +80,8 @@ public class Setting {
         this.mod = mod;
 
         this.color = color;
+        this.sideSlider = 0;
+        this.mainSlider = new float[2];
     }
 
     /**
@@ -174,6 +178,22 @@ public class Setting {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public float getSideSlider() {
+        return sideSlider;
+    }
+
+    public void setSideSlider(float sideSlider) {
+        this.sideSlider = sideSlider;
+    }
+
+    public float[] getMainSlider() {
+        return mainSlider;
+    }
+
+    public void setMainSlider(float[] mainSlider) {
+        this.mainSlider = mainSlider;
     }
 
     public String[] getOptions() {

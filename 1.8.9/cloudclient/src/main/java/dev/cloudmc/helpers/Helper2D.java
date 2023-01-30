@@ -7,13 +7,14 @@ package dev.cloudmc.helpers;
 
 import dev.cloudmc.Cloud;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -86,7 +87,7 @@ public class Helper2D {
         if (color == 0) {
             GlStateManager.color(1, 1, 1);
         } else {
-            color(color);
+            ColorHelper.color(color);
         }
         ResourceLocation resourceLocation = new ResourceLocation(Cloud.modID, location);
         Cloud.INSTANCE.mc.getTextureManager().bindTexture(resourceLocation);
@@ -117,15 +118,15 @@ public class Helper2D {
     /**
      * Draws a rectangle gradient from 4 given coordinates and 2 given colors vertically
      *
-     * @param left       Left X coordinate of the rectangle
-     * @param top        Top Y coordinate of the rectangle
-     * @param right      Right X coordinate of the rectangle
-     * @param bottom     Bottom Y coordinate of the rectangle
+     * @param x          X coordinate of the rectangle
+     * @param y          Y coordinate of the rectangle
+     * @param w          Width of the rectangle
+     * @param h          Height of the rectangle
      * @param startColor The first color of the gradient
      * @param endColor   The second color of the gradient
      */
 
-    public static void drawGradientRectangle(float left, float top, float right, float bottom, int startColor, int endColor) {
+    public static void drawGradientRectangle(float x, float y, float w, float h, int startColor, int endColor) {
         float f1 = (float) (startColor >> 24 & 255) / 255.0F;
         float f2 = (float) (startColor >> 16 & 255) / 255.0F;
         float f3 = (float) (startColor >> 8 & 255) / 255.0F;
@@ -142,10 +143,10 @@ public class Helper2D {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldRenderer = tessellator.getWorldRenderer();
         worldRenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldRenderer.pos(right, top, 0f).color(f2, f3, f4, f1).endVertex();
-        worldRenderer.pos(left, top, 0f).color(f2, f3, f4, f1).endVertex();
-        worldRenderer.pos(left, bottom, 0f).color(f6, f7, f8, f5).endVertex();
-        worldRenderer.pos(right, bottom, 0f).color(f6, f7, f8, f5).endVertex();
+        worldRenderer.pos(x + w, y, 0f).color(f2, f3, f4, f1).endVertex();
+        worldRenderer.pos(x, y, 0f).color(f2, f3, f4, f1).endVertex();
+        worldRenderer.pos(x, y + h, 0f).color(f6, f7, f8, f5).endVertex();
+        worldRenderer.pos(x + w, y + h, 0f).color(f6, f7, f8, f5).endVertex();
         tessellator.draw();
         GlStateManager.shadeModel(7424);
         GlStateManager.disableBlend();
@@ -156,15 +157,15 @@ public class Helper2D {
     /**
      * Draws a rectangle gradient from 4 given coordinates and 2 given colors horizontally
      *
-     * @param left       Left X coordinate of the rectangle
-     * @param top        Top Y coordinate of the rectangle
-     * @param right      Right X coordinate of the rectangle
-     * @param bottom     Bottom Y coordinate of the rectangle
+     * @param x          X coordinate of the rectangle
+     * @param y          Y coordinate of the rectangle
+     * @param w          Width of the rectangle
+     * @param h          Height of the rectangle
      * @param startColor The first color of the gradient
      * @param endColor   The second color of the gradient
      */
 
-    public static void drawHorizontalGradientRectangle(float left, float top, float right, float bottom, int startColor, int endColor) {
+    public static void drawHorizontalGradientRectangle(float x, float y, float w, float h, int startColor, int endColor) {
         float f1 = (float) (startColor >> 24 & 255) / 255.0F;
         float f2 = (float) (startColor >> 16 & 255) / 255.0F;
         float f3 = (float) (startColor >> 8 & 255) / 255.0F;
@@ -181,10 +182,10 @@ public class Helper2D {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldRenderer = tessellator.getWorldRenderer();
         worldRenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldRenderer.pos(left, top, 0f).color(f2, f3, f4, f1).endVertex();
-        worldRenderer.pos(left, bottom, 0f).color(f2, f3, f4, f1).endVertex();
-        worldRenderer.pos(right, bottom, 0f).color(f6, f7, f8, f5).endVertex();
-        worldRenderer.pos(right, top, 0f).color(f6, f7, f8, f5).endVertex();
+        worldRenderer.pos(x, y, 0f).color(f2, f3, f4, f1).endVertex();
+        worldRenderer.pos(x, y + h, 0f).color(f2, f3, f4, f1).endVertex();
+        worldRenderer.pos(x + w, y + h, 0f).color(f6, f7, f8, f5).endVertex();
+        worldRenderer.pos(x + w, y, 0f).color(f6, f7, f8, f5).endVertex();
         tessellator.draw();
         GlStateManager.shadeModel(7424);
         GlStateManager.disableBlend();
@@ -222,12 +223,12 @@ public class Helper2D {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         glBegin(GL_TRIANGLE_FAN);
 
-        color(color);
+        ColorHelper.color(color);
 
         float var;
         glVertex2f(x, y);
         for (var = h; var <= j; var++) {
-            color(color);
+            ColorHelper.color(color);
             glVertex2f(
                     (float) (r * Math.cos(Math.PI * var / 180) + x),
                     (float) (r * Math.sin(Math.PI * var / 180) + y)
@@ -238,58 +239,5 @@ public class Helper2D {
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glDisable(GL_BLEND);
-    }
-
-    /**
-     * Sets the color using a hex value using GlStateManager
-     *
-     * @param color The given hex value
-     */
-
-    private static void color(int color) {
-        float alpha = (color >> 24 & 255) / 255f;
-        float red = (color >> 16 & 255) / 255f;
-        float green = (color >> 8 & 255) / 255f;
-        float blue = (color & 255) / 255f;
-        GlStateManager.color(red, green, blue, alpha);
-    }
-
-    /**
-     * Scissors out everything outside a rectangle using GL_SCISSOR_TEST
-     *
-     * @param x      Left X coordinate of the rectangle
-     * @param y      Top Y coordinate of the rectangle
-     * @param width  The width of the rectangle
-     * @param height The height of the rectangle
-     */
-
-    public static void startScissor(int x, int y, int width, int height) {
-        GL11.glEnable(GL_SCISSOR_TEST);
-        ScaledResolution sr = new ScaledResolution(Cloud.INSTANCE.mc);
-        GL11.glScissor(
-                x * sr.getScaleFactor(),
-                (sr.getScaledHeight() - y) * sr.getScaleFactor() - height * sr.getScaleFactor(),
-                width * sr.getScaleFactor(),
-                height * sr.getScaleFactor()
-        );
-    }
-
-    /**
-     * Stops the scissors
-     */
-
-    public static void endScissor() {
-        GL11.glDisable(GL_SCISSOR_TEST);
-    }
-
-    public static void startScale(int x, int y, float scale) {
-        GL11.glPushMatrix();
-        GL11.glTranslatef(x, y, 1);
-        GL11.glScalef(scale, scale, 1);
-        GL11.glTranslatef(-x, -y, -1);
-    }
-
-    public static void endScale() {
-        GL11.glPopMatrix();
     }
 }

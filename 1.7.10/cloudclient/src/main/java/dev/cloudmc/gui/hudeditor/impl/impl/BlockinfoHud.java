@@ -10,6 +10,7 @@ import dev.cloudmc.Cloud;
 import dev.cloudmc.gui.ClientStyle;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
+import dev.cloudmc.helpers.GLHelper;
 import dev.cloudmc.helpers.Helper2D;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -35,7 +36,7 @@ public class BlockinfoHud extends HudMod {
 
     @Override
     public void renderMod(int mouseX, int mouseY) {
-        Helper2D.startScale(getX(), getY(), getSize());
+        GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isModern()) {
                 setW(Cloud.INSTANCE.fontHelper.size20.getStringWidth("Grass Block") + 42);
@@ -55,7 +56,7 @@ public class BlockinfoHud extends HudMod {
             }
             super.renderMod(mouseX, mouseY);
         }
-        Helper2D.endScale();
+        GLHelper.endScale();
     }
 
     @SubscribeEvent
@@ -65,7 +66,7 @@ public class BlockinfoHud extends HudMod {
             return;
         }
 
-        Helper2D.startScale(getX(), getY(), getSize());
+        GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             World world = Cloud.INSTANCE.mc.theWorld;
             Vector3f v = getLookingAtPosition();
@@ -73,7 +74,7 @@ public class BlockinfoHud extends HudMod {
             ItemStack finalItem = new ItemStack(Item.getItemById(id), 1, block.getDamageValue(world, (int) v.x, (int) v.y, (int) v.z));
             String blockName = getBlockName(id, block.getDamageValue(world, (int) v.x, (int) v.y, (int) v.z));
             if (blockName == null) {
-                Helper2D.endScale();
+                GLHelper.endScale();
                 return;
             }
             if (isModern()) {
@@ -96,7 +97,7 @@ public class BlockinfoHud extends HudMod {
                 renderItem(finalItem);
             }
         }
-        Helper2D.endScale();
+        GLHelper.endScale();
     }
 
     public int getColor() {

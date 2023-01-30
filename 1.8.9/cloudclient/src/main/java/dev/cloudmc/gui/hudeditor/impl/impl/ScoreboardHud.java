@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
+import dev.cloudmc.helpers.GLHelper;
 import dev.cloudmc.helpers.Helper2D;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
@@ -31,7 +32,7 @@ public class ScoreboardHud extends HudMod {
 
     @Override
     public void renderMod(int mouseX, int mouseY) {
-        Helper2D.startScale(getX(), getY(), getSize());
+        GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             ScoreObjective scoreobjective = Cloud.INSTANCE.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
 
@@ -42,18 +43,18 @@ public class ScoreboardHud extends HudMod {
                     drawLegacyScoreboard(scoreobjective, isBackground(), isRemoveNumbers());
                 }
             } else {
-                Helper2D.endScale();
+                GLHelper.endScale();
                 return;
             }
 
             super.renderMod(mouseX, mouseY);
         }
-        Helper2D.endScale();
+        GLHelper.endScale();
     }
 
     @SubscribeEvent
     public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
-        Helper2D.startScale(getX(), getY(), getSize());
+        GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             ScoreObjective scoreobjective = Cloud.INSTANCE.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
 
@@ -65,7 +66,7 @@ public class ScoreboardHud extends HudMod {
                 }
             }
         }
-        Helper2D.endScale();
+        GLHelper.endScale();
     }
 
     private void drawLegacyScoreboard(ScoreObjective objective, boolean background, boolean numbers) {

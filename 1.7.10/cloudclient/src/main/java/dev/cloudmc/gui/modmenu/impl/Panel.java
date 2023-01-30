@@ -12,6 +12,7 @@ import dev.cloudmc.gui.ClientStyle;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.Button;
 import dev.cloudmc.gui.modmenu.impl.sidebar.options.Options;
 import dev.cloudmc.gui.modmenu.impl.sidebar.options.type.*;
+import dev.cloudmc.helpers.GLHelper;
 import dev.cloudmc.helpers.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
 import dev.cloudmc.helpers.ScrollHelper;
@@ -127,14 +128,11 @@ public class Panel {
         Cloud.INSTANCE.warningHelper.renderWarning();
 
         if (selected == 0) {
-            Helper2D.startScissor(x, y + 30, w, h + 270);
-            GL11.glPushMatrix();
-            GL11.glTranslatef(0, 300 - animateTransition.getValueI(), 0);
+            GLHelper.startScissor(x, y + 30, w, h + 270);
             for (Button button : buttonList) {
                 button.renderButton(mouseX, mouseY);
             }
-            GL11.glPopMatrix();
-            Helper2D.endScissor();
+            GLHelper.endScissor();
 
             if (MathHelper.withinBox(x, y + 30, w, h + 270, mouseX, mouseY)) {
                 int height = 0;
@@ -163,14 +161,11 @@ public class Panel {
                 }
             }
         } else if (selected == 1) {
-            Helper2D.startScissor(x, y + 30, w, h + 270);
-            GL11.glPushMatrix();
-            GL11.glTranslatef(0, 300 - animateTransition.getValueI(), 0);
+            GLHelper.startScissor(x, y + 30, w, h + 270);
             for (Options option : optionsList) {
                 option.renderOption(mouseX, mouseY);
             }
-            GL11.glPopMatrix();
-            Helper2D.endScissor();
+            GLHelper.endScissor();
 
             if (MathHelper.withinBox(x, y + 30, w, h + 270, mouseX, mouseY)) {
                 int height = 0;
