@@ -10,6 +10,7 @@ import dev.cloudmc.feature.setting.Setting;
 import dev.cloudmc.gui.ClientStyle;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.Button;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.Settings;
+import dev.cloudmc.helpers.GLHelper;
 import dev.cloudmc.helpers.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
 import dev.cloudmc.helpers.animation.Animate;
@@ -59,7 +60,7 @@ public class ModePicker extends Settings {
 
         if (isOpen()) {
             if (!animateSelect.hasFinished()) {
-                Helper2D.startScissor(
+                GLHelper.startScissor(
                         button.getPanel().getX(),
                         button.getPanel().getY() + button.getPanel().getH() + getY() + 23,
                         button.getPanel().getW(),
@@ -103,7 +104,7 @@ public class ModePicker extends Settings {
                 offset++;
             }
             if (!animateSelect.hasFinished()) {
-                Helper2D.endScissor();
+                GLHelper.endScissor();
             }
         }
     }

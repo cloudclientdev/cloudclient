@@ -13,6 +13,7 @@ import dev.cloudmc.gui.hudeditor.impl.HudMod;
 import dev.cloudmc.gui.hudeditor.impl.impl.*;
 import dev.cloudmc.gui.hudeditor.impl.impl.keystrokes.KeystrokesHud;
 import dev.cloudmc.gui.modmenu.ModMenu;
+import dev.cloudmc.helpers.GLHelper;
 import dev.cloudmc.helpers.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
 import dev.cloudmc.helpers.animation.Animate;
@@ -89,7 +90,7 @@ public class HudEditor extends GuiScreen {
 
         animateLogo.update();
 
-        Helper2D.startScissor(0, height / 2 - 78, width, 73);
+        GLHelper.startScissor(0, height / 2 - 78, width, 73);
         Cloud.INSTANCE.fontHelper.size40.drawString(
                 Cloud.modName,
                 width / 2 - Cloud.INSTANCE.fontHelper.size40.getStringWidth(Cloud.modName) / 2,
@@ -101,7 +102,7 @@ public class HudEditor extends GuiScreen {
                 height / 2 - 8 - animateLogo.getValueI(),
                 50, 50, ClientStyle.getBackgroundColor(70).getRGB(), "cloudlogo.png"
         );
-        Helper2D.endScissor();
+        GLHelper.endScissor();
 
         animate.update();
 

@@ -10,6 +10,7 @@ import dev.cloudmc.Cloud;
 import dev.cloudmc.gui.ClientStyle;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
+import dev.cloudmc.helpers.GLHelper;
 import dev.cloudmc.helpers.Helper2D;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
@@ -36,7 +37,7 @@ public class PotionHud extends HudMod {
 
     @Override
     public void renderMod(int mouseX, int mouseY) {
-        Helper2D.startScale(getX(), getY(), getSize());
+        GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isModern()) {
                 if (isBackground()) {
@@ -56,7 +57,7 @@ public class PotionHud extends HudMod {
             super.renderMod(mouseX, mouseY);
             setH(90);
         }
-        Helper2D.endScale();
+        GLHelper.endScale();
     }
 
     @SubscribeEvent
@@ -65,7 +66,7 @@ public class PotionHud extends HudMod {
         if(collection.isEmpty()){
             return;
         }
-        Helper2D.startScale(getX(), getY(), getSize());
+        GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             if (isModern()) {
                 if (isBackground()) {
@@ -93,7 +94,7 @@ public class PotionHud extends HudMod {
                 }
             }
         }
-        Helper2D.endScale();
+        GLHelper.endScale();
     }
 
     private void drawPotion(Potion potion, PotionEffect effect, int y, boolean modern, boolean time) {

@@ -9,6 +9,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
+import dev.cloudmc.helpers.GLHelper;
 import dev.cloudmc.helpers.Helper2D;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -23,28 +24,28 @@ public class BossbarHud extends HudMod {
 
     @Override
     public void renderMod(int mouseX, int mouseY) {
-        Helper2D.startScale(getX(), getY(), getSize());
+        GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if(BossStatus.bossName != null && BossStatus.statusBarTime > 0) {
                 renderBossHealth(isModern());
             } else {
-                Helper2D.endScale();
+                GLHelper.endScale();
                 return;
             }
             super.renderMod(mouseX, mouseY);
         }
-        Helper2D.endScale();
+        GLHelper.endScale();
     }
 
     @SubscribeEvent
     public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
-        Helper2D.startScale(getX(), getY(), getSize());
+        GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             if(BossStatus.bossName != null && BossStatus.statusBarTime > 0) {
                 renderBossHealth(isModern());
             }
         }
-        Helper2D.endScale();
+        GLHelper.endScale();
     }
 
     private void renderBossHealth(boolean modern) {

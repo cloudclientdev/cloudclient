@@ -13,6 +13,7 @@ import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
 import dev.cloudmc.gui.hudeditor.impl.impl.keystrokes.keys.KeyboardKey;
 import dev.cloudmc.gui.hudeditor.impl.impl.keystrokes.keys.MouseKey;
+import dev.cloudmc.helpers.GLHelper;
 import dev.cloudmc.helpers.Helper2D;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
@@ -34,7 +35,7 @@ public class KeystrokesHud extends HudMod {
 
     @Override
     public void renderMod(int mouseX, int mouseY) {
-        Helper2D.startScale(getX(), getY(), getSize());
+        GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             keyUp.renderKey(getX() + 28, getY() + 2, 24, 24, isModern(), Cloud.INSTANCE.mc.gameSettings.keyBindForward, ClientStyle.getBackgroundColor(50).getRGB(), getColor(), isBackground());
             keyDown.renderKey(getX() + 28, getY() + 28, 24, 24, isModern(), Cloud.INSTANCE.mc.gameSettings.keyBindBack, ClientStyle.getBackgroundColor(50).getRGB(), getColor(), isBackground());
@@ -47,12 +48,12 @@ public class KeystrokesHud extends HudMod {
             }
             super.renderMod(mouseX, mouseY);
         }
-        Helper2D.endScale();
+        GLHelper.endScale();
     }
 
     @SubscribeEvent
     public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
-        Helper2D.startScale(getX(), getY(), getSize());
+        GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             keyUp.renderKey(getX() + 28, getY() + 2, 24, 24, isModern(), Cloud.INSTANCE.mc.gameSettings.keyBindForward, 0x50000000, getColor(), isBackground());
             keyDown.renderKey(getX() + 28, getY() + 28, 24, 24, isModern(), Cloud.INSTANCE.mc.gameSettings.keyBindBack, 0x50000000, getColor(), isBackground());
@@ -64,7 +65,7 @@ public class KeystrokesHud extends HudMod {
                 mouseKey1.renderKey(getX() + 2 + 40, getY() + 54, 36, 24, isModern(), 1, 0x50000000, getColor(), isBackground(), isCPS());
             }
         }
-        Helper2D.endScale();
+        GLHelper.endScale();
     }
 
     @SubscribeEvent
