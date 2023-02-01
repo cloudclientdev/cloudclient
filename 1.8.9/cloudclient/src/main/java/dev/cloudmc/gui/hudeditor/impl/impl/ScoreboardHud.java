@@ -248,14 +248,18 @@ public class ScoreboardHud extends HudMod {
 
             if (index == 0) {
                 if(background) {
-                    Helper2D.drawRectangle(x, calculatedY, displayText + 4, textHeight, 1610612736);
+                    Helper2D.drawRoundedRectangle(x, calculatedY, displayText + 4, textHeight, 2, 1610612736, 1);
                     Helper2D.drawRectangle(x, calculatedY + textHeight, displayText + 4, 1, 1342177280);
                 }
                 Cloud.INSTANCE.fontHelper.size20.drawString(objective, x + 2 + displayText / 2f - Cloud.INSTANCE.fontHelper.size20.getStringWidth(objective) / 2f, calculatedY + 1, -1);
             }
 
             if(background) {
-                Helper2D.drawRectangle(x, calculatedY + textHeight + 1, displayText + 4, textHeight, 1342177280);
+                if(index == collectionSize - 1) {
+                    Helper2D.drawRoundedRectangle(x, calculatedY + textHeight + 1, displayText + 4, textHeight, 2, 1342177280, 2);
+                } else {
+                    Helper2D.drawRectangle(x, calculatedY + textHeight + 1, displayText + 4, textHeight, 1342177280);
+                }
             }
             Cloud.INSTANCE.fontHelper.size20.drawString(mainText, x + 2, calculatedY + textHeight + 1, -1);
             if (!numbers) {
