@@ -12,21 +12,17 @@ import dev.cloudmc.gui.modmenu.impl.sidebar.mods.Button;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.Settings;
 import dev.cloudmc.helpers.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
-import dev.cloudmc.helpers.animation.Animate;
-import dev.cloudmc.helpers.animation.Easing;
+import dev.cloudmc.helpers.PositionHelper;
 
 public class Slider extends Settings {
 
     private boolean drag;
-    private float difference;
-    private boolean direction = false;
     private float sliderPos;
     private final int sliderWidth = 150;
-    private Animate animate = new Animate();
+    private PositionHelper posHelper = new PositionHelper(125);
 
     public Slider(Setting setting, Button button, int y) {
         super(setting, button, y);
-        animate.setEase(Easing.CUBIC_OUT).setMin(0).setSpeed(125);
         sliderPos = setting.getCurrentNumber() / (setting.getMaxNumber() / sliderWidth);
     }
 
@@ -60,7 +56,7 @@ public class Slider extends Settings {
                 Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
 
-        float preMove = sliderPos;
+        posHelper.pre(sliderPos);
 
         if (drag) {
             sliderPos = mouseX - (button.getPanel().getX() + button.getPanel().getW() - sliderWidth - 20);
@@ -72,25 +68,12 @@ public class Slider extends Settings {
             setting.setCurrentNumber(sliderPos * (setting.getMaxNumber() / sliderWidth));
         }
 
-        float move = sliderPos;
-
-        if(move != preMove) {
-            difference = move - preMove;
-            if(difference > 0) {
-                direction = false;
-                animate.setMax(difference);
-            } else if (difference < 0) {
-                direction = true;
-                animate.setMax(-difference);
-            }
-            animate.reset();
-        }
-
-        animate.update();
+        posHelper.post(sliderPos);
+        posHelper.update();
 
         float xPos = (button.getPanel().getX() + button.getPanel().getW() - sliderWidth - 20) + sliderPos - 3;
         Helper2D.drawRoundedRectangle(
-                (int) (direction ? xPos - difference - animate.getValueI() : xPos - difference + animate.getValueI()),
+                (int) (posHelper.isDirection() ? xPos - posHelper.getDifference() - posHelper.getValue() : xPos - posHelper.getDifference() + posHelper.getValue()),
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 5,
                 7, 16, 1, ClientStyle.getBackgroundColor(80).getRGB(),
                 Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1

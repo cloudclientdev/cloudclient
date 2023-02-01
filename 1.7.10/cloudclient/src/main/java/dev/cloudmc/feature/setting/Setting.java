@@ -21,6 +21,7 @@ public class Setting {
     private int modeIndex;
 
     private Color color;
+    private Color sideColor;
     private float sideSlider;
     private float[] mainSlider;
 
@@ -74,14 +75,15 @@ public class Setting {
      * A setting which allows you to choose a specific color
      */
 
-    public Setting(String name, Mod mod, Color color) {
+    public Setting(String name, Mod mod, Color color, Color sideColor, float sideSlider, float[] mainSlider) {
         this.mode = "ColorPicker";
         this.name = name;
         this.mod = mod;
 
         this.color = color;
-        this.sideSlider = 0;
-        this.mainSlider = new float[2];
+        this.sideColor = sideColor;
+        this.sideSlider = sideSlider;
+        this.mainSlider = mainSlider;
     }
 
     /**
@@ -178,6 +180,14 @@ public class Setting {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public Color getSideColor() {
+        return sideColor;
+    }
+
+    public void setSideColor(Color sideColor) {
+        this.sideColor = sideColor;
     }
 
     public float getSideSlider() {

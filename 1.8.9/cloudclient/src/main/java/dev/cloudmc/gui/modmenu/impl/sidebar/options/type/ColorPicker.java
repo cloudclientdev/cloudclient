@@ -10,9 +10,9 @@ import dev.cloudmc.feature.option.Option;
 import dev.cloudmc.gui.ClientStyle;
 import dev.cloudmc.gui.modmenu.impl.Panel;
 import dev.cloudmc.gui.modmenu.impl.sidebar.options.Options;
-import dev.cloudmc.helpers.ColorHelper;
-import dev.cloudmc.helpers.Helper2D;
-import dev.cloudmc.helpers.MathHelper;
+import dev.cloudmc.helpers.*;
+import dev.cloudmc.helpers.animation.Animate;
+import dev.cloudmc.helpers.animation.Easing;
 
 import java.awt.*;
 
@@ -20,15 +20,16 @@ public class ColorPicker extends Options {
 
     private boolean dragSide;
     private boolean dragMain;
-    private float sideSlider;
-    private float[] mainSlider;
     private boolean open;
+    private PositionHelper sidePosHelper = new PositionHelper(75);
+    private PositionHelper mainPosHelperX = new PositionHelper(100);
+    private PositionHelper mainPosHelperY = new PositionHelper(150);
+    private Animate animate = new Animate();
 
     public ColorPicker(Option option, Panel panel, int y) {
         super(option, panel, y);
-        sideSlider = option.getSideSlider();
-        mainSlider = option.getMainSlider();
         open = false;
+        animate.setEase(Easing.CUBIC_OUT).setMin(0).setMax(70).setSpeed(200);
     }
 
     @Override
@@ -44,53 +45,98 @@ public class ColorPicker extends Options {
         boolean rounded = Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled();
 
         Cloud.INSTANCE.fontHelper.size30.drawString(option.getName(), panel.getX() + 20, getYH + 6, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
+        animate.update();
 
         if(open) {
-            Helper2D.drawRoundedRectangle(getXW - 40, getYH + 25, 20, 70, 2, ClientStyle.getBackgroundColor(50).getRGB(), rounded ? 0 : -1);
-            Helper2D.drawRoundedRectangle(getXW - 193, getYH + 25, 150, 70, 2, ClientStyle.getBackgroundColor(50).getRGB(), rounded ? 0 : -1);
-
-            Helper2D.drawPicture(getXW - 38, getYH + 27, 16, 66, 0, "icon/hue.png");
-            if (dragSide) {
-                sideSlider = mouseY - (getYH + 25);
-                float sliderHeight = 65;
-                if (sideSlider < 0) {
-                    sideSlider = 0;
-                } else if (sideSlider > sliderHeight) {
-                    sideSlider = sliderHeight;
-                }
-                option.setSideSlider(sideSlider);
+            if(!animate.hasFinished()) {
+                GLHelper.startScissor(getXW - 193, getYH + 25, 180, 70);
             }
-            int sideSliderColor = ColorHelper.getColorAtPixel(getXW - 35, getYH + 28 + sideSlider);
-            Helper2D.drawRoundedRectangle(getXW - 40, (int) (getYH + 25 + sideSlider), 20, 5, 2, -1, rounded ? 0 : -1);
-            Helper2D.drawHorizontalGradientRectangle(getXW - 191, getYH + 27, 146, 66, -1, sideSliderColor);
-            Helper2D.drawGradientRectangle(getXW - 191, getYH + 27, 146, 66, 0x00000000, 0xff000000);
+
+            int offset = animate.getValueI() - 70;
+
+            Helper2D.drawRoundedRectangle(getXW - 40, getYH + 25 + offset, 20, 70, 2, ClientStyle.getBackgroundColor(50).getRGB(), rounded ? 0 : -1);
+            Helper2D.drawRoundedRectangle(getXW - 193, getYH + 25 + offset, 150, 70, 2, ClientStyle.getBackgroundColor(50).getRGB(), rounded ? 0 : -1);
+
+            Helper2D.drawPicture(getXW - 38, getYH + 27 + offset, 16, 66, 0, "icon/hue.png");
+
+            sidePosHelper.pre(option.getSideSlider());
+
+            if (dragSide) {
+                option.setSideSlider(mouseY - (getYH + 25));
+                float sliderHeight = 65;
+                if (option.getSideSlider() < 0) {
+                    option.setSideSlider(0);
+                } else if (option.getSideSlider() > sliderHeight) {
+                    option.setSideSlider(sliderHeight);
+                }
+            }
+
+            sidePosHelper.post(option.getSideSlider());
+            sidePosHelper.update();
+
+            int sideColor = ColorHelper.getColorAtPixel(getXW - 35, getYH + 28 + option.getSideSlider() + offset);
+            if(animate.hasFinished())
+                option.setSideColor(ColorHelper.hexToRgb(sideColor));
+
+            float sidePosY = getYH + 25 + option.getSideSlider() + offset;
+            Helper2D.drawRoundedRectangle(getXW - 40, (int) (sidePosHelper.isDirection() ?
+                    sidePosY - sidePosHelper.getDifference() - sidePosHelper.getValue() :
+                    sidePosY - sidePosHelper.getDifference() + sidePosHelper.getValue()
+            ), 20, 5, 2, -1, rounded ? 0 : -1);
+            Helper2D.drawHorizontalGradientRectangle(getXW - 191, getYH + 27 + offset, 146, 66, -1, option.getSideColor().getRGB());
+            Helper2D.drawGradientRectangle(getXW - 191, getYH + 27 + offset, 146, 66, 0x00000000, 0xff000000);
+
+            mainPosHelperX.pre(option.getMainSlider()[0]);
+            mainPosHelperY.pre(option.getMainSlider()[1]);
+
             if (dragMain) {
-                mainSlider[0] = mouseX - (getXW - 193);
-                mainSlider[1] = mouseY - (getYH + 25);
+                option.getMainSlider()[0] = mouseX - (getXW - 193);
+                option.getMainSlider()[1] = mouseY - (getYH + 25);
                 float sliderWidth = 145;
                 float sliderHeight = 65;
-                if (mainSlider[0] < 0) {
-                    mainSlider[0] = 0;
-                } else if (mainSlider[0] > sliderWidth) {
-                    mainSlider[0] = sliderWidth;
+                if (option.getMainSlider()[0] < 0) {
+                    option.getMainSlider()[0] = 0;
+                } else if (option.getMainSlider()[0] > sliderWidth) {
+                    option.getMainSlider()[0] = sliderWidth;
                 }
-                if (mainSlider[1] < 0) {
-                    mainSlider[1] = 0;
-                } else if (mainSlider[1] > sliderHeight) {
-                    mainSlider[1] = sliderHeight;
+                if (option.getMainSlider()[1] < 0) {
+                    option.getMainSlider()[1] = 0;
+                } else if (option.getMainSlider()[1] > sliderHeight) {
+                    option.getMainSlider()[1] = sliderHeight;
                 }
-                option.setMainSlider(mainSlider);
             }
-            int preMainColor = ColorHelper.getColorAtPixel(getXW - 191 + mainSlider[0], getYH + 28 + mainSlider[1]);
-            Color mainColor = new Color(
-                    ColorHelper.hexToRgb(preMainColor).getRed(),
-                    ColorHelper.hexToRgb(preMainColor).getGreen(),
-                    ColorHelper.hexToRgb(preMainColor).getBlue(),
-                    255
-            );
-            Helper2D.drawRoundedRectangle((int) (getXW - 193 + mainSlider[0]), (int) (getYH + 25 + mainSlider[1]), 5, 5, 3, -1, 0);
 
+            mainPosHelperX.post(option.getMainSlider()[0]);
+            mainPosHelperY.post(option.getMainSlider()[1]);
+            mainPosHelperX.update();
+            mainPosHelperY.update();
+
+            Color mainColor = option.getColor();
+            int color = ColorHelper.getColorAtPixel(getXW - 191 + option.getMainSlider()[0], getYH + 28 + option.getMainSlider()[1] + offset);
+            if(animate.hasFinished())
+                mainColor = new Color(
+                        ColorHelper.hexToRgb(color).getRed(),
+                        ColorHelper.hexToRgb(color).getGreen(),
+                        ColorHelper.hexToRgb(color).getBlue(),
+                        255
+                );
+            float mainPosX = getXW - 193 + option.getMainSlider()[0];
+            float mainPosY = getYH + 25 + option.getMainSlider()[1] + offset;
+            Helper2D.drawRoundedRectangle(
+                    (int) (mainPosHelperX.isDirection() ?
+                            mainPosX - mainPosHelperX.getDifference() - mainPosHelperX.getValue() :
+                            mainPosX - mainPosHelperX.getDifference() + mainPosHelperX.getValue()
+                    ),
+                    (int) (mainPosHelperY.isDirection() ?
+                            mainPosY - mainPosHelperY.getDifference() - mainPosHelperY.getValue() :
+                            mainPosY - mainPosHelperY.getDifference() + mainPosHelperY.getValue()
+                    ), 5, 5, 3, -1, 0
+            );
             option.setColor(mainColor);
+
+            if(!animate.hasFinished()) {
+                GLHelper.endScissor();
+            }
         }
 
         String color = "R" + option.getColor().getRed() + " G" + option.getColor().getGreen() + " B" + option.getColor().getBlue();
@@ -106,6 +152,7 @@ public class ColorPicker extends Options {
 
         if(MathHelper.withinBox(panel.getX(), getYH, panel.getW(), 25, mouseX, mouseY)) {
             open = !open;
+            animate.reset();
         } else if (MathHelper.withinBox(getXW - 40, getYH + 25, 20, 70, mouseX, mouseY)) {
             dragSide = true;
         } else if (MathHelper.withinBox(getXW - 193, getYH + 25, 150, 70, mouseX, mouseY)) {

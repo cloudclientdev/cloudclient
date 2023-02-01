@@ -25,7 +25,7 @@ public class OptionManager {
     public void init() {
         addOption(new Option("Font Changer", "Arial", 0,
                 GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
-        addOption(new Option("Color", new Color(255, 255, 255)));
+        addOption(new Option("Color", new Color(255, 255, 255), new Color(255, 0, 0), 0, new float[]{0, 0}));
         addOption(new Option("Rounded Corners", true));
         addOption(new Option("ModMenu Keybinding", Keyboard.KEY_RSHIFT));
     }

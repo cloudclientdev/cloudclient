@@ -7,26 +7,25 @@ package dev.cloudmc.gui.modmenu.impl.sidebar.options.type;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.option.Option;
+import dev.cloudmc.feature.setting.Setting;
 import dev.cloudmc.gui.ClientStyle;
 import dev.cloudmc.gui.modmenu.impl.Panel;
+import dev.cloudmc.gui.modmenu.impl.sidebar.mods.Button;
+import dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.Settings;
 import dev.cloudmc.gui.modmenu.impl.sidebar.options.Options;
 import dev.cloudmc.helpers.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
-import dev.cloudmc.helpers.animation.Animate;
-import dev.cloudmc.helpers.animation.Easing;
+import dev.cloudmc.helpers.PositionHelper;
 
 public class Slider extends Options {
 
     private boolean drag;
-    private float difference;
-    private boolean direction = false;
     private float sliderPos;
     private final int sliderWidth = 150;
-    private Animate animate = new Animate();
+    private PositionHelper posHelper = new PositionHelper(125);
 
     public Slider(Option option, Panel panel, int y) {
         super(option, panel, y);
-        animate.setEase(Easing.CUBIC_OUT).setMin(0).setSpeed(125);
         sliderPos = option.getCurrentNumber() / (option.getMaxNumber() / sliderWidth);
     }
 
@@ -39,7 +38,6 @@ public class Slider extends Options {
 
     @Override
     public void renderOption(int mouseX, int mouseY) {
-
         Cloud.INSTANCE.fontHelper.size30.drawString(
                 option.getName(),
                 panel.getX() + 20,
@@ -61,7 +59,7 @@ public class Slider extends Options {
                 Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
 
-        float preMove = sliderPos;
+        posHelper.pre(sliderPos);
 
         if (drag) {
             sliderPos = mouseX - (panel.getX() + panel.getW() - sliderWidth - 20);
@@ -73,25 +71,12 @@ public class Slider extends Options {
             option.setCurrentNumber(sliderPos * (option.getMaxNumber() / sliderWidth));
         }
 
-        float move = sliderPos;
-
-        if(move != preMove) {
-            difference = move - preMove;
-            if(difference > 0) {
-                direction = false;
-                animate.setMax(difference);
-            } else if (difference < 0) {
-                direction = true;
-                animate.setMax(-difference);
-            }
-            animate.reset();
-        }
-
-        animate.update();
+        posHelper.post(sliderPos);
+        posHelper.update();
 
         float xPos = (panel.getX() + panel.getW() - sliderWidth - 20) + sliderPos - 3;
         Helper2D.drawRoundedRectangle(
-                (int) (direction ? xPos - difference - animate.getValueI() : xPos - difference + animate.getValueI()),
+                (int) (posHelper.isDirection() ? xPos - posHelper.getDifference() - posHelper.getValue() : xPos - posHelper.getDifference() + posHelper.getValue()),
                 panel.getY() + panel.getH() + getY() + 5,
                 7, 16, 1, ClientStyle.getBackgroundColor(80).getRGB(),
                 Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
@@ -101,8 +86,8 @@ public class Slider extends Options {
     /**
      * Changes the drag variable if the slider is pressed
      *
-     * @param mouseX The current X position of the mouse
-     * @param mouseY The current Y position of the mouse
+     * @param mouseX      The current X position of the mouse
+     * @param mouseY      The current Y position of the mouse
      * @param mouseButton The current mouse button which is pressed
      */
 

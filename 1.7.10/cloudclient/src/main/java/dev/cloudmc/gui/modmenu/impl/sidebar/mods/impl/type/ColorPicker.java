@@ -6,33 +6,33 @@
 package dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.type;
 
 import dev.cloudmc.Cloud;
+import dev.cloudmc.feature.option.Option;
 import dev.cloudmc.feature.setting.Setting;
 import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.modmenu.impl.Panel;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.Button;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.Settings;
-import dev.cloudmc.helpers.ColorHelper;
-import dev.cloudmc.helpers.Helper2D;
-import dev.cloudmc.helpers.MathHelper;
-import net.minecraft.client.gui.ScaledResolution;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
+import dev.cloudmc.gui.modmenu.impl.sidebar.options.Options;
+import dev.cloudmc.helpers.*;
+import dev.cloudmc.helpers.animation.Animate;
+import dev.cloudmc.helpers.animation.Easing;
 
 import java.awt.*;
-import java.nio.IntBuffer;
 
 public class ColorPicker extends Settings {
 
     private boolean dragSide;
     private boolean dragMain;
-    private float sideSlider;
-    private float[] mainSlider;
     private boolean open;
+    private PositionHelper sidePosHelper = new PositionHelper(75);
+    private PositionHelper mainPosHelperX = new PositionHelper(100);
+    private PositionHelper mainPosHelperY = new PositionHelper(150);
+    private Animate animate = new Animate();
 
     public ColorPicker(Setting setting, Button button, int y) {
         super(setting, button, y);
-        sideSlider = setting.getSideSlider();
-        mainSlider = setting.getMainSlider();
         open = false;
+        animate.setEase(Easing.CUBIC_OUT).setMin(0).setMax(70).setSpeed(200);
     }
 
     @Override
@@ -48,53 +48,98 @@ public class ColorPicker extends Settings {
         boolean rounded = Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled();
 
         Cloud.INSTANCE.fontHelper.size30.drawString(setting.getName(), button.getPanel().getX() + 20, getYH + 6, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
+        animate.update();
 
         if(open) {
-            Helper2D.drawRoundedRectangle(getXW - 40, getYH + 25, 20, 70, 2, ClientStyle.getBackgroundColor(50).getRGB(), rounded ? 0 : -1);
-            Helper2D.drawRoundedRectangle(getXW - 193, getYH + 25, 150, 70, 2, ClientStyle.getBackgroundColor(50).getRGB(), rounded ? 0 : -1);
-
-            Helper2D.drawPicture(getXW - 38, getYH + 27, 16, 66, 0, "icon/hue.png");
-            if (dragSide) {
-                sideSlider = mouseY - (getYH + 25);
-                float sliderHeight = 65;
-                if (sideSlider < 0) {
-                    sideSlider = 0;
-                } else if (sideSlider > sliderHeight) {
-                    sideSlider = sliderHeight;
-                }
-                setting.setSideSlider(sideSlider);
+            if(!animate.hasFinished()) {
+                GLHelper.startScissor(getXW - 193, getYH + 25, 180, 70);
             }
-            int sideSliderColor = ColorHelper.getColorAtPixel(getXW - 35, getYH + 28 + sideSlider);
-            Helper2D.drawRoundedRectangle(getXW - 40, (int) (getYH + 25 + sideSlider), 20, 5, 2, -1, rounded ? 0 : -1);
-            Helper2D.drawHorizontalGradientRectangle(getXW - 191, getYH + 27, 146, 66, -1, sideSliderColor);
-            Helper2D.drawGradientRectangle(getXW - 191, getYH + 27, 146, 66, 0x00000000, 0xff000000);
+
+            int offset = animate.getValueI() - 70;
+
+            Helper2D.drawRoundedRectangle(getXW - 40, getYH + 25 + offset, 20, 70, 2, ClientStyle.getBackgroundColor(50).getRGB(), rounded ? 0 : -1);
+            Helper2D.drawRoundedRectangle(getXW - 193, getYH + 25 + offset, 150, 70, 2, ClientStyle.getBackgroundColor(50).getRGB(), rounded ? 0 : -1);
+
+            Helper2D.drawPicture(getXW - 38, getYH + 27 + offset, 16, 66, 0, "icon/hue.png");
+
+            sidePosHelper.pre(setting.getSideSlider());
+
+            if (dragSide) {
+                setting.setSideSlider(mouseY - (getYH + 25));
+                float sliderHeight = 65;
+                if (setting.getSideSlider() < 0) {
+                    setting.setSideSlider(0);
+                } else if (setting.getSideSlider() > sliderHeight) {
+                    setting.setSideSlider(sliderHeight);
+                }
+            }
+
+            sidePosHelper.post(setting.getSideSlider());
+            sidePosHelper.update();
+
+            int sideColor = ColorHelper.getColorAtPixel(getXW - 35, getYH + 28 + setting.getSideSlider() + offset);
+            if(animate.hasFinished())
+                setting.setSideColor(ColorHelper.hexToRgb(sideColor));
+
+            float sidePosY = getYH + 25 + setting.getSideSlider() + offset;
+            Helper2D.drawRoundedRectangle(getXW - 40, (int) (sidePosHelper.isDirection() ?
+                    sidePosY - sidePosHelper.getDifference() - sidePosHelper.getValue() :
+                    sidePosY - sidePosHelper.getDifference() + sidePosHelper.getValue()
+            ), 20, 5, 2, -1, rounded ? 0 : -1);
+            Helper2D.drawHorizontalGradientRectangle(getXW - 191, getYH + 27 + offset, 146, 66, -1, setting.getSideColor().getRGB());
+            Helper2D.drawGradientRectangle(getXW - 191, getYH + 27 + offset, 146, 66, 0x00000000, 0xff000000);
+
+            mainPosHelperX.pre(setting.getMainSlider()[0]);
+            mainPosHelperY.pre(setting.getMainSlider()[1]);
+
             if (dragMain) {
-                mainSlider[0] = mouseX - (getXW - 193);
-                mainSlider[1] = mouseY - (getYH + 25);
+                setting.getMainSlider()[0] = mouseX - (getXW - 193);
+                setting.getMainSlider()[1] = mouseY - (getYH + 25);
                 float sliderWidth = 145;
                 float sliderHeight = 65;
-                if (mainSlider[0] < 0) {
-                    mainSlider[0] = 0;
-                } else if (mainSlider[0] > sliderWidth) {
-                    mainSlider[0] = sliderWidth;
+                if (setting.getMainSlider()[0] < 0) {
+                    setting.getMainSlider()[0] = 0;
+                } else if (setting.getMainSlider()[0] > sliderWidth) {
+                    setting.getMainSlider()[0] = sliderWidth;
                 }
-                if (mainSlider[1] < 0) {
-                    mainSlider[1] = 0;
-                } else if (mainSlider[1] > sliderHeight) {
-                    mainSlider[1] = sliderHeight;
+                if (setting.getMainSlider()[1] < 0) {
+                    setting.getMainSlider()[1] = 0;
+                } else if (setting.getMainSlider()[1] > sliderHeight) {
+                    setting.getMainSlider()[1] = sliderHeight;
                 }
-                setting.setMainSlider(mainSlider);
             }
-            int preMainColor = ColorHelper.getColorAtPixel(getXW - 191 + mainSlider[0], getYH + 28 + mainSlider[1]);
-            Color mainColor = new Color(
-                    ColorHelper.hexToRgb(preMainColor).getRed(),
-                    ColorHelper.hexToRgb(preMainColor).getGreen(),
-                    ColorHelper.hexToRgb(preMainColor).getBlue(),
-                    255
-            );
-            Helper2D.drawRoundedRectangle((int) (getXW - 193 + mainSlider[0]), (int) (getYH + 25 + mainSlider[1]), 5, 5, 3, -1, 0);
 
+            mainPosHelperX.post(setting.getMainSlider()[0]);
+            mainPosHelperY.post(setting.getMainSlider()[1]);
+            mainPosHelperX.update();
+            mainPosHelperY.update();
+
+            Color mainColor = setting.getColor();
+            int color = ColorHelper.getColorAtPixel(getXW - 191 + setting.getMainSlider()[0], getYH + 28 + setting.getMainSlider()[1] + offset);
+            if(animate.hasFinished())
+                mainColor = new Color(
+                        ColorHelper.hexToRgb(color).getRed(),
+                        ColorHelper.hexToRgb(color).getGreen(),
+                        ColorHelper.hexToRgb(color).getBlue(),
+                        255
+                );
+            float mainPosX = getXW - 193 + setting.getMainSlider()[0];
+            float mainPosY = getYH + 25 + setting.getMainSlider()[1] + offset;
+            Helper2D.drawRoundedRectangle(
+                    (int) (mainPosHelperX.isDirection() ?
+                            mainPosX - mainPosHelperX.getDifference() - mainPosHelperX.getValue() :
+                            mainPosX - mainPosHelperX.getDifference() + mainPosHelperX.getValue()
+                    ),
+                    (int) (mainPosHelperY.isDirection() ?
+                            mainPosY - mainPosHelperY.getDifference() - mainPosHelperY.getValue() :
+                            mainPosY - mainPosHelperY.getDifference() + mainPosHelperY.getValue()
+                    ), 5, 5, 3, -1, 0
+            );
             setting.setColor(mainColor);
+
+            if(!animate.hasFinished()) {
+                GLHelper.endScissor();
+            }
         }
 
         String color = "R" + setting.getColor().getRed() + " G" + setting.getColor().getGreen() + " B" + setting.getColor().getBlue();
@@ -110,6 +155,7 @@ public class ColorPicker extends Settings {
 
         if(MathHelper.withinBox(button.getPanel().getX(), getYH, button.getPanel().getW(), 25, mouseX, mouseY)) {
             open = !open;
+            animate.reset();
         } else if (MathHelper.withinBox(getXW - 40, getYH + 25, 20, 70, mouseX, mouseY)) {
             dragSide = true;
         } else if (MathHelper.withinBox(getXW - 193, getYH + 25, 150, 70, mouseX, mouseY)) {

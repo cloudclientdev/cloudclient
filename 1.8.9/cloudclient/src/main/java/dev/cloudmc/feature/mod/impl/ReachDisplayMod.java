@@ -22,6 +22,6 @@ public class ReachDisplayMod extends Mod {
         String[] mode = {"Modern", "Legacy"};
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Mode", this, "Modern", 0, mode));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Background", this, true));
-        Cloud.INSTANCE.settingManager.addSetting(new Setting("Font Color", this, new Color(255, 255, 255)));
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Font Color", this, new Color(255, 255, 255), new Color(255, 0, 0), 0, new float[]{0, 0}));
     }
 }
