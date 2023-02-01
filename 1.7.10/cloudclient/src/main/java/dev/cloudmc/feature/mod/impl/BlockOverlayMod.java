@@ -33,8 +33,8 @@ public class BlockOverlayMod extends Mod {
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Outline", this, true));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Filling", this, true));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Thickness", this, 20, 3));
-        Cloud.INSTANCE.settingManager.addSetting(new Setting("Outline Color", this, new Color(0, 0, 0)));
-        Cloud.INSTANCE.settingManager.addSetting(new Setting("Filling Color", this, new Color(0, 0, 0)));
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Outline Color", this, new Color(0, 0, 0), new Color(255, 0, 0), 0, new float[]{0, 65}));
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Filling Color", this, new Color(0, 0, 0), new Color(255, 0, 0), 0, new float[]{0, 65}));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Alpha", this, 255, 100));
     }
 

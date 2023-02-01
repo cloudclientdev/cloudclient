@@ -24,7 +24,7 @@ public class CrosshairMod extends Mod {
                 "Makes Crosshair customizable."
         );
 
-        Cloud.INSTANCE.settingManager.addSetting(new Setting("Color", this, new Color(255, 255, 255)));
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Color", this, new Color(255, 255, 255), new Color(255, 0, 0), 0, new float[]{0, 0}));
         boolean[] cells = {
                 false, false, false, false, false, false, false, false, false, false, false,
                 false, false, false, false, false, false, false, false, false, false, false,
