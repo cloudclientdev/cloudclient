@@ -6,6 +6,7 @@
   "client": [
     "EntityRendererMixin",
     "FontRendererMixin",
+    "GuiIngameMenuMixin",
     "GuiInGameMixin",
     "GuiMainMenuMixin",
     "GuiScreenMixin",
