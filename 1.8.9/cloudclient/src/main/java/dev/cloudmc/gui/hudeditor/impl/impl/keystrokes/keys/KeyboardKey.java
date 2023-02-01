@@ -16,6 +16,10 @@ public class KeyboardKey {
 
     private Animate animate = new Animate();
 
+    public KeyboardKey() {
+        animate.setEase(Easing.CUBIC_IN).setMin(0).setMax(12).setSpeed(100);
+    }
+
     public void renderKey(int x, int y, int width, int height, boolean modern, KeyBinding keyBinding, int color, int fontColor, boolean background) {
         boolean keyDown;
         if(Cloud.INSTANCE.mc.currentScreen == null) {
@@ -25,23 +29,14 @@ public class KeyboardKey {
             keyDown = false;
         }
 
-        animate
-                .setEase(Easing.CUBIC_IN)
-                .setMin(0)
-                .setMax(12)
-                .setSpeed(100)
-                .setReversed(keyDown)
-                .update();
+        animate.setReversed(keyDown).update();
 
         if (modern) {
             if (background) {
                 Helper2D.drawRoundedRectangle(x, y, width, height, 2, color, 0);
             }
 
-            if (animate.hasFinished() && !keyDown) {
-
-            }
-            else {
+            if (!animate.hasFinished() || keyDown) {
                 Helper2D.drawRoundedRectangle(
                         x + animate.getValueI(),
                         y + animate.getValueI(),
@@ -55,8 +50,8 @@ public class KeyboardKey {
 
             Cloud.INSTANCE.fontHelper.size20.drawString(
                     Keyboard.getKeyName(keyBinding.getKeyCode()),
-                    x - Cloud.INSTANCE.fontHelper.size20.getStringWidth(Keyboard.getKeyName(keyBinding.getKeyCode())) / 2 + width / 2,
-                    y + height / 2 - 4,
+                    x - Cloud.INSTANCE.fontHelper.size20.getStringWidth(Keyboard.getKeyName(keyBinding.getKeyCode())) / 2f + width / 2f,
+                    y + height / 2f - 4,
                     fontColor
             );
         }
@@ -65,10 +60,7 @@ public class KeyboardKey {
                 Helper2D.drawRectangle(x, y, width, height, color);
             }
 
-            if (animate.hasFinished() && !keyDown) {
-
-            }
-            else {
+            if (!animate.hasFinished() || keyDown) {
                 Helper2D.drawRectangle(
                         x + animate.getValueI(),
                         y + animate.getValueI(),
@@ -80,7 +72,7 @@ public class KeyboardKey {
 
             Cloud.INSTANCE.mc.fontRendererObj.drawString(
                     Keyboard.getKeyName(keyBinding.getKeyCode()),
-                    x - Cloud.INSTANCE.fontHelper.size20.getStringWidth(Keyboard.getKeyName(keyBinding.getKeyCode())) / 2 + width / 2,
+                    x - Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(Keyboard.getKeyName(keyBinding.getKeyCode())) / 2 + width / 2,
                     y + height / 2 - 4,
                     fontColor
             );
