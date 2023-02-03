@@ -54,6 +54,7 @@ public class ModManager {
         addMod(new NickHiderMod());
         addMod(new ScoreboardMod());
         addMod(new BossbarMod());
+        addMod(new DirectionMod());
     }
 
     /**
