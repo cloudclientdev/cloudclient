@@ -10,6 +10,7 @@
     "GuiInGameMixin",
     "GuiMainMenuMixin",
     "GuiScreenMixin",
+    "ItemRendererMixin",
     "MinecraftMixin"
   ]
 }

@@ -100,6 +100,7 @@ public class Option {
     }
 
     public Option(String name) {
+        this.mode = "Category";
         this.name = name;
     }
 

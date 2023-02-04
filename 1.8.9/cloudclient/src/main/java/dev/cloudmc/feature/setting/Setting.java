@@ -106,10 +106,6 @@ public class Setting {
         this.key = key;
     }
 
-    public Setting(String name) {
-        this.name = name;
-    }
-
     public String getName() {
         return name;
     }

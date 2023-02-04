@@ -27,6 +27,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemRenderer.class)
@@ -144,5 +145,10 @@ public abstract class ItemRendererMixin {
         GlStateManager.popMatrix();
         GlStateManager.disableRescaleNormal();
         RenderHelper.disableStandardItemLighting();
+    }
+
+    @Redirect(method = "renderFireInFirstPerson", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;translate(FFF)V"))
+    public void renderFireInFirstPerson(float x, float y, float z) {
+        GlStateManager.translate(x, y - Cloud.INSTANCE.optionManager.getOptionByName("Fire Height").getCurrentNumber() / 100f, z);
     }
 }

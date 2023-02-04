@@ -95,6 +95,11 @@ public class Panel {
                     optionsList.add(keybinding);
                     addOptionY += keybinding.getH();
                     break;
+                case "Category":
+                    Category category = new Category(option, this, addOptionY);
+                    optionsList.add(category);
+                    addOptionY += category.getH();
+                    break;
             }
         }
 
