@@ -92,4 +92,9 @@ public abstract class EntityRendererMixin {
         }
         return gameSettings.fovSetting;
     }
+
+    @Redirect(method = "setupCameraTransform", at = @At(value = "FIELD", target = "Lnet/minecraft/client/settings/GameSettings;viewBobbing:Z", ordinal = 0))
+    public boolean setupCameraTransform(GameSettings instance) {
+        return !Cloud.INSTANCE.optionManager.getOptionByName("Minimal View Bobbing").isCheckToggled() && Cloud.INSTANCE.mc.gameSettings.viewBobbing;
+    }
 }
