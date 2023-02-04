@@ -34,11 +34,7 @@ public class ScoreboardHud extends HudMod {
     public void renderMod(int mouseX, int mouseY) {
         GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
-            if(isModern()) {
-                drawModernScoreboardPlaceHolder(isBackground(), isRemoveNumbers());
-            } else {
-                drawLegacyScoreboardPlaceHolder(isBackground(), isRemoveNumbers());
-            }
+            drawScoreboardPlaceHolder(isBackground(), isRemoveNumbers());
             super.renderMod(mouseX, mouseY);
         }
         GLHelper.endScale();
@@ -49,23 +45,18 @@ public class ScoreboardHud extends HudMod {
         GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             ScoreObjective scoreobjective = Cloud.INSTANCE.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
-
             if (scoreobjective != null) {
-                if(isModern()) {
-                    drawModernScoreboard(scoreobjective, isBackground(), isRemoveNumbers());
-                } else {
-                    drawLegacyScoreboard(scoreobjective, isBackground(), isRemoveNumbers());
-                }
+                drawScoreboard(scoreobjective, isBackground(), isRemoveNumbers());
             }
         }
         GLHelper.endScale();
     }
 
-    private void drawLegacyScoreboard(ScoreObjective objective, boolean background, boolean numbers) {
+    private void drawScoreboard(ScoreObjective objective, boolean background, boolean numbers) {
         Scoreboard scoreboard = objective.getScoreboard();
         Collection<Score> collection = scoreboard.getSortedScores(objective);
-        List<Score> list = collection.stream().filter(p_apply_1_ -> p_apply_1_.getPlayerName() != null &&
-                !p_apply_1_.getPlayerName().startsWith("#")).collect(Collectors.toList());
+        List<Score> list = collection.stream().filter(score -> score.getPlayerName() != null &&
+                !score.getPlayerName().startsWith("#")).collect(Collectors.toList());
 
         if (list.size() > 15) {
             collection = Lists.newArrayList(Iterables.skip(list, collection.size() - 15));
@@ -117,67 +108,7 @@ public class ScoreboardHud extends HudMod {
         setH((collection.size() + 1) * textHeight);
     }
 
-    private void drawModernScoreboard(ScoreObjective objective, boolean background, boolean numbers) {
-        Scoreboard scoreboard = objective.getScoreboard();
-        Collection<Score> collection = scoreboard.getSortedScores(objective);
-        List<Score> list = collection.stream().filter(p_apply_1_ -> p_apply_1_.getPlayerName() != null &&
-                !p_apply_1_.getPlayerName().startsWith("#")).collect(Collectors.toList());
-
-        if (list.size() > 15) {
-            collection = Lists.newArrayList(Iterables.skip(list, collection.size() - 15));
-        } else {
-            collection = list;
-        }
-
-        int displayText = Cloud.INSTANCE.fontHelper.size20.getStringWidth(objective.getDisplayName()) + 2;
-
-        for (Score score : collection) {
-            ScorePlayerTeam scoreplayerteam = scoreboard.getPlayersTeam(score.getPlayerName());
-            String text = ScorePlayerTeam.formatPlayerName(scoreplayerteam, score.getPlayerName()) + ": " + EnumChatFormatting.RED + score.getScorePoints();
-            displayText = Math.max(displayText, Cloud.INSTANCE.fontHelper.size20.getStringWidth(text)) + 1;
-        }
-
-        int y = getY();
-        int x = getX();
-
-        int textHeight = 9;
-
-        int index = collection.size() - 1;
-        for (Score score1 : collection) {
-            ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
-            String mainText = ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName());
-            String redNumbers = EnumChatFormatting.RED + "" + score1.getScorePoints();
-            int calculatedY = y + index * textHeight;
-
-            if (index == 0) {
-                String topText = objective.getDisplayName();
-                if(background) {
-                    Helper2D.drawRoundedRectangle(x, calculatedY, displayText + 4, textHeight, 2, 1610612736, 1);
-                    Helper2D.drawRectangle(x, calculatedY + textHeight, displayText + 4, 1, 1342177280);
-                }
-                Cloud.INSTANCE.fontHelper.size20.drawString(topText, x + 2 + displayText / 2f - Cloud.INSTANCE.fontHelper.size20.getStringWidth(topText) / 2f, calculatedY + 1, -1);
-            }
-
-            if(background) {
-                if(index == collection.size() - 1) {
-                    Helper2D.drawRoundedRectangle(x, calculatedY + textHeight + 1, displayText + 4, textHeight, 2, 1342177280, 2);
-                } else {
-                    Helper2D.drawRectangle(x, calculatedY + textHeight + 1, displayText + 4, textHeight, 1342177280);
-                }
-            }
-            Cloud.INSTANCE.fontHelper.size20.drawString(mainText, x + 2, calculatedY + textHeight + 1, -1);
-            if (!numbers) {
-                Cloud.INSTANCE.fontHelper.size20.drawString(redNumbers, x + 4 + displayText - Cloud.INSTANCE.fontHelper.size20.getStringWidth(redNumbers) - 5, calculatedY + textHeight + 1, -1);
-            }
-
-            index--;
-        }
-
-        setW(displayText + 4);
-        setH((collection.size() + 1) * textHeight);
-    }
-
-    private void drawLegacyScoreboardPlaceHolder(boolean background, boolean numbers) {
+    private void drawScoreboardPlaceHolder(boolean background, boolean numbers) {
         String objective = "Scoreboard";
         int displayText = Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(objective) + 2;
 
@@ -214,56 +145,6 @@ public class ScoreboardHud extends HudMod {
             Cloud.INSTANCE.mc.fontRendererObj.drawString(mainText, x + 2, calculatedY + textHeight + 1, -1);
             if (!numbers) {
                 Cloud.INSTANCE.mc.fontRendererObj.drawString(redNumbers, x + 4 + displayText - Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(redNumbers), calculatedY + textHeight + 1, -1);
-            }
-
-            index--;
-        }
-
-        setW(displayText + 4);
-        setH((collectionSize + 1) * textHeight);
-    }
-
-    private void drawModernScoreboardPlaceHolder(boolean background, boolean numbers) {
-        String objective = "Scoreboard";
-        int displayText = Cloud.INSTANCE.fontHelper.size20.getStringWidth(objective) + 2;
-
-        String[] names = { "Steve", "Alex", "Zuri", "Sunny", "Noor", "Makena", "Kai", "Efe", "Ari" };
-        int collectionSize = names.length;
-
-        for (int i = 0; i < collectionSize; i++) {
-            String text = names[i] +  ": " + EnumChatFormatting.RED + i;
-            displayText = Math.max(displayText, Cloud.INSTANCE.fontHelper.size20.getStringWidth(text)) + 1;
-        }
-
-        int y = getY();
-        int x = getX();
-
-        int textHeight = 9;
-
-        int index = collectionSize - 1;
-        for (int i = 0; i < collectionSize; i++) {
-            String mainText = names[i];
-            String redNumbers = EnumChatFormatting.RED + "" + i;
-            int calculatedY = y + index * textHeight;
-
-            if (index == 0) {
-                if(background) {
-                    Helper2D.drawRoundedRectangle(x, calculatedY, displayText + 4, textHeight, 2, 1610612736, 1);
-                    Helper2D.drawRectangle(x, calculatedY + textHeight, displayText + 4, 1, 1342177280);
-                }
-                Cloud.INSTANCE.fontHelper.size20.drawString(objective, x + 2 + displayText / 2f - Cloud.INSTANCE.fontHelper.size20.getStringWidth(objective) / 2f, calculatedY + 1, -1);
-            }
-
-            if(background) {
-                if(index == collectionSize - 1) {
-                    Helper2D.drawRoundedRectangle(x, calculatedY + textHeight + 1, displayText + 4, textHeight, 2, 1342177280, 2);
-                } else {
-                    Helper2D.drawRectangle(x, calculatedY + textHeight + 1, displayText + 4, textHeight, 1342177280);
-                }
-            }
-            Cloud.INSTANCE.fontHelper.size20.drawString(mainText, x + 2, calculatedY + textHeight + 1, -1);
-            if (!numbers) {
-                Cloud.INSTANCE.fontHelper.size20.drawString(redNumbers, x + 4 + displayText - Cloud.INSTANCE.fontHelper.size20.getStringWidth(redNumbers) - 5, calculatedY + textHeight + 1, -1);
             }
 
             index--;

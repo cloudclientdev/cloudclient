@@ -14,8 +14,6 @@ public class ScoreboardMod extends Mod {
                 "Adds Tweaks to the Scoreboard"
         );
 
-        String[] mode = {"Modern", "Legacy"};
-        Cloud.INSTANCE.settingManager.addSetting(new Setting("Mode", this, "Legacy", 1, mode));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Background", this, true));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Remove Red Numbers", this, false));
     }

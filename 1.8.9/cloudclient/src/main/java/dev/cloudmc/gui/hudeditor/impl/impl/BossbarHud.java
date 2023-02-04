@@ -30,7 +30,7 @@ public class BossbarHud extends HudMod {
     public void renderMod(int mouseX, int mouseY) {
         GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
-            renderBossHealthPlaceHolder(isModern());
+            renderBossHealthPlaceHolder();
             super.renderMod(mouseX, mouseY);
         }
         GLHelper.endScale();
@@ -41,13 +41,13 @@ public class BossbarHud extends HudMod {
         GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             if(BossStatus.bossName != null && BossStatus.statusBarTime > 0) {
-                renderBossHealth(isModern());
+                renderBossHealth();
             }
         }
         GLHelper.endScale();
     }
 
-    private void renderBossHealth(boolean modern) {
+    private void renderBossHealth() {
         BossStatus.statusBarTime--;
         int x = getX();
         int y = getY();
@@ -63,17 +63,13 @@ public class BossbarHud extends HudMod {
         }
 
         String s = BossStatus.bossName;
-        if(modern) {
-            Cloud.INSTANCE.fontHelper.size20.drawString(s, (float) (x + width / 2 - Cloud.INSTANCE.fontHelper.size20.getStringWidth(s) / 2), y, 16777215);
-        } else {
-            Cloud.INSTANCE.mc.fontRendererObj.drawString(s, x + width / 2 - Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(s) / 2, y, 16777215);
-        }
+        Cloud.INSTANCE.mc.fontRendererObj.drawStringWithShadow(s, x + width / 2f - Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(s) / 2f, y, 16777215);
 
         setW(width);
         setH(15);
     }
 
-    private void renderBossHealthPlaceHolder(boolean modern) {
+    private void renderBossHealthPlaceHolder() {
         int x = getX();
         int y = getY();
         int width = 182;
@@ -85,11 +81,7 @@ public class BossbarHud extends HudMod {
         Helper2D.drawTexturedModalRect(x, y + 10, 0, 79, health, 5);
 
         String s = "BossBar";
-        if(modern) {
-            Cloud.INSTANCE.fontHelper.size20.drawString(s, (float) (x + width / 2 - Cloud.INSTANCE.fontHelper.size20.getStringWidth(s) / 2), y, 16777215);
-        } else {
-            Cloud.INSTANCE.mc.fontRendererObj.drawString(s, x + width / 2 - Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(s) / 2, y, 16777215);
-        }
+        Cloud.INSTANCE.mc.fontRendererObj.drawStringWithShadow(s, x + width / 2f - Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(s) / 2f, y, 16777215);
 
         setW(width);
         setH(15);
