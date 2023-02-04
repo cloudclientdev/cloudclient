@@ -25,19 +25,19 @@ public abstract class GuiIngameMenuMixin extends GuiScreen {
         this.field_146445_a = 0;
         this.buttonList.clear();
         byte b0 = -16;
-        boolean flag = true;
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 120 + b0, I18n.format("menu.returnToMenu")));
+        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 144 + b0, I18n.format("menu.returnToMenu")));
 
         if (!this.mc.isIntegratedServerRunning()) {
             ((GuiButton) this.buttonList.get(0)).displayString = I18n.format("menu.disconnect");
         }
 
         this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 4 + 24 + b0, I18n.format("menu.returnToGame")));
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 96 + b0, 98, 20, I18n.format("menu.options")));
-        this.buttonList.add(new GuiButton(12, this.width / 2 + 2, this.height / 4 + 96 + b0, 98, 20, "Mod Options..."));
+        this.buttonList.add(new GuiButton(30, this.width / 2 - 100, this.height / 4 + 96 + b0, 98, 20, "Servers"));
+        this.buttonList.add(new GuiButton(31, this.width / 2 + 2, this.height / 4 + 96 + b0, 98, 20, "Cloud Client"));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 120 + b0, 98, 20, I18n.format("menu.options")));
+        this.buttonList.add(new GuiButton(12, this.width / 2 + 2, this.height / 4 + 120 + b0, 98, 20, "Mod Options..."));
         GuiButton guibutton;
-        this.buttonList.add(guibutton = new GuiButton(7, this.width / 2 - 100, this.height / 4 + 72 + b0, 98, 20, I18n.format("menu.shareToLan")));
-        this.buttonList.add(new GuiButton(20, this.width / 2 + 2, this.height / 4 + 72 + b0, 98, 20, "Cloud Menu"));
+        this.buttonList.add(guibutton = new GuiButton(7, this.width / 2 - 100, this.height / 4 + 72 + b0, 200, 20, I18n.format("menu.shareToLan")));
         this.buttonList.add(new GuiButton(5, this.width / 2 - 100, this.height / 4 + 48 + b0, 98, 20, I18n.format("gui.achievements")));
         this.buttonList.add(new GuiButton(6, this.width / 2 + 2, this.height / 4 + 48 + b0, 98, 20, I18n.format("gui.stats")));
         guibutton.enabled = this.mc.isSingleplayer() && !this.mc.getIntegratedServer().getPublic();
@@ -80,7 +80,10 @@ public abstract class GuiIngameMenuMixin extends GuiScreen {
             case 12:
                 FMLClientHandler.instance().showInGameModOptions((GuiIngameMenu) (Object) this);
                 break;
-            case 20:
+            case 30:
+                this.mc.displayGuiScreen(new GuiMultiplayer(this));
+                break;
+            case 31:
                 this.mc.displayGuiScreen(Cloud.INSTANCE.hudEditor);
                 break;
         }
