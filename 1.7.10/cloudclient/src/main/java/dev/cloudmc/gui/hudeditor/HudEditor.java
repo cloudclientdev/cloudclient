@@ -94,8 +94,8 @@ public class HudEditor extends GuiScreen {
         GLHelper.startScissor(0, height / 2 - 78, width, 73);
         Cloud.INSTANCE.fontHelper.size40.drawString(
                 Cloud.modName,
-                width / 2 - Cloud.INSTANCE.fontHelper.size40.getStringWidth(Cloud.modName) / 2,
-                height / 2 + 36 - animateLogo.getValueI(),
+                width / 2f - Cloud.INSTANCE.fontHelper.size40.getStringWidth(Cloud.modName) / 2f,
+                height / 2f + 36 - animateLogo.getValueI(),
                 Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
         Helper2D.drawPicture(
@@ -118,8 +118,8 @@ public class HudEditor extends GuiScreen {
         );
         Cloud.INSTANCE.fontHelper.size20.drawString(
                 "Open Mods",
-                width / 2 - Cloud.INSTANCE.fontHelper.size20.getStringWidth("Open Mods") / 2,
-                height / 2,
+                width / 2f - Cloud.INSTANCE.fontHelper.size20.getStringWidth("Open Mods") / 2f,
+                height / 2f,
                 Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
 
@@ -134,39 +134,57 @@ public class HudEditor extends GuiScreen {
                     hudMod.setSize(hudMod.getSize() - 0.1f);
                 }
             }
-            for (HudMod sHudMod : hudModList) {
-                if (Cloud.INSTANCE.modManager.getMod(sHudMod.getName()).isToggled() && hudMod.isDragging() && !sHudMod.equals(hudMod)  && ClientStyle.isSnapping()) {
-                    if (!sHudMod.equals(hudMod)) {
-                        SnapPosition snap = new SnapPosition();
-                        snap.setSnapping(true);
-                        int snapRange = 5;
-                        if (MathHelper.withinBoundsRange(hudMod.getX(), sHudMod.getX(), snapRange))
-                            snap.setAll(sHudMod.getX(), sHudMod.getX(), false);
-                        else if (MathHelper.withinBoundsRange(hudMod.getX() + hudMod.getW() * hudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), snapRange))
-                            snap.setAll(sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize() - hudMod.getW() * hudMod.getSize(), false);
-                        else if (MathHelper.withinBoundsRange(hudMod.getX() + hudMod.getW() * hudMod.getSize(), sHudMod.getX(), snapRange))
-                            snap.setAll(sHudMod.getX(), sHudMod.getX() - hudMod.getW() * hudMod.getSize(), false);
-                        else if (MathHelper.withinBoundsRange(hudMod.getX(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), snapRange))
-                            snap.setAll(sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), false);
-                        else if (MathHelper.withinBoundsRange(hudMod.getY(), sHudMod.getY(), snapRange))
-                            snap.setAll(sHudMod.getY(), sHudMod.getY(), true);
-                        else if (MathHelper.withinBoundsRange(hudMod.getY() + hudMod.getH() * hudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), snapRange))
-                            snap.setAll(sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize() - hudMod.getH() * hudMod.getSize(), true);
-                        else if (MathHelper.withinBoundsRange(hudMod.getY() + hudMod.getH() * hudMod.getSize(), sHudMod.getY(), snapRange))
-                            snap.setAll(sHudMod.getY(), sHudMod.getY() - hudMod.getH() * hudMod.getSize(), true);
-                        else if (MathHelper.withinBoundsRange(hudMod.getY(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), snapRange))
-                            snap.setAll(sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), true);
-                        else
-                            snap.setSnapping(false);
 
-                        if (snap.isSnapping()) {
-                            if (!snap.isHorizontal()) {
-                                Helper2D.drawRectangle((int) snap.getsPos(), 0, 1, sr.getScaledHeight(), 0x60ffffff);
-                                hudMod.setX((int) snap.getPos());
-                            } else {
-                                Helper2D.drawRectangle(0, (int) snap.getsPos(), sr.getScaledWidth(), 1, 0x60ffffff);
-                                hudMod.setY((int) snap.getPos());
-                            }
+            ScaledResolution scaledResolution = new ScaledResolution(Cloud.INSTANCE.mc, Cloud.INSTANCE.mc.displayWidth, Cloud.INSTANCE.mc.displayHeight);
+            if(hudMod.getX() < 0) {
+                hudMod.setX(0);
+            } else if(hudMod.getX() + hudMod.getW() * hudMod.getSize() > scaledResolution.getScaledWidth()) {
+                hudMod.setX((int) (scaledResolution.getScaledWidth() - hudMod.getW() * hudMod.getSize()));
+            }
+
+            if(hudMod.getY() < 0) {
+                hudMod.setY(0);
+            } else if(hudMod.getY() + hudMod.getH() * hudMod.getSize() > scaledResolution.getScaledHeight()) {
+                hudMod.setY((int) (scaledResolution.getScaledHeight() - hudMod.getH() * hudMod.getSize()));
+            }
+
+            for (HudMod sHudMod : hudModList) {
+                if (
+                        Cloud.INSTANCE.modManager.getMod(sHudMod.getName()).isToggled() &&
+                        hudMod.isDragging() &&
+                        !sHudMod.equals(hudMod) &&
+                        !sHudMod.equals(hudMod) &&
+                        ClientStyle.isSnapping()
+                ) {
+                    SnapPosition snap = new SnapPosition();
+                    snap.setSnapping(true);
+                    int snapRange = 5;
+                    if (MathHelper.withinBoundsRange(hudMod.getX(), sHudMod.getX(), snapRange))
+                        snap.setAll(sHudMod.getX(), sHudMod.getX(), false);
+                    else if (MathHelper.withinBoundsRange(hudMod.getX() + hudMod.getW() * hudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), snapRange))
+                        snap.setAll(sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize() - hudMod.getW() * hudMod.getSize(), false);
+                    else if (MathHelper.withinBoundsRange(hudMod.getX() + hudMod.getW() * hudMod.getSize(), sHudMod.getX(), snapRange))
+                        snap.setAll(sHudMod.getX(), sHudMod.getX() - hudMod.getW() * hudMod.getSize(), false);
+                    else if (MathHelper.withinBoundsRange(hudMod.getX(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), snapRange))
+                        snap.setAll(sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), sHudMod.getX() + sHudMod.getW() * sHudMod.getSize(), false);
+                    else if (MathHelper.withinBoundsRange(hudMod.getY(), sHudMod.getY(), snapRange))
+                        snap.setAll(sHudMod.getY(), sHudMod.getY(), true);
+                    else if (MathHelper.withinBoundsRange(hudMod.getY() + hudMod.getH() * hudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), snapRange))
+                        snap.setAll(sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize() - hudMod.getH() * hudMod.getSize(), true);
+                    else if (MathHelper.withinBoundsRange(hudMod.getY() + hudMod.getH() * hudMod.getSize(), sHudMod.getY(), snapRange))
+                        snap.setAll(sHudMod.getY(), sHudMod.getY() - hudMod.getH() * hudMod.getSize(), true);
+                    else if (MathHelper.withinBoundsRange(hudMod.getY(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), snapRange))
+                        snap.setAll(sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), sHudMod.getY() + sHudMod.getH() * sHudMod.getSize(), true);
+                    else
+                        snap.setSnapping(false);
+
+                    if (snap.isSnapping()) {
+                        if (!snap.isHorizontal()) {
+                            Helper2D.drawRectangle((int) snap.getsPos(), 0, 1, sr.getScaledHeight(), 0x60ffffff);
+                            hudMod.setX((int) snap.getPos());
+                        } else {
+                            Helper2D.drawRectangle(0, (int) snap.getsPos(), sr.getScaledWidth(), 1, 0x60ffffff);
+                            hudMod.setY((int) snap.getPos());
                         }
                     }
                 }
