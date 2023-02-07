@@ -111,15 +111,9 @@ public class ColorPicker extends Settings {
             mainPosHelperX.update();
             mainPosHelperY.update();
 
-            Color mainColor = setting.getColor();
             Color color = ColorHelper.getColorAtPixel(getXW - 191 + setting.getMainSlider()[0], getYH + 28 + setting.getMainSlider()[1] + offset);
             if(animate.hasFinished())
-                mainColor = new Color(
-                        color.getRed(),
-                        color.getGreen(),
-                        color.getBlue(),
-                        255
-                );
+                setting.setColor(color);
             float mainPosX = getXW - 193 + setting.getMainSlider()[0];
             float mainPosY = getYH + 25 + setting.getMainSlider()[1] + offset;
             Helper2D.drawRoundedRectangle(
@@ -132,7 +126,6 @@ public class ColorPicker extends Settings {
                             mainPosY - mainPosHelperY.getDifference() + mainPosHelperY.getValue()
                     ), 5, 5, 3, -1, 0
             );
-            setting.setColor(mainColor);
 
             if(!animate.hasFinished()) {
                 GLHelper.endScissor();
