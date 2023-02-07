@@ -74,9 +74,9 @@ public class ColorPicker extends Options {
             sidePosHelper.post(option.getSideSlider());
             sidePosHelper.update();
 
-            int sideColor = ColorHelper.getColorAtPixel(getXW - 35, getYH + 28 + option.getSideSlider() + offset);
+            Color sideColor = ColorHelper.getColorAtPixel(getXW - 35, getYH + 28 + option.getSideSlider() + offset);
             if(animate.hasFinished())
-                option.setSideColor(ColorHelper.hexToRgb(sideColor));
+                option.setSideColor(sideColor);
 
             float sidePosY = getYH + 25 + option.getSideSlider() + offset;
             Helper2D.drawRoundedRectangle(getXW - 40, (int) (sidePosHelper.isDirection() ?
@@ -111,15 +111,9 @@ public class ColorPicker extends Options {
             mainPosHelperX.update();
             mainPosHelperY.update();
 
-            Color mainColor = option.getColor();
-            int color = ColorHelper.getColorAtPixel(getXW - 191 + option.getMainSlider()[0], getYH + 28 + option.getMainSlider()[1] + offset);
+            Color color = ColorHelper.getColorAtPixel(getXW - 191 + option.getMainSlider()[0], getYH + 28 + option.getMainSlider()[1] + offset);
             if(animate.hasFinished())
-                mainColor = new Color(
-                        ColorHelper.hexToRgb(color).getRed(),
-                        ColorHelper.hexToRgb(color).getGreen(),
-                        ColorHelper.hexToRgb(color).getBlue(),
-                        255
-                );
+                option.setColor(color);
             float mainPosX = getXW - 193 + option.getMainSlider()[0];
             float mainPosY = getYH + 25 + option.getMainSlider()[1] + offset;
             Helper2D.drawRoundedRectangle(
@@ -132,7 +126,6 @@ public class ColorPicker extends Options {
                             mainPosY - mainPosHelperY.getDifference() + mainPosHelperY.getValue()
                     ), 5, 5, 3, -1, 0
             );
-            option.setColor(mainColor);
 
             if(!animate.hasFinished()) {
                 GLHelper.endScissor();

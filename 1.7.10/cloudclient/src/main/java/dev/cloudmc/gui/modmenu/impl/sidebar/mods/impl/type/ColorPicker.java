@@ -6,13 +6,10 @@
 package dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.type;
 
 import dev.cloudmc.Cloud;
-import dev.cloudmc.feature.option.Option;
 import dev.cloudmc.feature.setting.Setting;
 import dev.cloudmc.gui.ClientStyle;
-import dev.cloudmc.gui.modmenu.impl.Panel;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.Button;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.Settings;
-import dev.cloudmc.gui.modmenu.impl.sidebar.options.Options;
 import dev.cloudmc.helpers.*;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
@@ -77,9 +74,9 @@ public class ColorPicker extends Settings {
             sidePosHelper.post(setting.getSideSlider());
             sidePosHelper.update();
 
-            int sideColor = ColorHelper.getColorAtPixel(getXW - 35, getYH + 28 + setting.getSideSlider() + offset);
+            Color sideColor = ColorHelper.getColorAtPixel(getXW - 35, getYH + 28 + setting.getSideSlider() + offset);
             if(animate.hasFinished())
-                setting.setSideColor(ColorHelper.hexToRgb(sideColor));
+                setting.setSideColor(sideColor);
 
             float sidePosY = getYH + 25 + setting.getSideSlider() + offset;
             Helper2D.drawRoundedRectangle(getXW - 40, (int) (sidePosHelper.isDirection() ?
@@ -115,12 +112,12 @@ public class ColorPicker extends Settings {
             mainPosHelperY.update();
 
             Color mainColor = setting.getColor();
-            int color = ColorHelper.getColorAtPixel(getXW - 191 + setting.getMainSlider()[0], getYH + 28 + setting.getMainSlider()[1] + offset);
+            Color color = ColorHelper.getColorAtPixel(getXW - 191 + setting.getMainSlider()[0], getYH + 28 + setting.getMainSlider()[1] + offset);
             if(animate.hasFinished())
                 mainColor = new Color(
-                        ColorHelper.hexToRgb(color).getRed(),
-                        ColorHelper.hexToRgb(color).getGreen(),
-                        ColorHelper.hexToRgb(color).getBlue(),
+                        color.getRed(),
+                        color.getGreen(),
+                        color.getBlue(),
                         255
                 );
             float mainPosX = getXW - 193 + setting.getMainSlider()[0];
