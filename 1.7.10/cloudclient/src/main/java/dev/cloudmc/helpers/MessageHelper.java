@@ -7,7 +7,7 @@ import dev.cloudmc.helpers.render.Helper2D;
 
 public class MessageHelper {
 
-    private Animate animate = new Animate();
+    private final Animate animate = new Animate();
     private String message;
     private String subMessage;
     private double time;
