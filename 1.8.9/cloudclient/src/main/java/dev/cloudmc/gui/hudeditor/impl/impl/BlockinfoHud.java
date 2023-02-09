@@ -6,11 +6,11 @@
 package dev.cloudmc.gui.hudeditor.impl.impl;
 
 import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
-import dev.cloudmc.helpers.GLHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.GLHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.init.Blocks;
@@ -37,17 +37,16 @@ public class BlockinfoHud extends HudMod {
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isModern()) {
                 if (isBackground()) {
-                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, ClientStyle.getBackgroundColor(50).getRGB(), 0);
+                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, Style.getColor(50).getRGB(), 0);
                 }
                 setW(Cloud.INSTANCE.fontHelper.size20.getStringWidth("Grass Block") + 42);
                 Cloud.INSTANCE.fontHelper.size20.drawString("Grass Block", getX() + 35, getY() + 10, getColor());
 
                 ItemStack itemStack = new ItemStack(Blocks.grass);
                 renderItem(itemStack);
-            }
-            else {
+            } else {
                 if (isBackground()) {
-                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), ClientStyle.getBackgroundColor(50).getRGB());
+                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), Style.getColor(50).getRGB());
                 }
                 setW(Cloud.INSTANCE.mc.fontRendererObj.getStringWidth("Grass Block") + 42);
                 Cloud.INSTANCE.mc.fontRendererObj.drawString("Grass Block", getX() + 35, getY() + 10, getColor());
@@ -89,8 +88,7 @@ public class BlockinfoHud extends HudMod {
                 }
                 Cloud.INSTANCE.fontHelper.size20.drawString(finalItem.getDisplayName(), getX() + 35, getY() + 10, getColor());
                 renderItem(finalItem);
-            }
-            else {
+            } else {
                 setW(Cloud.INSTANCE.fontHelper.size20.getStringWidth(finalItem.getDisplayName()) + 42);
                 if (isBackground()) {
                     Helper2D.drawRectangle(getX(), getY(), getW(), getH(), 0x50000000);

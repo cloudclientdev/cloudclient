@@ -6,41 +6,39 @@
 package dev.cloudmc.gui.hudeditor;
 
 import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
 import dev.cloudmc.gui.hudeditor.impl.impl.*;
 import dev.cloudmc.gui.hudeditor.impl.impl.keystrokes.KeystrokesHud;
 import dev.cloudmc.gui.modmenu.ModMenu;
-import dev.cloudmc.helpers.GLHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.ResolutionHelper;
+import dev.cloudmc.helpers.render.GLHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class HudEditor extends GuiScreen {
 
-    private final ArrayList<HudMod> hudModList;
+    private final ArrayList<HudMod> hudModList = new ArrayList<>();
 
-    private Animate animateLogo = new Animate();
-    private Animate animateSnapping = new Animate();
-    private Animate animate = new Animate();
+    private final Animate animateLogo = new Animate();
+    private final Animate animateSnapping = new Animate();
+    private final Animate animate = new Animate();
 
     private int counter;
     private int index;
     private final int offset;
 
     public HudEditor() {
-        hudModList = new ArrayList<>();
         counter = 0;
         index = 10;
         offset = 10;
@@ -85,26 +83,25 @@ public class HudEditor extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        ScaledResolution sr = new ScaledResolution(Cloud.INSTANCE.mc);
+        boolean roundedCorners = Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled();
+        int color = Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB();
+
         Helper2D.drawRectangle(0, 0, width, height, 0x70000000);
 
         animateLogo.update();
-
         GLHelper.startScissor(0, height / 2 - 78, width, 73);
         Cloud.INSTANCE.fontHelper.size40.drawString(
                 Cloud.modName,
                 width / 2f - Cloud.INSTANCE.fontHelper.size40.getStringWidth(Cloud.modName) / 2f,
                 height / 2f + 36 - animateLogo.getValueI(),
-                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
+                color
         );
         Helper2D.drawPicture(
                 width / 2 - 25,
                 height / 2 - 8 - animateLogo.getValueI(),
-                50, 50, ClientStyle.getBackgroundColor(70).getRGB(), "cloudlogo.png"
+                50, 50, Style.getColor(70).getRGB(), "cloudlogo.png"
         );
         GLHelper.endScissor();
-
-        animate.update();
 
         animate.update().setReversed(!MathHelper.withinBox(width / 2 - 50, height / 2 - 6, 100, 20, mouseX, mouseY));
 
@@ -112,14 +109,14 @@ public class HudEditor extends GuiScreen {
                 width / 2 - 50,
                 height / 2 - 6,
                 100, 20, 2,
-                ClientStyle.getBackgroundColor(animate.getValueI() + 30).getRGB(),
-                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+                Style.getColor(animate.getValueI() + 30).getRGB(),
+                roundedCorners ? 0 : -1
         );
         Cloud.INSTANCE.fontHelper.size20.drawString(
                 "Open Mods",
                 width / 2f - Cloud.INSTANCE.fontHelper.size20.getStringWidth("Open Mods") / 2f,
                 height / 2f,
-                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
+                color
         );
 
         for (HudMod hudMod : hudModList) {
@@ -134,26 +131,25 @@ public class HudEditor extends GuiScreen {
                 }
             }
 
-            ScaledResolution scaledResolution = new ScaledResolution(Cloud.INSTANCE.mc);
-            if(hudMod.getX() < 0) {
+            if (hudMod.getX() < 0) {
                 hudMod.setX(0);
-            } else if(hudMod.getX() + hudMod.getW() * hudMod.getSize() > scaledResolution.getScaledWidth()) {
-                hudMod.setX((int) (scaledResolution.getScaledWidth() - hudMod.getW() * hudMod.getSize()));
+            } else if (hudMod.getX() + hudMod.getW() * hudMod.getSize() > ResolutionHelper.getWidth()) {
+                hudMod.setX((int) (ResolutionHelper.getWidth() - hudMod.getW() * hudMod.getSize()));
             }
 
-            if(hudMod.getY() < 0) {
+            if (hudMod.getY() < 0) {
                 hudMod.setY(0);
-            } else if(hudMod.getY() + hudMod.getH() * hudMod.getSize() > scaledResolution.getScaledHeight()) {
-                hudMod.setY((int) (scaledResolution.getScaledHeight() - hudMod.getH() * hudMod.getSize()));
+            } else if (hudMod.getY() + hudMod.getH() * hudMod.getSize() > ResolutionHelper.getHeight()) {
+                hudMod.setY((int) (ResolutionHelper.getHeight() - hudMod.getH() * hudMod.getSize()));
             }
 
             for (HudMod sHudMod : hudModList) {
                 if (
                         Cloud.INSTANCE.modManager.getMod(sHudMod.getName()).isToggled() &&
-                        hudMod.isDragging() &&
-                        !sHudMod.equals(hudMod) &&
-                        !sHudMod.equals(hudMod) &&
-                        ClientStyle.isSnapping()
+                                hudMod.isDragging() &&
+                                !sHudMod.equals(hudMod) &&
+                                !sHudMod.equals(hudMod) &&
+                                Style.isSnapping()
                 ) {
                     SnapPosition snap = new SnapPosition();
                     snap.setSnapping(true);
@@ -179,10 +175,10 @@ public class HudEditor extends GuiScreen {
 
                     if (snap.isSnapping()) {
                         if (!snap.isHorizontal()) {
-                            Helper2D.drawRectangle((int) snap.getsPos(), 0, 1, sr.getScaledHeight(), 0x60ffffff);
+                            Helper2D.drawRectangle((int) snap.getsPos(), 0, 1, ResolutionHelper.getHeight(), 0x60ffffff);
                             hudMod.setX((int) snap.getPos());
                         } else {
-                            Helper2D.drawRectangle(0, (int) snap.getsPos(), sr.getScaledWidth(), 1, 0x60ffffff);
+                            Helper2D.drawRectangle(0, (int) snap.getsPos(), ResolutionHelper.getWidth(), 1, 0x60ffffff);
                             hudMod.setY((int) snap.getPos());
                         }
                     }
@@ -190,17 +186,11 @@ public class HudEditor extends GuiScreen {
             }
         }
 
-        Helper2D.drawRoundedRectangle(10, height - 50, 40, 40, 2,
-                ClientStyle.getBackgroundColor(40).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
-        Helper2D.drawPicture(15, height - 45, 30, 30, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(),
-                ClientStyle.isDarkMode() ? "icon/dark.png" : "icon/light.png");
-
         animateSnapping.update();
-
-        Helper2D.drawRoundedRectangle(60, height - animateSnapping.getValueI(), 40, 40, 2,
-                ClientStyle.getBackgroundColor(40).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
-        Helper2D.drawPicture(65, height + 5 - animateSnapping.getValueI(), 30, 30, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(),
-                ClientStyle.isSnapping() ? "icon/grid.png" : "icon/nogrid.png");
+        Helper2D.drawRoundedRectangle(10, height - 50, 40, 40, 2, Style.getColor(40).getRGB(), roundedCorners ? 0 : -1);
+        Helper2D.drawPicture(15, height - 45, 30, 30, color, Style.isDarkMode() ? "icon/dark.png" : "icon/light.png");
+        Helper2D.drawRoundedRectangle(60, height - animateSnapping.getValueI(), 40, 40, 2, Style.getColor(40).getRGB(), roundedCorners ? 0 : -1);
+        Helper2D.drawPicture(65, height + 5 - animateSnapping.getValueI(), 30, 30, color, Style.isSnapping() ? "icon/grid.png" : "icon/nogrid.png");
     }
 
     /**
@@ -228,9 +218,9 @@ public class HudEditor extends GuiScreen {
             }
 
             if (MathHelper.withinBox(10, height - 50, 40, 40, mouseX, mouseY)) {
-                ClientStyle.setDarkMode(!ClientStyle.isDarkMode());
+                Style.setDarkMode(!Style.isDarkMode());
             } else if (MathHelper.withinBox(60, height - 50, 40, 40, mouseX, mouseY)) {
-                ClientStyle.setSnapping(!ClientStyle.isSnapping());
+                Style.setSnapping(!Style.isSnapping());
             }
         }
     }

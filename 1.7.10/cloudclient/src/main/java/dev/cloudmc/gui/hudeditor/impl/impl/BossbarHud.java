@@ -7,17 +7,13 @@ package dev.cloudmc.gui.hudeditor.impl.impl;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.ClientStyle;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
-import dev.cloudmc.helpers.GLHelper;
-import dev.cloudmc.helpers.Helper2D;
-import dev.cloudmc.helpers.font.GlyphPageFontRenderer;
-import net.minecraft.client.gui.FontRenderer;
+import dev.cloudmc.helpers.render.GLHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.boss.BossStatus;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import org.lwjgl.opengl.GL11;
 
 public class BossbarHud extends HudMod {
 
@@ -39,7 +35,7 @@ public class BossbarHud extends HudMod {
     public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
         GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
-            if(BossStatus.bossName != null && BossStatus.statusBarTime > 0) {
+            if (BossStatus.bossName != null && BossStatus.statusBarTime > 0) {
                 renderBossHealth();
             }
         }

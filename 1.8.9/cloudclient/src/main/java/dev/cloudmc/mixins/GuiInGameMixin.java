@@ -8,12 +8,15 @@ package dev.cloudmc.mixins;
 import dev.cloudmc.Cloud;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiIngame;
+import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.scoreboard.ScoreObjective;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(GuiIngame.class)
 public abstract class GuiInGameMixin extends Gui {

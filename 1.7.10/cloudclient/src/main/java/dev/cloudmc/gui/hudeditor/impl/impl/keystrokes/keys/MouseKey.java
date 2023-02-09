@@ -6,12 +6,10 @@
 package dev.cloudmc.gui.hudeditor.impl.impl.keystrokes.keys;
 
 import dev.cloudmc.Cloud;
-import dev.cloudmc.helpers.CpsHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.Helper2D;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
@@ -26,10 +24,9 @@ public class MouseKey {
 
     public void renderKey(int x, int y, int width, int height, boolean modern, int mouseButton, int color, int fontColor, boolean background, boolean cps) {
         boolean mouseDown;
-        if(Cloud.INSTANCE.mc.currentScreen == null) {
+        if (Cloud.INSTANCE.mc.currentScreen == null) {
             mouseDown = Mouse.isButtonDown(mouseButton);
-        }
-        else {
+        } else {
             mouseDown = false;
         }
 
@@ -50,8 +47,7 @@ public class MouseKey {
                     y + height / 2f - 4,
                     fontColor
             );
-        }
-        else {
+        } else {
             if (background) {
                 Helper2D.drawRectangle(x, y, width, height, color);
             }

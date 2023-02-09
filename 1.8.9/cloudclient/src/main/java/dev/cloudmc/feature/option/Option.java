@@ -5,8 +5,6 @@
 
 package dev.cloudmc.feature.option;
 
-import dev.cloudmc.feature.mod.Mod;
-
 import java.awt.*;
 
 public class Option {

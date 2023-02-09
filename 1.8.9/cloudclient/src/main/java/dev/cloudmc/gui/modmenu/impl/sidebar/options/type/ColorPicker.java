@@ -7,24 +7,28 @@ package dev.cloudmc.gui.modmenu.impl.sidebar.options.type;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.option.Option;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.modmenu.impl.Panel;
 import dev.cloudmc.gui.modmenu.impl.sidebar.options.Options;
 import dev.cloudmc.helpers.*;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
+import dev.cloudmc.helpers.hud.PositionHelper;
+import dev.cloudmc.helpers.render.GLHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 
 import java.awt.*;
 
 public class ColorPicker extends Options {
 
+    private final PositionHelper sidePosHelper = new PositionHelper(75);
+    private final PositionHelper mainPosHelperX = new PositionHelper(100);
+    private final PositionHelper mainPosHelperY = new PositionHelper(150);
+    private final Animate animate = new Animate();
+
     private boolean dragSide;
     private boolean dragMain;
     private boolean open;
-    private PositionHelper sidePosHelper = new PositionHelper(75);
-    private PositionHelper mainPosHelperX = new PositionHelper(100);
-    private PositionHelper mainPosHelperY = new PositionHelper(150);
-    private Animate animate = new Animate();
 
     public ColorPicker(Option option, Panel panel, int y) {
         super(option, panel, y);
@@ -34,28 +38,23 @@ public class ColorPicker extends Options {
 
     @Override
     public void renderOption(int mouseX, int mouseY) {
-        if(open) {
-            setH(100);
-        } else {
-            setH(25);
-        }
-
         int getXW = panel.getX() + panel.getW();
         int getYH = panel.getY() + panel.getH() + getY();
         boolean rounded = Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled();
+        int color = Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB();
 
-        Cloud.INSTANCE.fontHelper.size30.drawString(option.getName(), panel.getX() + 20, getYH + 6, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
+        Cloud.INSTANCE.fontHelper.size30.drawString(option.getName(), panel.getX() + 20, getYH + 6, color);
         animate.update();
 
-        if(open) {
-            if(!animate.hasFinished()) {
+        if (open) {
+            if (!animate.hasFinished()) {
                 GLHelper.startScissor(getXW - 193, getYH + 25, 180, 70);
             }
 
             int offset = animate.getValueI() - 70;
 
-            Helper2D.drawRoundedRectangle(getXW - 40, getYH + 25 + offset, 20, 70, 2, ClientStyle.getBackgroundColor(50).getRGB(), rounded ? 0 : -1);
-            Helper2D.drawRoundedRectangle(getXW - 193, getYH + 25 + offset, 150, 70, 2, ClientStyle.getBackgroundColor(50).getRGB(), rounded ? 0 : -1);
+            Helper2D.drawRoundedRectangle(getXW - 40, getYH + 25 + offset, 20, 70, 2, Style.getColor(50).getRGB(), rounded ? 0 : -1);
+            Helper2D.drawRoundedRectangle(getXW - 193, getYH + 25 + offset, 150, 70, 2, Style.getColor(50).getRGB(), rounded ? 0 : -1);
 
             Helper2D.drawPicture(getXW - 38, getYH + 27 + offset, 16, 66, 0, "icon/hue.png");
 
@@ -75,7 +74,7 @@ public class ColorPicker extends Options {
             sidePosHelper.update();
 
             Color sideColor = ColorHelper.getColorAtPixel(getXW - 35, getYH + 28 + option.getSideSlider() + offset);
-            if(animate.hasFinished())
+            if (animate.hasFinished() && getYH + 28 + option.getSideSlider() + offset < (panel.getY() + panel.getH() + 300))
                 option.setSideColor(sideColor);
 
             float sidePosY = getYH + 25 + option.getSideSlider() + offset;
@@ -111,9 +110,9 @@ public class ColorPicker extends Options {
             mainPosHelperX.update();
             mainPosHelperY.update();
 
-            Color color = ColorHelper.getColorAtPixel(getXW - 191 + option.getMainSlider()[0], getYH + 28 + option.getMainSlider()[1] + offset);
-            if(animate.hasFinished())
-                option.setColor(color);
+            Color mainColor = ColorHelper.getColorAtPixel(getXW - 191 + option.getMainSlider()[0], getYH + 28 + option.getMainSlider()[1] + offset);
+            if (animate.hasFinished() && getYH + 28 + option.getMainSlider()[1] + offset < (panel.getY() + panel.getH() + 300))
+                option.setColor(mainColor);
             float mainPosX = getXW - 193 + option.getMainSlider()[0];
             float mainPosY = getYH + 25 + option.getMainSlider()[1] + offset;
             Helper2D.drawRoundedRectangle(
@@ -127,15 +126,17 @@ public class ColorPicker extends Options {
                     ), 5, 5, 3, -1, 0
             );
 
-            if(!animate.hasFinished()) {
+            if (!animate.hasFinished()) {
                 GLHelper.endScissor();
             }
         }
 
-        String color = "R" + option.getColor().getRed() + " G" + option.getColor().getGreen() + " B" + option.getColor().getBlue();
-        Cloud.INSTANCE.fontHelper.size20.drawString(color, getXW - 45 - Cloud.INSTANCE.fontHelper.size20.getStringWidth(color), getYH + 9, -1);
-        Helper2D.drawRoundedRectangle(getXW - 40, getYH + 2, 20, 20, 2, ClientStyle.getBackgroundColor(50).getRGB(), rounded ? 0 : -1);
+        String rgbText = "R" + option.getColor().getRed() + " G" + option.getColor().getGreen() + " B" + option.getColor().getBlue();
+        Cloud.INSTANCE.fontHelper.size20.drawString(rgbText, getXW - 45 - Cloud.INSTANCE.fontHelper.size20.getStringWidth(rgbText), getYH + 9, -1);
+        Helper2D.drawRoundedRectangle(getXW - 40, getYH + 2, 20, 20, 2, Style.getColor(50).getRGB(), rounded ? 0 : -1);
         Helper2D.drawRectangle(getXW - 38, getYH + 4, 16, 16, option.getColor().getRGB());
+
+        setH(open ? 100 : 25);
     }
 
     @Override
@@ -143,7 +144,7 @@ public class ColorPicker extends Options {
         int getXW = panel.getX() + panel.getW();
         int getYH = panel.getY() + panel.getH() + getY();
 
-        if(MathHelper.withinBox(panel.getX(), getYH, panel.getW(), 25, mouseX, mouseY)) {
+        if (MathHelper.withinBox(panel.getX(), getYH, panel.getW(), 25, mouseX, mouseY)) {
             open = !open;
             animate.reset();
         } else if (MathHelper.withinBox(getXW - 40, getYH + 25, 20, 70, mouseX, mouseY)) {

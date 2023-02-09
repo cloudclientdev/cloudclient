@@ -6,12 +6,10 @@
 package dev.cloudmc.gui.hudeditor.impl.impl.keystrokes.keys;
 
 import dev.cloudmc.Cloud;
-import dev.cloudmc.helpers.CpsHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.Helper2D;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;

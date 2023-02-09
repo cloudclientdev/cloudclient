@@ -6,7 +6,6 @@
 package dev.cloudmc.helpers;
 
 import dev.cloudmc.Cloud;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -54,12 +53,10 @@ public class ColorHelper {
      */
 
     public static Color getColorAtPixel(float x, float y) {
-        ScaledResolution scaledResolution = new ScaledResolution(Cloud.INSTANCE.mc);
-        int scaleFactor = scaledResolution.getScaleFactor();
         FloatBuffer floatBuffer = BufferUtils.createFloatBuffer(3);
         GL11.glReadPixels(
-                (int) (x * scaleFactor),
-                (int) (Cloud.INSTANCE.mc.displayHeight - y * scaleFactor),
+                (int) (x * ResolutionHelper.getFactor()),
+                (int) (Cloud.INSTANCE.mc.displayHeight - y * ResolutionHelper.getFactor()),
                 1, 1, GL11.GL_RGB, GL11.GL_FLOAT, floatBuffer
         );
         float red = floatBuffer.get(0);

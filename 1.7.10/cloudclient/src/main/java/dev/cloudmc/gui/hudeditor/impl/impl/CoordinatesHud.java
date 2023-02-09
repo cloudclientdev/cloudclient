@@ -8,11 +8,11 @@ package dev.cloudmc.gui.hudeditor.impl.impl;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
-import dev.cloudmc.helpers.GLHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.GLHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
@@ -30,16 +30,15 @@ public class CoordinatesHud extends HudMod {
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isModern()) {
                 if (isBackground()) {
-                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, ClientStyle.getBackgroundColor(50).getRGB(), 0);
+                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, Style.getColor(50).getRGB(), 0);
                 }
                 Cloud.INSTANCE.fontHelper.size20.drawString("X: " + MathHelper.round(Cloud.INSTANCE.mc.thePlayer.posX, 1), getX() + 5, getY() + 5, getColor());
                 Cloud.INSTANCE.fontHelper.size20.drawString("Y: " + MathHelper.round(Cloud.INSTANCE.mc.thePlayer.posY, 1), getX() + 5, getY() + 5 + 14, getColor());
                 Cloud.INSTANCE.fontHelper.size20.drawString("Z: " + MathHelper.round(Cloud.INSTANCE.mc.thePlayer.posZ, 1), getX() + 5, getY() + 5 + 28, getColor());
                 Cloud.INSTANCE.fontHelper.size20.drawString(isBiome() ? "Biome: " + getBiomeName() : "", getX() + 5, getY() + 5 + 42, getColor());
-            }
-            else {
+            } else {
                 if (isBackground()) {
-                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), ClientStyle.getBackgroundColor(50).getRGB());
+                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), Style.getColor(50).getRGB());
                 }
                 Cloud.INSTANCE.mc.fontRendererObj.drawString("X: " + MathHelper.round(Cloud.INSTANCE.mc.thePlayer.posX, 1), getX() + 5, getY() + 5, getColor());
                 Cloud.INSTANCE.mc.fontRendererObj.drawString("Y: " + MathHelper.round(Cloud.INSTANCE.mc.thePlayer.posY, 1), getX() + 5, getY() + 5 + 14, getColor());
@@ -63,8 +62,7 @@ public class CoordinatesHud extends HudMod {
                 Cloud.INSTANCE.fontHelper.size20.drawString("Y: " + MathHelper.round(Cloud.INSTANCE.mc.thePlayer.posY, 1), getX() + 5, getY() + 5 + 14, getColor());
                 Cloud.INSTANCE.fontHelper.size20.drawString("Z: " + MathHelper.round(Cloud.INSTANCE.mc.thePlayer.posZ, 1), getX() + 5, getY() + 5 + 28, getColor());
                 Cloud.INSTANCE.fontHelper.size20.drawString(isBiome() ? "Biome: " + getBiomeName() : "", getX() + 5, getY() + 5 + 42, getColor());
-            }
-            else {
+            } else {
                 if (isBackground()) {
                     Helper2D.drawRectangle(getX(), getY(), getW(), getH(), 0x50000000);
                 }
@@ -82,8 +80,7 @@ public class CoordinatesHud extends HudMod {
         if (isBiome()) {
             setW(120);
             setH(60);
-        }
-        else {
+        } else {
             setW(70);
             setH(45);
         }

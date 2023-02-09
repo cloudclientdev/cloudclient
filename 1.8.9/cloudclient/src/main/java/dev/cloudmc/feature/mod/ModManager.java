@@ -12,10 +12,9 @@ import java.util.ArrayList;
 
 public class ModManager {
 
-    public ArrayList<Mod> mods;
+    public ArrayList<Mod> mods = new ArrayList<>();
 
     public ModManager() {
-        mods = new ArrayList<>();
         init();
     }
 

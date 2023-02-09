@@ -19,17 +19,29 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class AnimationMod extends Mod {
 
+    public AnimationMod() {
+        super(
+                "Animation",
+                "1.7 Animations in 1.8."
+        );
+
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Block Animation", this, true));
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Eat/Drink Animation", this, true));
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Bow Animation", this, true));
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Fishing Rod", this, true));
+    }
+
     @SubscribeEvent
     public void onAnimation(TickEvent.ClientTickEvent e) {
         if (Cloud.INSTANCE.mc.theWorld == null || Cloud.INSTANCE.mc.thePlayer == null) return;
         if (e.phase == TickEvent.Phase.START) return;
         ItemStack heldItem = Cloud.INSTANCE.mc.thePlayer.getHeldItem();
         if (Cloud.INSTANCE.modManager.getMod("Animation").isToggled() && heldItem != null) {
-            if (Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Block Animation").isCheckToggled() && heldItem.getItemUseAction() == EnumAction.BLOCK) {
+            if (Cloud.INSTANCE.settingManager.getSettingByModAndName(getName(), "Block Animation").isCheckToggled() && heldItem.getItemUseAction() == EnumAction.BLOCK) {
                 attemptSwing();
-            } else if (Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Eat/Drink Animation").isCheckToggled() && heldItem.getItemUseAction() == EnumAction.DRINK) {
+            } else if (Cloud.INSTANCE.settingManager.getSettingByModAndName(getName(), "Eat/Drink Animation").isCheckToggled() && heldItem.getItemUseAction() == EnumAction.DRINK) {
                 attemptSwing();
-            } else if (Cloud.INSTANCE.settingManager.getSettingByModAndName("Animation", "Bow Animation").isCheckToggled() && heldItem.getItemUseAction() == EnumAction.BOW) {
+            } else if (Cloud.INSTANCE.settingManager.getSettingByModAndName(getName(), "Bow Animation").isCheckToggled() && heldItem.getItemUseAction() == EnumAction.BOW) {
                 attemptSwing();
             }
         }
@@ -60,17 +72,5 @@ public class AnimationMod extends Mod {
             player.swingProgressInt = -1;
             player.isSwingInProgress = true;
         }
-    }
-    
-    public AnimationMod() {
-        super(
-                "Animation",
-                "1.7 Animations in 1.8."
-        );
-
-        Cloud.INSTANCE.settingManager.addSetting(new Setting("Block Animation", this, true));
-        Cloud.INSTANCE.settingManager.addSetting(new Setting("Eat/Drink Animation", this, true));
-        Cloud.INSTANCE.settingManager.addSetting(new Setting("Bow Animation", this, true));
-        Cloud.INSTANCE.settingManager.addSetting(new Setting("Fishing Rod", this, true));
     }
 }

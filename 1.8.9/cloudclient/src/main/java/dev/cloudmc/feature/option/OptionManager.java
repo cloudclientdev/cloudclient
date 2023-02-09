@@ -5,20 +5,16 @@
 
 package dev.cloudmc.feature.option;
 
-import dev.cloudmc.gui.modmenu.impl.sidebar.options.type.CellGrid;
-import dev.cloudmc.gui.modmenu.impl.sidebar.options.type.Keybinding;
 import org.lwjgl.input.Keyboard;
-import scala.tools.cmd.gen.AnyValReps;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public class OptionManager {
 
-    public ArrayList<Option> optionList;
+    public ArrayList<Option> optionList  = new ArrayList<>();
 
     public OptionManager() {
-        optionList = new ArrayList<>();
         init();
     }
 

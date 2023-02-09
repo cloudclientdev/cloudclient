@@ -8,7 +8,7 @@ package dev.cloudmc.feature.mod;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraftforge.common.MinecraftForge;
 
-public class Mod {
+public abstract class Mod {
 
     private String name;
     private String description;

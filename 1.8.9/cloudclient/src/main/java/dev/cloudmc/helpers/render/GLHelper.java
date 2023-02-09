@@ -3,10 +3,9 @@
  * GNU Lesser General Public License v3.0
  */
 
-package dev.cloudmc.helpers;
+package dev.cloudmc.helpers.render;
 
-import dev.cloudmc.Cloud;
-import net.minecraft.client.gui.ScaledResolution;
+import dev.cloudmc.helpers.ResolutionHelper;
 import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.opengl.GL11.GL_SCISSOR_TEST;
@@ -24,12 +23,11 @@ public class GLHelper {
 
     public static void startScissor(int x, int y, int width, int height) {
         GL11.glEnable(GL_SCISSOR_TEST);
-        ScaledResolution sr = new ScaledResolution(Cloud.INSTANCE.mc);
         GL11.glScissor(
-                x * sr.getScaleFactor(),
-                (sr.getScaledHeight() - y) * sr.getScaleFactor() - height * sr.getScaleFactor(),
-                width * sr.getScaleFactor(),
-                height * sr.getScaleFactor()
+                x * ResolutionHelper.getFactor(),
+                (ResolutionHelper.getHeight() - y) * ResolutionHelper.getFactor() - height * ResolutionHelper.getFactor(),
+                width * ResolutionHelper.getFactor(),
+                height * ResolutionHelper.getFactor()
         );
     }
 

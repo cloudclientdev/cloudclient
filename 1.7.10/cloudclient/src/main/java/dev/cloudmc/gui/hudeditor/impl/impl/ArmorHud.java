@@ -7,11 +7,11 @@ package dev.cloudmc.gui.hudeditor.impl.impl;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
-import dev.cloudmc.helpers.GLHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.GLHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.init.Items;
@@ -38,10 +38,10 @@ public class ArmorHud extends HudMod {
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isBackground()) {
                 if (isModern()) {
-                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, ClientStyle.getBackgroundColor(50).getRGB(), 0);
+                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, Style.getColor(50).getRGB(), 0);
                 }
                 else {
-                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), ClientStyle.getBackgroundColor(50).getRGB());
+                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), Style.getColor(50).getRGB());
                 }
             }
 

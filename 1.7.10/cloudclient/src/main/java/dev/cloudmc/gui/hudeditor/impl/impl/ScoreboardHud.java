@@ -11,8 +11,8 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
-import dev.cloudmc.helpers.GLHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.GLHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
@@ -86,14 +86,14 @@ public class ScoreboardHud extends HudMod {
 
             if (index == 0) {
                 String topText = objective.getDisplayName();
-                if(background) {
+                if (background) {
                     Helper2D.drawRectangle(x, calculatedY, displayText + 4, textHeight, 1610612736);
                     Helper2D.drawRectangle(x, calculatedY + textHeight, displayText + 4, 1, 1342177280);
                 }
                 Cloud.INSTANCE.mc.fontRendererObj.drawString(topText, x + 2 + displayText / 2 - Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(topText) / 2, calculatedY + 1, -1);
             }
 
-            if(background) {
+            if (background) {
                 Helper2D.drawRectangle(x, calculatedY + textHeight + 1, displayText + 4, textHeight, 1342177280);
             }
             Cloud.INSTANCE.mc.fontRendererObj.drawString(mainText, x + 2, calculatedY + textHeight + 1, -1);
@@ -112,11 +112,11 @@ public class ScoreboardHud extends HudMod {
         String objective = "Scoreboard";
         int displayText = Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(objective) + 2;
 
-        String[] names = { "Steve", "Alex", "Zuri", "Sunny", "Noor", "Makena", "Kai", "Efe", "Ari" };
+        String[] names = {"Steve", "Alex", "Zuri", "Sunny", "Noor", "Makena", "Kai", "Efe", "Ari"};
         int collectionSize = names.length;
 
         for (int i = 0; i < collectionSize; i++) {
-            String text = names[i] +  ": " + EnumChatFormatting.RED + i;
+            String text = names[i] + ": " + EnumChatFormatting.RED + i;
             displayText = Math.max(displayText, Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(text));
         }
 
@@ -132,14 +132,14 @@ public class ScoreboardHud extends HudMod {
             int calculatedY = y + index * textHeight;
 
             if (index == 0) {
-                if(background) {
+                if (background) {
                     Helper2D.drawRectangle(x, calculatedY, displayText + 4, textHeight, 1610612736);
                     Helper2D.drawRectangle(x, calculatedY + textHeight, displayText + 4, 1, 1342177280);
                 }
                 Cloud.INSTANCE.mc.fontRendererObj.drawString(objective, x + 2 + displayText / 2 - Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(objective) / 2, calculatedY + 1, -1);
             }
 
-            if(background) {
+            if (background) {
                 Helper2D.drawRectangle(x, calculatedY + textHeight + 1, displayText + 4, textHeight, 1342177280);
             }
             Cloud.INSTANCE.mc.fontRendererObj.drawString(mainText, x + 2, calculatedY + textHeight + 1, -1);
@@ -162,7 +162,7 @@ public class ScoreboardHud extends HudMod {
         return Cloud.INSTANCE.settingManager.getSettingByModAndName(getName(), "Background").isCheckToggled();
     }
 
-    private boolean isRemoveNumbers(){
+    private boolean isRemoveNumbers() {
         return Cloud.INSTANCE.settingManager.getSettingByModAndName(getName(), "Remove Red Numbers").isCheckToggled();
     }
 }

@@ -8,14 +8,14 @@ package dev.cloudmc.gui.modmenu.impl.sidebar.mods;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
 import dev.cloudmc.feature.setting.Setting;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.modmenu.impl.Panel;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.Settings;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.type.*;
-import dev.cloudmc.helpers.GLHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.GLHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
-import dev.cloudmc.helpers.ScrollHelper;
+import dev.cloudmc.helpers.hud.ScrollHelper;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
 
@@ -23,16 +23,17 @@ import java.util.ArrayList;
 
 public class Button {
 
-    private final ArrayList<Settings> settingsList;
+    private final ArrayList<Settings> settingsList = new ArrayList<>();
 
-    Animate animateButton = new Animate();
-    Animate animatePanel = new Animate();
+    private final Animate animButton = new Animate();
+    private final Animate animPanel = new Animate();
+
+    private final ScrollHelper scrollHelper = new ScrollHelper(0, 240);
 
     private Panel panel;
     private Mod mod;
     private int x, y, w, h;
     private boolean open;
-    private ScrollHelper scrollHelper = new ScrollHelper(0, 240);
 
     public Button(Mod mod, Panel panel, int x, int y) {
         this.mod = mod;
@@ -42,10 +43,8 @@ public class Button {
         this.w = 120;
         this.h = 80;
 
-        settingsList = new ArrayList<>();
         if (Cloud.INSTANCE.settingManager.getSettingsByMod(mod) != null) {
             int addY = 40;
-
             for (Setting setting : Cloud.INSTANCE.settingManager.getSettingsByMod(mod)) {
                 switch (setting.getMode()) {
                     case "CheckBox":
@@ -81,8 +80,8 @@ public class Button {
             }
         }
 
-        animatePanel.setEase(Easing.CUBIC_OUT).setMin(0).setMax(300).setSpeed(1000).setReversed(false);
-        animateButton.setMin(0).setMax(15).setSpeed(50);
+        animPanel.setEase(Easing.CUBIC_OUT).setMin(0).setMax(300).setSpeed(1000).setReversed(false);
+        animButton.setMin(0).setMax(15).setSpeed(50);
     }
 
     /**
@@ -95,8 +94,14 @@ public class Button {
      */
 
     public void renderButton(int mouseX, int mouseY) {
+        boolean roundedCorners = Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled();
+        int color = Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB();
 
-        animateButton.setReversed(!mod.isToggled()).setEase(mod.isToggled() ? Easing.CUBIC_OUT : Easing.CUBIC_IN).update();
+        animButton.setReversed(!mod.isToggled()).setEase(
+                mod.isToggled() ?
+                        Easing.CUBIC_OUT :
+                        Easing.CUBIC_IN
+        ).update();
         scrollHelper.update();
 
         /*
@@ -104,30 +109,46 @@ public class Button {
          */
 
         if (!getPanel().isAnyButtonOpen()) {
-            Helper2D.drawRoundedRectangle(panel.getX() + 5 + x, panel.getY() + panel.getH() + 5 + y, w, h, 2, ClientStyle.getBackgroundColor(40).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
-            Helper2D.drawRoundedRectangle(panel.getX() + 5 + x, panel.getY() + panel.getH() + y + 60, w, 25, 2, ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 2 : -1);
-            Cloud.INSTANCE.fontHelper.size20.drawString(mod.getName(), panel.getX() + 10 + x, panel.getY() + panel.getH() + y + 67, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
-            Helper2D.drawRoundedRectangle(panel.getX() + 13 + x + 77, panel.getY() + panel.getH() + y + h - 16, 30, 15, 2, ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
-            Helper2D.drawRoundedRectangle(animateButton.hasFinished() ? mod.isToggled() ? panel.getX() + 13 + 15 + x + 77 : panel.getX() + 13 + x + 77 : panel.getX() + 13 + animateButton.getValueI() + x + 77, panel.getY() + panel.getH() + y + h - 16, 15, 15, 2, ClientStyle.getBackgroundColor(70).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
-            Helper2D.drawPicture(panel.getX() + getX() + getW() / 2 - 12, panel.getY() + panel.getH() + getY() + 15, 35, 35, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), "icon/button/button/" + mod.getName() + ".png");
+            Helper2D.drawRoundedRectangle(panel.getX() + 5 + x, panel.getY() + panel.getH() + 5 + y, w, h, 2, Style.getColor(40).getRGB(), roundedCorners ? 0 : -1);
+            Helper2D.drawRoundedRectangle(panel.getX() + 5 + x, panel.getY() + panel.getH() + y + 60, w, 25, 2, Style.getColor(50).getRGB(), roundedCorners ? 2 : -1);
+
+            Cloud.INSTANCE.fontHelper.size20.drawString(mod.getName(), panel.getX() + 10 + x, panel.getY() + panel.getH() + y + 67, color);
+
+            Helper2D.drawRoundedRectangle(panel.getX() + 13 + x + 77, panel.getY() + panel.getH() + y + h - 16, 30, 15, 2, Style.getColor(50).getRGB(), roundedCorners ? 0 : -1);
+            Helper2D.drawRoundedRectangle(
+                    animButton.hasFinished() ?
+                            mod.isToggled() ?
+                                    panel.getX() + 13 + 15 + x + 77 :
+                                    panel.getX() + 13 + x + 77 :
+                            panel.getX() + 13 + animButton.getValueI() + x + 77,
+                    panel.getY() + panel.getH() + y + h - 16, 15, 15, 2, Style.getColor(70).getRGB(), roundedCorners ? 0 : -1);
+
+            Helper2D.drawPicture(panel.getX() + getX() + getW() / 2 - 12, panel.getY() + panel.getH() + getY() + 15, 35, 35, color, "icon/button/button/" + mod.getName() + ".png");
         }
 
         if (open) {
+            animPanel.update();
 
-            animatePanel.update();
+            Helper2D.drawRoundedRectangle(panel.getX() + 5, panel.getY() + panel.getH() + 5 + 300 - animPanel.getValueI(), panel.getW() - 10, panel.getH(), 2, Style.getColor(80).getRGB(), roundedCorners ? 1 : -1);
+            Helper2D.drawRectangle(panel.getX() + 5, panel.getY() + panel.getH() + 35 + 300 - animPanel.getValueI(), panel.getW() - 10, 265, Style.getColor(40).getRGB());
 
-            Helper2D.drawRoundedRectangle(panel.getX() + 5, panel.getY() + panel.getH() + 5 + 300 - animatePanel.getValueI(), panel.getW() - 10, panel.getH(), 2, ClientStyle.getBackgroundColor(80).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 1 : -1);
-            Helper2D.drawRectangle(panel.getX() + 5, panel.getY() + panel.getH() + 35 + 300 - animatePanel.getValueI(), panel.getW() - 10, 265, ClientStyle.getBackgroundColor(40).getRGB());
-            Helper2D.drawRoundedRectangle(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10 + 300 - animatePanel.getValueI(), 20, 20, 2, MathHelper.withinBox(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10, 20, 20, mouseX, mouseY) ? ClientStyle.getBackgroundColor(70).getRGB() : ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
-            Helper2D.drawPicture(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10 + 300 - animatePanel.getValueI(), 20, 20, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), "icon/cross.png");
-            Cloud.INSTANCE.fontHelper.size30.drawString(mod.getName(), panel.getX() + 5 + 7, panel.getY() + panel.getH() + 5 + 8 + 300 - animatePanel.getValueI(), Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
-            Cloud.INSTANCE.fontHelper.size20.drawString(mod.getDescription(), panel.getX() + 20 + Cloud.INSTANCE.fontHelper.size30.getStringWidth(mod.getName()), panel.getY() + panel.getH() + 316 - animatePanel.getValueI(), Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
+            boolean hovered = MathHelper.withinBox(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10, 20, 20, mouseX, mouseY);
+            Helper2D.drawRoundedRectangle(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10 + 300 - animPanel.getValueI(), 20, 20, 2, Style.getColor(hovered ? 70 : 50).getRGB(), roundedCorners ? 0 : -1);
+            Helper2D.drawPicture(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10 + 300 - animPanel.getValueI(), 20, 20, color, "icon/cross.png");
+
+            Cloud.INSTANCE.fontHelper.size30.drawString(mod.getName(), panel.getX() + 5 + 7, panel.getY() + panel.getH() + 5 + 8 + 300 - animPanel.getValueI(), color);
+            Cloud.INSTANCE.fontHelper.size20.drawString(mod.getDescription(), panel.getX() + 20 + Cloud.INSTANCE.fontHelper.size30.getStringWidth(mod.getName()), panel.getY() + panel.getH() + 316 - animPanel.getValueI(), color);
 
             /*
             Renders the settings
              */
 
-            GLHelper.startScissor(panel.getX() + 5, panel.getY() + panel.getH() + 35 + 300 - animatePanel.getValueI(), panel.getW() - 10, animatePanel.getValueI() - 35);
+            GLHelper.startScissor(
+                    panel.getX() + 5,
+                    panel.getY() + panel.getH() + 35 + 300 - animPanel.getValueI(),
+                    panel.getW() - 10,
+                    animPanel.getValueI() - 35
+            );
             for (Settings settings : settingsList) {
                 settings.renderSetting(mouseX, mouseY);
             }
@@ -138,21 +159,26 @@ public class Button {
              */
 
             if(settingsList.size() != 0) {
-                if (MathHelper.withinBox(panel.getX() + 5, panel.getY() + panel.getH() + 35, panel.getW() - 10, 260, mouseX, mouseY)) {
+                if (MathHelper.withinBox(
+                        panel.getX() + 5,
+                        panel.getY() + panel.getH() + 35,
+                        panel.getW() - 10,
+                        260,
+                        mouseX, mouseY)
+                ) {
                     int height = 0;
-                    for (Settings settings : settingsList) {
+                    for(Settings settings : settingsList) {
                         height += settings.getH();
                     }
-
                     scrollHelper.setHeight(height);
                     scrollHelper.updateScroll();
 
-                    int totalHeight = 0;
+                    height = 0;
                     for (Settings settings : settingsList) {
-                        float position = totalHeight;
+                        float position = height;
                         position += scrollHelper.getCalculatedScroll() + 40;
                         settings.setY((int) position);
-                        totalHeight += settings.getH();
+                        height += settings.getH();
                     }
                 }
             }
@@ -173,18 +199,14 @@ public class Button {
         if (MathHelper.withinBox(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10, 20, 20, mouseX, mouseY)) {
             panel.setAnyButtonOpen(false);
             open = false;
-        }
-        else {
-            if (MathHelper.withinBox(panel.getX() + 5 + x, panel.getY() + panel.getH() + 5 + y, w, h, mouseX, mouseY)) {
-                if (!panel.isAnyButtonOpen() && !open) {
-                    if (mouseButton == 0) {
-                        mod.toggle();
-                    }
-                    else if (mouseButton == 1) {
-                        animatePanel.reset();
-                        getPanel().setAnyButtonOpen(true);
-                        open = true;
-                    }
+        } else if (MathHelper.withinBox(panel.getX() + 5 + x, panel.getY() + panel.getH() + 5 + y, w, h, mouseX, mouseY)) {
+            if (!panel.isAnyButtonOpen() && !open) {
+                if (mouseButton == 0) {
+                    mod.toggle();
+                } else if (mouseButton == 1) {
+                    animPanel.reset();
+                    getPanel().setAnyButtonOpen(true);
+                    open = true;
                 }
             }
         }

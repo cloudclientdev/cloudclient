@@ -9,8 +9,7 @@ import dev.cloudmc.feature.mod.Mod;
 
 import java.util.ArrayList;
 
-public class
-SettingManager {
+public class SettingManager {
 
     public ArrayList<Setting> settingList;
 

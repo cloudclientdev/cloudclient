@@ -6,11 +6,11 @@
 package dev.cloudmc.gui.hudeditor.impl.impl;
 
 import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
-import dev.cloudmc.helpers.GLHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.GLHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -34,10 +34,9 @@ public class ArmorHud extends HudMod {
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isBackground()) {
                 if (isModern()) {
-                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, ClientStyle.getBackgroundColor(50).getRGB(), 0);
-                }
-                else {
-                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), ClientStyle.getBackgroundColor(50).getRGB());
+                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, Style.getColor(50).getRGB(), 0);
+                } else {
+                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), Style.getColor(50).getRGB());
                 }
             }
 
@@ -49,12 +48,13 @@ public class ArmorHud extends HudMod {
         }
         GLHelper.endScale();
     }
+
     @SubscribeEvent
     public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
         GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             if (!Arrays.equals(Cloud.INSTANCE.mc.thePlayer.inventory.armorInventory, emptyArmorInventory) ||
-                    Cloud.INSTANCE.settingManager.getSettingByModAndName("Armor Status", "No Armor Background").isCheckToggled()) {
+                    Cloud.INSTANCE.settingManager.getSettingByModAndName(getName(), "No Armor Background").isCheckToggled()) {
 
                 if (isBackground()) {
                     if (isModern()) {

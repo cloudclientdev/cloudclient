@@ -6,7 +6,8 @@
 package dev.cloudmc;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.EventBus;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import dev.cloudmc.config.ConfigLoader;
 import dev.cloudmc.config.ConfigSaver;
 import dev.cloudmc.feature.mod.ModManager;
@@ -14,12 +15,9 @@ import dev.cloudmc.feature.option.OptionManager;
 import dev.cloudmc.feature.setting.SettingManager;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.helpers.CpsHelper;
-import dev.cloudmc.helpers.WarningHelper;
+import dev.cloudmc.helpers.MessageHelper;
 import dev.cloudmc.helpers.font.FontHelper;
 import net.minecraft.client.Minecraft;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.Display;
 
@@ -48,44 +46,36 @@ public class Cloud {
     public OptionManager optionManager;
     public FontHelper fontHelper;
     public CpsHelper cpsHelper;
-    public WarningHelper warningHelper;
+    public MessageHelper messageHelper;
 
     /**
      * Initializes the client
      */
-    @EventHandler
+    @Mod.EventHandler
     public void init(FMLInitializationEvent event) throws IOException {
-        MinecraftForge.EVENT_BUS.register((cpsHelper = new CpsHelper()));
-        MinecraftForge.EVENT_BUS.register((settingManager = new SettingManager()));
-        MinecraftForge.EVENT_BUS.register((modManager = new ModManager()));
-        MinecraftForge.EVENT_BUS.register((hudEditor = new HudEditor()));
-        MinecraftForge.EVENT_BUS.register((optionManager = new OptionManager()));
-        MinecraftForge.EVENT_BUS.register((fontHelper = new FontHelper()));
-        MinecraftForge.EVENT_BUS.register((warningHelper = new WarningHelper()));
-        FMLCommonHandler.instance().bus().register(cpsHelper);
-        FMLCommonHandler.instance().bus().register(settingManager);
-        FMLCommonHandler.instance().bus().register(modManager);
-        FMLCommonHandler.instance().bus().register(hudEditor);
-        FMLCommonHandler.instance().bus().register(optionManager);
-        FMLCommonHandler.instance().bus().register(fontHelper);
-        FMLCommonHandler.instance().bus().register(warningHelper);
-
         Display.setTitle(Cloud.modName + " Client " + Cloud.modVersion);
+        registerEvents(
+                cpsHelper = new CpsHelper(),
+                settingManager = new SettingManager(),
+                modManager = new ModManager(),
+                optionManager = new OptionManager(),
+                hudEditor = new HudEditor(),
+                fontHelper = new FontHelper(),
+                messageHelper = new MessageHelper()
+        );
 
         if (!ConfigSaver.configExists()) {
             ConfigSaver.saveConfig();
         }
-        try {
-            ConfigLoader.loadConfig();
-        }
-        catch (Exception ignored) {}
+        ConfigLoader.loadConfig();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
-                ConfigSaver.saveConfig();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(ConfigSaver::saveConfig));
+    }
+
+    private void registerEvents(Object... events) {
+        for (Object event : events) {
+            MinecraftForge.EVENT_BUS.register(event);
+            FMLCommonHandler.instance().bus().register(event);
+        }
     }
 }

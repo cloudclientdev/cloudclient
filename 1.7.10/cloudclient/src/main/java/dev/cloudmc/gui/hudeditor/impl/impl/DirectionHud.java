@@ -7,11 +7,11 @@ package dev.cloudmc.gui.hudeditor.impl.impl;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
-import dev.cloudmc.helpers.GLHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.GLHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 import dev.cloudmc.helpers.font.FontHelper;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -33,7 +33,7 @@ public class DirectionHud extends HudMod {
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isModern()) {
                 if (isBackground()) {
-                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, ClientStyle.getBackgroundColor(50).getRGB(), 0);
+                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, Style.getColor(50).getRGB(), 0);
                 }
                 FontHelper fontHelper = Cloud.INSTANCE.fontHelper;
 
@@ -42,21 +42,21 @@ public class DirectionHud extends HudMod {
                 Helper2D.drawPicture((int) (getX() + getW() / 2f - 4), getY() - 2, 8, 8, -1, "icon/triangle.png");
 
                 GLHelper.startScissor(getX(), getY(), (int) (getW() * getSize()), (int) (getH() * getSize()));
-                for(int i = 0; i < 4; i++) {
+                for (int i = 0; i < 4; i++) {
                     int xFull = (int) ((normalized(Cloud.INSTANCE.mc.thePlayer.rotationYaw) + i * 90) % 360 + getX() - 86);
                     int xHalf = (int) ((normalized(Cloud.INSTANCE.mc.thePlayer.rotationYaw) + i * 90) % 360 + getX() - 43);
 
                     fontHelper.size30.drawString("§l" + directionsFull[i], xFull, getY() + getH() / 2f - 5, getColor());
                     fontHelper.size20.drawString(directionsHalf[i], xHalf, getY() + getH() / 2f - 1, getColor());
 
-                    for(int j = 0; j < 6; j++) {
+                    for (int j = 0; j < 6; j++) {
                         Helper2D.drawRoundedRectangle((int) (xFull - 2 + j * 15 + fontHelper.size30.getStringWidth(directionsFull[i]) / 2f), getY() + 2, 2, j == 3 ? 6 : 4, 1, 0x80ffffff, 0);
                     }
                 }
                 GLHelper.endScissor();
             } else {
                 if (isBackground()) {
-                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), ClientStyle.getBackgroundColor(50).getRGB());
+                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), Style.getColor(50).getRGB());
                 }
                 FontRenderer fontHelper = Cloud.INSTANCE.mc.fontRendererObj;
 
@@ -65,7 +65,7 @@ public class DirectionHud extends HudMod {
                 Helper2D.drawPicture((int) (getX() + getW() / 2f - 4), getY() - 2, 8, 8, -1, "icon/triangle.png");
 
                 GLHelper.startScissor(getX(), getY(), (int) (getW() * getSize()), (int) (getH() * getSize()));
-                for(int i = 0; i < 4; i++) {
+                for (int i = 0; i < 4; i++) {
                     int xFull = (int) ((normalized(Cloud.INSTANCE.mc.thePlayer.rotationYaw) + i * 90) % 360 + getX() - 83);
                     int xHalf = (int) ((normalized(Cloud.INSTANCE.mc.thePlayer.rotationYaw) + i * 90) % 360 + getX() - 40);
 
@@ -75,7 +75,7 @@ public class DirectionHud extends HudMod {
 
                     fontHelper.drawString(directionsHalf[i], xHalf, (int) (getY() + getH() / 2f - 1), getColor());
 
-                    for(int j = 0; j < 6; j++) {
+                    for (int j = 0; j < 6; j++) {
                         Helper2D.drawRectangle((int) (xFull - 2 + j * 15 + (fontHelper.getStringWidth(directionsFull[i]) / 2f) * 1.5f), getY() + 2, 2, j == 3 ? 6 : 4, 0x80ffffff);
                     }
                 }
@@ -102,14 +102,14 @@ public class DirectionHud extends HudMod {
                 Helper2D.drawPicture((int) (getX() + getW() / 2f - 4), getY() - 2, 8, 8, -1, "icon/triangle.png");
 
                 GLHelper.startScissor(getX(), getY(), (int) (getW() * getSize()), (int) (getH() * getSize()));
-                for(int i = 0; i < 4; i++) {
+                for (int i = 0; i < 4; i++) {
                     int xFull = (int) ((normalized(Cloud.INSTANCE.mc.thePlayer.rotationYaw) + i * 90) % 360 + getX() - 86);
                     int xHalf = (int) ((normalized(Cloud.INSTANCE.mc.thePlayer.rotationYaw) + i * 90) % 360 + getX() - 43);
 
                     fontHelper.size30.drawString("§l" + directionsFull[i], xFull, getY() + getH() / 2f - 5, getColor());
                     fontHelper.size20.drawString(directionsHalf[i], xHalf, getY() + getH() / 2f - 1, getColor());
 
-                    for(int j = 0; j < 6; j++) {
+                    for (int j = 0; j < 6; j++) {
                         Helper2D.drawRoundedRectangle((int) (xFull - 2 + j * 15 + fontHelper.size30.getStringWidth(directionsFull[i]) / 2f), getY() + 2, 2, j == 3 ? 6 : 4, 1, 0x80ffffff, 0);
                     }
                 }
@@ -125,7 +125,7 @@ public class DirectionHud extends HudMod {
                 Helper2D.drawPicture((int) (getX() + getW() / 2f - 4), getY() - 2, 8, 8, -1, "icon/triangle.png");
 
                 GLHelper.startScissor(getX(), getY(), (int) (getW() * getSize()), (int) (getH() * getSize()));
-                for(int i = 0; i < 4; i++) {
+                for (int i = 0; i < 4; i++) {
                     int xFull = (int) ((normalized(Cloud.INSTANCE.mc.thePlayer.rotationYaw) + i * 90) % 360 + getX() - 83);
                     int xHalf = (int) ((normalized(Cloud.INSTANCE.mc.thePlayer.rotationYaw) + i * 90) % 360 + getX() - 40);
 
@@ -135,7 +135,7 @@ public class DirectionHud extends HudMod {
 
                     fontHelper.drawString(directionsHalf[i], xHalf, (int) (getY() + getH() / 2f - 1), getColor());
 
-                    for(int j = 0; j < 6; j++) {
+                    for (int j = 0; j < 6; j++) {
                         Helper2D.drawRectangle((int) (xFull - 2 + j * 15 + (fontHelper.getStringWidth(directionsFull[i]) / 2f) * 1.5f), getY() + 2, 2, j == 3 ? 6 : 4, 0x80ffffff);
                     }
                 }
@@ -147,7 +147,7 @@ public class DirectionHud extends HudMod {
 
     public float normalized(float value) {
         float normalized = value % 360;
-        if(normalized < 0) {
+        if (normalized < 0) {
             normalized += 360;
         }
         return normalized;

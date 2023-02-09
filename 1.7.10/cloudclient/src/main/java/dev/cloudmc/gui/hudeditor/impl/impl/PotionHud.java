@@ -7,11 +7,11 @@ package dev.cloudmc.gui.hudeditor.impl.impl;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
-import dev.cloudmc.helpers.GLHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.GLHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.Potion;
@@ -41,14 +41,14 @@ public class PotionHud extends HudMod {
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isModern()) {
                 if (isBackground()) {
-                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, ClientStyle.getBackgroundColor(50).getRGB(), 0);
+                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, Style.getColor(50).getRGB(), 0);
                 }
                 drawPotion(potion, new PotionEffect(5, 1, 1), 0, true, isTime());
                 drawPotion(potion2, new PotionEffect(10, 1, 1), 30, true, isTime());
                 drawPotion(potion3, new PotionEffect(16, 1, 1), 60, true, isTime());
             } else {
                 if (isBackground()) {
-                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), ClientStyle.getBackgroundColor(50).getRGB());
+                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), Style.getColor(50).getRGB());
                 }
                 drawPotion(potion, new PotionEffect(5, 1, 1), 0, false, isTime());
                 drawPotion(potion2, new PotionEffect(10, 1, 1), 30, false, isTime());
@@ -63,7 +63,7 @@ public class PotionHud extends HudMod {
     @SubscribeEvent
     public void onRender2D(RenderGameOverlayEvent.Pre.Text e) {
         Collection collection = Cloud.INSTANCE.mc.thePlayer.getActivePotionEffects();
-        if(collection.isEmpty()){
+        if (collection.isEmpty()) {
             return;
         }
         GLHelper.startScale(getX(), getY(), getSize());

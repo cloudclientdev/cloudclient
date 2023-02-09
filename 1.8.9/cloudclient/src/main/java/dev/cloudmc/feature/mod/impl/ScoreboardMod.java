@@ -4,8 +4,6 @@ import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
 import dev.cloudmc.feature.setting.Setting;
 
-import java.awt.*;
-
 public class ScoreboardMod extends Mod {
 
     public ScoreboardMod() {

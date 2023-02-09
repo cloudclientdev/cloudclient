@@ -3,22 +3,24 @@ package dev.cloudmc.helpers;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
+import dev.cloudmc.helpers.render.Helper2D;
 
-public class WarningHelper {
+public class MessageHelper {
 
-    private Animate animate = new Animate();
+    private final Animate animate = new Animate();
+
     private String message;
     private String subMessage;
     private double time;
     private int timeLength;
 
-    public WarningHelper() {
+    public MessageHelper() {
         animate.setEase(Easing.CUBIC_OUT).setMin(0).setMax(200).setSpeed(200);
         timeLength = 2500;
         time = 0;
     }
 
-    public void renderWarning() {
+    public void renderMessage() {
         int messageWidth = Cloud.INSTANCE.fontHelper.size20.getStringWidth(subMessage) + 50;
         animate.update();
         animate.setMax(messageWidth);
@@ -33,7 +35,7 @@ public class WarningHelper {
         }
     }
 
-    public void showWarning(String message, String subMessage) {
+    public void showMessage(String message, String subMessage) {
         this.message = message;
         this.subMessage = subMessage;
 

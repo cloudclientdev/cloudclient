@@ -7,19 +7,20 @@ package dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.type;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.setting.Setting;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.Button;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.Settings;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
-import dev.cloudmc.helpers.PositionHelper;
+import dev.cloudmc.helpers.hud.PositionHelper;
 
 public class Slider extends Settings {
+
+    private final PositionHelper posHelper = new PositionHelper(125);
 
     private boolean drag;
     private float sliderPos;
     private final int sliderWidth = 150;
-    private PositionHelper posHelper = new PositionHelper(125);
 
     public Slider(Setting setting, Button button, int y) {
         super(setting, button, y);
@@ -35,34 +36,37 @@ public class Slider extends Settings {
 
     @Override
     public void renderSetting(int mouseX, int mouseY) {
+        boolean roundedCorners = Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled();
+        int color = Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB();
+
         Cloud.INSTANCE.fontHelper.size30.drawString(
                 setting.getName(),
                 button.getPanel().getX() + 20,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 6,
-                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
+                color
         );
         Cloud.INSTANCE.fontHelper.size20.drawString(
                 String.valueOf(MathHelper.round(setting.getCurrentNumber(), 1)),
                 button.getPanel().getX() + button.getPanel().getW() - 175 -
                         Cloud.INSTANCE.fontHelper.size20.getStringWidth(String.valueOf(MathHelper.round(setting.getCurrentNumber(), 1))),
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 9,
-                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
+                color
         );
 
         Helper2D.drawRoundedRectangle(
                 button.getPanel().getX() + button.getPanel().getW() - sliderWidth - 20,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 10,
-                150, 5, 2, ClientStyle.getBackgroundColor(50).getRGB(),
-                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+                150, 5, 2, Style.getColor(50).getRGB(),
+                roundedCorners ? 0 : -1
         );
 
         posHelper.pre(sliderPos);
 
         if (drag) {
             sliderPos = mouseX - (button.getPanel().getX() + button.getPanel().getW() - sliderWidth - 20);
-            if(sliderPos < 0) {
+            if (sliderPos < 0) {
                 sliderPos = 0;
-            } else if(sliderPos > sliderWidth){
+            } else if (sliderPos > sliderWidth) {
                 sliderPos = sliderWidth;
             }
             setting.setCurrentNumber(sliderPos * (setting.getMaxNumber() / sliderWidth));
@@ -75,8 +79,8 @@ public class Slider extends Settings {
         Helper2D.drawRoundedRectangle(
                 (int) (posHelper.isDirection() ? xPos - posHelper.getDifference() - posHelper.getValue() : xPos - posHelper.getDifference() + posHelper.getValue()),
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 5,
-                7, 16, 1, ClientStyle.getBackgroundColor(80).getRGB(),
-                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+                7, 16, 1, Style.getColor(80).getRGB(),
+                roundedCorners ? 0 : -1
         );
     }
 

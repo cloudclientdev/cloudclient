@@ -8,18 +8,17 @@ package dev.cloudmc.gui.modmenu.impl;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
 import dev.cloudmc.feature.option.Option;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.Button;
 import dev.cloudmc.gui.modmenu.impl.sidebar.options.Options;
 import dev.cloudmc.gui.modmenu.impl.sidebar.options.type.*;
-import dev.cloudmc.helpers.GLHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.ResolutionHelper;
+import dev.cloudmc.helpers.render.GLHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
-import dev.cloudmc.helpers.ScrollHelper;
+import dev.cloudmc.helpers.hud.ScrollHelper;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
-import net.minecraft.client.gui.ScaledResolution;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 
@@ -27,20 +26,20 @@ public class Panel {
 
     private final ArrayList<Button> buttonList = new ArrayList<>();
     private final ArrayList<Options> optionsList = new ArrayList<>();
-    private Animate animateSideBar = new Animate();
-    private Animate animateTransition = new Animate();
+    private final String[] sideButtons = {"Mods", "Settings"};
+    private final Animate animateSideBar = new Animate();
+    private final Animate animateTransition = new Animate();
+    private final ScrollHelper scrollHelperMods = new ScrollHelper(0, 300);
+    private final ScrollHelper scrollHelperOptions = new ScrollHelper(0, 300);
     private int x, y, w, h;
     private int offsetX, offsetY;
     private boolean dragging;
     private boolean anyButtonOpen;
     private int selected = 0;
-    private ScrollHelper scrollHelperMods = new ScrollHelper(0, 300);
-    private ScrollHelper scrollHelperOptions = new ScrollHelper(0, 300);
 
     public Panel() {
-        ScaledResolution sr = new ScaledResolution(Cloud.INSTANCE.mc, Cloud.INSTANCE.mc.displayWidth, Cloud.INSTANCE.mc.displayHeight);
-        this.x = sr.getScaledWidth() / 2 - 250;
-        this.y = sr.getScaledHeight() / 2 - 150;
+        this.x = ResolutionHelper.getWidth() / 2 - 250;
+        this.y = ResolutionHelper.getHeight() / 2 - 150;
         this.w = 500;
         this.h = 30;
         this.offsetX = 0;
@@ -115,12 +114,18 @@ public class Panel {
      */
 
     public void renderPanel(int mouseX, int mouseY) {
-        Helper2D.drawRoundedRectangle(x, y, w, h, 2, ClientStyle.getBackgroundColor(70).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 1 : -1);
-        Helper2D.drawRoundedRectangle(x, y + 30, w, h + 270, 2, ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 2 : -1);
-        Helper2D.drawRoundedRectangle(x + w - 25, y + 5, 20, 20, 2, MathHelper.withinBox(x + w - 25, y + 5, 20, 20, mouseX, mouseY) ? ClientStyle.getBackgroundColor(70).getRGB() : ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
-        Helper2D.drawPicture(x + w - 25, y + 5, 20, 20, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), "icon/cross.png");
-        Helper2D.drawPicture(x + 2, y - 1, 35, 35, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), "cloudlogo.png");
-        Cloud.INSTANCE.fontHelper.size40.drawString(Cloud.modName, x + 37, y + 6, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
+        boolean roundedCorners = Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled();
+        int color = Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB();
+
+        Helper2D.drawRoundedRectangle(x, y, w, h, 2, Style.getColor(70).getRGB(), roundedCorners ? 1 : -1);
+        Helper2D.drawRoundedRectangle(x, y + 30, w, h + 270, 2, Style.getColor(50).getRGB(), roundedCorners ? 2 : -1);
+
+        boolean hovered = MathHelper.withinBox(x + w - 25, y + 5, 20, 20, mouseX, mouseY);
+        Helper2D.drawRoundedRectangle(x + w - 25, y + 5, 20, 20, 2, Style.getColor(hovered ? 70 : 50).getRGB(), roundedCorners ? 0 : -1);
+        Helper2D.drawPicture(x + w - 25, y + 5, 20, 20, color, "icon/cross.png");
+
+        Helper2D.drawPicture(x + 2, y - 1, 35, 35, color, "cloudlogo.png");
+        Cloud.INSTANCE.fontHelper.size40.drawString(Cloud.modName, x + 37, y + 6, color);
 
         /*
         Buttons are only drawn if the Sidebar is on the mods tab
@@ -130,7 +135,7 @@ public class Panel {
         scrollHelperMods.update();
         scrollHelperOptions.update();
 
-        Cloud.INSTANCE.warningHelper.renderWarning();
+        Cloud.INSTANCE.messageHelper.renderMessage();
 
         if (selected == 0) {
             GLHelper.startScissor(x, y + 30, w, h + 270);
@@ -140,23 +145,13 @@ public class Panel {
             GLHelper.endScissor();
 
             if (MathHelper.withinBox(x, y + 30, w, h + 270, mouseX, mouseY)) {
-                int height = 0;
-                int index2 = 0;
-                for (Button button : buttonList) {
-                    if (index2 % 4 == 0) {
-                        height += button.getH() + 3;
-                    }
-                    index2++;
-                }
-
-                scrollHelperMods.setHeight(height);
                 scrollHelperMods.updateScroll();
+                scrollHelperMods.setHeight(buttonList.size() / 4f * (buttonList.get(0).getH() + 3));
 
                 int index = 0;
                 int count = 0;
                 for (Button button : buttonList) {
                     float position = scrollHelperMods.getCalculatedScroll();
-
                     position += count * (button.getH() + 3);
                     button.setY((int) position);
                     index++;
@@ -174,19 +169,18 @@ public class Panel {
 
             if (MathHelper.withinBox(x, y + 30, w, h + 270, mouseX, mouseY)) {
                 int height = 0;
-                for (Options options : optionsList) {
+                for(Options options : optionsList) {
                     height += options.getH();
                 }
-
                 scrollHelperOptions.setHeight(height);
                 scrollHelperOptions.updateScroll();
 
-                int totalHeight = 0;
+                height = 0;
                 for (Options options : optionsList) {
-                    float position = totalHeight;
+                    float position = height;
                     position += scrollHelperOptions.getCalculatedScroll() + 10;
                     options.setY((int) position);
-                    totalHeight += options.getH();
+                    height += options.getH();
                 }
             }
         }
@@ -197,30 +191,17 @@ public class Panel {
 
         animateSideBar.update();
 
-        Helper2D.drawRoundedRectangle(
-                x - 50, y, 40, h + 300, 2,
-                ClientStyle.getBackgroundColor(50).getRGB(),
-                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
-        );
-        Helper2D.drawRoundedRectangle(
-                x - 50, selected == 1 ? y + animateSideBar.getValueI() : y + 40 - animateSideBar.getValueI(), 40, 40, 2,
-                ClientStyle.getBackgroundColor(50).getRGB(),
-                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
-        );
+        Helper2D.drawRoundedRectangle(x - 50, y, 40, h + 300, 2, Style.getColor(50).getRGB(), roundedCorners ? 0 : -1);
 
-        String[] buttons = {"Mods", "Settings"};
-        for (int i = 0; i < buttons.length; i++) {
-            Cloud.INSTANCE.fontHelper.size15.drawString(
-                    buttons[i],
-                    x - 30 - Cloud.INSTANCE.fontHelper.size15.getStringWidth(buttons[i]) / 2f,
-                    y + 30 + i * 40,
-                    Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
-            );
-            Helper2D.drawPicture(
-                    x - 40, y + 5 + i * 40, 20, 20,
-                    Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(),
-                    "icon/button/sidebar/icon" + i + ".png"
-            );
+        int value = selected == 1 ? animateSideBar.getValueI() : 40 - animateSideBar.getValueI();
+        Helper2D.drawRoundedRectangle(x - 50, y + value, 40, 40, 2, Style.getColor(50).getRGB(), roundedCorners ? 0 : -1);
+
+        int index = 0;
+        for (String button : sideButtons) {
+            Cloud.INSTANCE.fontHelper.size15.drawString(button, x - 30 - Cloud.INSTANCE.fontHelper.size15.getStringWidth(button) / 2f, y + 30 + index * 40, color);
+            Helper2D.drawPicture(x - 40, y + 5 + index * 40, 20, 20, color, "icon/button/sidebar/" + button + ".png");
+
+            index++;
         }
     }
 
@@ -234,8 +215,22 @@ public class Panel {
      */
 
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (MathHelper.withinBox(x + w - 25, y + 5, 20, 20, mouseX, mouseY)) {
-            Cloud.INSTANCE.mc.displayGuiScreen(Cloud.INSTANCE.hudEditor);
+        if(mouseButton == 0) {
+            int index = 0;
+            for (String button : sideButtons) {
+                if (MathHelper.withinBox(x - 50, y + index * 40, 40, 39, mouseX, mouseY)) {
+                    if (selected != index) {
+                        animateSideBar.reset();
+                        animateTransition.reset();
+                    }
+                    selected = index;
+                }
+                index++;
+            }
+
+            if (MathHelper.withinBox(x + w - 25, y + 5, 20, 20, mouseX, mouseY)) {
+                Cloud.INSTANCE.mc.displayGuiScreen(Cloud.INSTANCE.hudEditor);
+            }
         }
 
         if (selected == 0) {
@@ -245,17 +240,6 @@ public class Panel {
         } else {
             for (Options option : optionsList) {
                 option.mouseClicked(mouseX, mouseY, mouseButton);
-            }
-        }
-
-        String[] buttons = {"Mods", "Settings"};
-        for (int i = 0; i < buttons.length; i++) {
-            if (MathHelper.withinBox(x - 50, y + i * 40, 40, 39, mouseX, mouseY)) {
-                if (selected != i) {
-                    animateSideBar.reset();
-                    animateTransition.reset();
-                }
-                selected = i;
             }
         }
     }
@@ -273,8 +257,7 @@ public class Panel {
     }
 
     public void initGui() {
-        ScaledResolution sr = new ScaledResolution(Cloud.INSTANCE.mc, Cloud.INSTANCE.mc.displayWidth, Cloud.INSTANCE.mc.displayHeight);
-        setX(sr.getScaledWidth() / 2 - 250);
+        setX(ResolutionHelper.getWidth() / 2 - 250);
     }
 
     /**

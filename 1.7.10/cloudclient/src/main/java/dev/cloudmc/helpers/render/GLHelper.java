@@ -3,7 +3,7 @@
  * GNU Lesser General Public License v3.0
  */
 
-package dev.cloudmc.helpers;
+package dev.cloudmc.helpers.render;
 
 import dev.cloudmc.Cloud;
 import net.minecraft.client.gui.ScaledResolution;

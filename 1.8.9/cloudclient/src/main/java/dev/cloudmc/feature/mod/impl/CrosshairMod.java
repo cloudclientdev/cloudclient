@@ -8,9 +8,8 @@ package dev.cloudmc.feature.mod.impl;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
 import dev.cloudmc.feature.setting.Setting;
-import dev.cloudmc.helpers.Helper2D;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
+import dev.cloudmc.helpers.ResolutionHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -44,7 +43,6 @@ public class CrosshairMod extends Mod {
     @SubscribeEvent
     public void onRender(RenderGameOverlayEvent.Post e) {
         if (e.type == RenderGameOverlayEvent.ElementType.TEXT) {
-            ScaledResolution sr = new ScaledResolution(Cloud.INSTANCE.mc);
 
             int x = 0;
             int y = 0;
@@ -55,8 +53,8 @@ public class CrosshairMod extends Mod {
                 }
                 if (getCells()[i] && isToggled()) {
                     Helper2D.drawRectangle(
-                            sr.getScaledWidth() / 2 - 5 + x,
-                            sr.getScaledHeight() / 2 - 6 + y,
+                            ResolutionHelper.getWidth() / 2 - 5 + x,
+                            ResolutionHelper.getHeight() / 2 - 6 + y,
                             1,
                             1,
                             color()

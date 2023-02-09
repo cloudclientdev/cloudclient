@@ -7,20 +7,21 @@ package dev.cloudmc.gui.modmenu.impl.sidebar.options.type;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.option.Option;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.modmenu.impl.Panel;
 import dev.cloudmc.gui.modmenu.impl.sidebar.options.Options;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
 
 public class CheckBox extends Options {
 
-    Animate animateCheckBox = new Animate();
+    private final Animate animCheckBox = new Animate();
 
     public CheckBox(Option option, Panel panel, int y) {
         super(option, panel, y);
+        animCheckBox.setEase(Easing.CUBIC_IN_OUT).setMin(0).setMax(10).setSpeed(100);
     }
 
     /**
@@ -32,52 +33,32 @@ public class CheckBox extends Options {
 
     @Override
     public void renderOption(int mouseX, int mouseY) {
+        boolean roundedCorners = Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled();
+        int color = Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB();
 
-        animateCheckBox
-                .setEase(Easing.CUBIC_OUT)
-                .setMin(0)
-                .setMax(10)
-                .setSpeed(100)
-                .setReversed(!option.isCheckToggled())
-                .setEase(option.isCheckToggled() ? Easing.CUBIC_IN : Easing.CUBIC_OUT)
-                .update();
+        animCheckBox.setReversed(!option.isCheckToggled()).update();
 
         Cloud.INSTANCE.fontHelper.size30.drawString(
                 option.getName(),
                 panel.getX() + 20,
                 panel.getY() + panel.getH() + getY() + 6,
-                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
+                color
         );
 
         Helper2D.drawRoundedRectangle(
                 panel.getX() + panel.getW() - 40,
                 panel.getY() + panel.getH() + getY() + 2,
-                20,
-                20,
-                2,
-                option.isCheckToggled() ? ClientStyle.getBackgroundColor(80).getRGB() : ClientStyle.getBackgroundColor(50).getRGB(),
-                Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+                20, 20, 2,
+                Style.getColor(option.isCheckToggled() ? 80 : 50).getRGB(),
+                roundedCorners ? 0 : -1
         );
 
         Helper2D.drawPicture(
-                animateCheckBox.hasFinished() ?
-                        option.isCheckToggled() ?
-                                panel.getX() + panel.getW() - 40
-                                : panel.getX() + panel.getW() - 30
-                        : panel.getX() + panel.getW() - 30 - animateCheckBox.getValueI(),
-                animateCheckBox.hasFinished() ?
-                        option.isCheckToggled() ?
-                                panel.getY() + panel.getH() + 2 + getY()
-                                : panel.getY() + panel.getH() + 12 + getY()
-                        : panel.getY() + panel.getH() + 12 + getY() - animateCheckBox.getValueI(),
-                animateCheckBox.hasFinished() ?
-                        option.isCheckToggled() ?
-                                20 : 0 : animateCheckBox.getValueI() * 2, animateCheckBox.hasFinished() ?
-                        option.isCheckToggled()
-                                ? 20
-                                : 0
-                        : animateCheckBox.getValueI() * 2,
-                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(),
+                panel.getX() + panel.getW() - 30 - animCheckBox.getValueI(),
+                panel.getY() + panel.getH() + 12 + getY() - animCheckBox.getValueI(),
+                animCheckBox.getValueI() * 2,
+                animCheckBox.getValueI() * 2,
+                color,
                 "icon/check.png"
         );
     }
@@ -96,13 +77,15 @@ public class CheckBox extends Options {
             if (MathHelper.withinBox(
                     panel.getX() + panel.getW() - 40,
                     panel.getY() + panel.getH() + 2 + getY(),
-                    20,
-                    20,
-                    mouseX,
-                    mouseY)
+                    20, 20, mouseX, mouseY)
             ) {
                 option.setCheckToggled(!option.isCheckToggled());
             }
         }
+    }
+
+    @Override
+    public void mouseReleased(int mouseX, int mouseY, int state) {
+
     }
 }

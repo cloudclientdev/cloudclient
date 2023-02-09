@@ -3,28 +3,29 @@
  * GNU Lesser General Public License v3.0
  */
 
-package dev.cloudmc.gui.titlescreen;
+package dev.cloudmc.gui.titlescreen.buttons;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.helpers.MathHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.Helper2D;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
 
 import java.awt.*;
 
-public class Button {
+public class IconButton {
 
-    private final String text;
+    private final Animate animate = new Animate();
+
+    private final String icon;
     private int x, y;
     private final int w, h;
-    private Animate animate = new Animate();
 
-    public Button(String text, int x, int y) {
-        this.text = text;
+    public IconButton(String icon, int x, int y) {
+        this.icon = icon;
         this.x = x;
         this.y = y;
-        this.w = 150;
+        this.w = 20;
         this.h = 20;
         animate.setEase(Easing.LINEAR).setMin(0).setMax(25).setSpeed(200);
     }
@@ -36,7 +37,7 @@ public class Button {
      * @param mouseY The current Y position of the mouse
      */
 
-    public void renderButton(int mouseX, int mouseY, int x, int y) {
+    public void renderButton(int x, int y, int mouseX, int mouseY) {
         this.x = x;
         this.y = y;
 
@@ -47,19 +48,10 @@ public class Button {
                 Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
         );
 
-        Cloud.INSTANCE.fontHelper.size20.drawString(
-                text,
-                x + w / 2f - Cloud.INSTANCE.fontHelper.size20.getStringWidth(text) / 2f,
-                y + h / 2f - 4,
-                -1
-        );
+        Helper2D.drawPicture(x, y, w, h, 0xffffffff, "icon/" + icon);
     }
 
-    public boolean isPressed(int mouseX, int mouseY) {
-        return MathHelper.withinBox(getX(), getY(), getW(), getH(), mouseX, mouseY);
-    }
-
-    private boolean isHovered(int mouseX, int mouseY) {
+    public boolean isHovered(int mouseX, int mouseY) {
         return MathHelper.withinBox(x, y, w, h, mouseX, mouseY);
     }
 
@@ -79,7 +71,7 @@ public class Button {
         return y;
     }
 
-    public String getText() {
-        return text;
+    public String getIcon() {
+        return icon;
     }
 }

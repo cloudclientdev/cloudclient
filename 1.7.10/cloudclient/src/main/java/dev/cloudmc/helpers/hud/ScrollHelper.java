@@ -1,4 +1,4 @@
-package dev.cloudmc.helpers;
+package dev.cloudmc.helpers.hud;
 
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;

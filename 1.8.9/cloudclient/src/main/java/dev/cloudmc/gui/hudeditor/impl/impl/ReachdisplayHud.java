@@ -6,11 +6,11 @@
 package dev.cloudmc.gui.hudeditor.impl.impl;
 
 import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
-import dev.cloudmc.helpers.GLHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.GLHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -44,18 +44,17 @@ public class ReachdisplayHud extends HudMod {
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isModern()) {
                 if (isBackground()) {
-                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, ClientStyle.getBackgroundColor(50).getRGB(), 0);
+                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, Style.getColor(50).getRGB(), 0);
                 }
                 Cloud.INSTANCE.fontHelper.size20.drawString(
                         MathHelper.round(range, 2) + " Blocks",
-                        getX() + getW() / 2 - (Cloud.INSTANCE.fontHelper.size20.getStringWidth(MathHelper.round(range, 2) + " Blocks")) / 2,
+                        getX() + getW() / 2f - (Cloud.INSTANCE.fontHelper.size20.getStringWidth(MathHelper.round(range, 2) + " Blocks")) / 2f,
                         getY() + 6,
                         getColor()
                 );
-            }
-            else {
+            } else {
                 if (isBackground()) {
-                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), ClientStyle.getBackgroundColor(50).getRGB());
+                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), Style.getColor(50).getRGB());
                 }
                 Cloud.INSTANCE.mc.fontRendererObj.drawString(
                         MathHelper.round(range, 2) + " Blocks",
@@ -79,12 +78,11 @@ public class ReachdisplayHud extends HudMod {
                 }
                 Cloud.INSTANCE.fontHelper.size20.drawString(
                         MathHelper.round(range, 2) + " Blocks",
-                        getX() + getW() / 2 - (Cloud.INSTANCE.fontHelper.size20.getStringWidth(MathHelper.round(range, 2) + " Blocks")) / 2,
+                        getX() + getW() / 2f - (Cloud.INSTANCE.fontHelper.size20.getStringWidth(MathHelper.round(range, 2) + " Blocks")) / 2f,
                         getY() + 6,
                         getColor()
                 );
-            }
-            else {
+            } else {
                 if (isBackground()) {
                     Helper2D.drawRectangle(getX(), getY(), getW(), getH(), 0x50000000);
                 }

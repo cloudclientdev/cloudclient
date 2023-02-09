@@ -7,23 +7,24 @@ package dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.type;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.setting.Setting;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.Button;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.Settings;
-import dev.cloudmc.helpers.GLHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.GLHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
 
 public class ModePicker extends Settings {
 
-    Animate animateSelect = new Animate();
+    private final Animate animateSelect = new Animate();
     private int longestString;
 
     public ModePicker(Setting setting, Button button, int y) {
         super(setting, button, y);
         setSettingHeight(setting.getOptions().length * 15 + 5);
+        animateSelect.setEase(Easing.CUBIC_OUT).setMin(0).setMax(setting.getOptions().length * 15 + 2).setReversed(false);
     }
 
     /**
@@ -35,27 +36,22 @@ public class ModePicker extends Settings {
 
     @Override
     public void renderSetting(int mouseX, int mouseY) {
+        boolean roundedCorners = Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled();
+        int color = Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB();
 
-        animateSelect
-                .setEase(Easing.CUBIC_OUT)
-                .setMin(0)
-                .setMax(setting.getOptions().length * 15 + 2)
-                .setSpeed(200)
-                .setReversed(false)
-                .update();
+        animateSelect.setSpeed(getSettingHeight() * 2).update();
 
         Cloud.INSTANCE.fontHelper.size30.drawString(
                 setting.getName(),
                 button.getPanel().getX() + 20,
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 6,
-                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
+                color
         );
         Cloud.INSTANCE.fontHelper.size20.drawString(
                 setting.getCurrentMode(),
-                button.getPanel().getX() + button.getPanel().getW() - 20 -
-                        Cloud.INSTANCE.fontHelper.size20.getStringWidth(setting.getCurrentMode()),
+                button.getPanel().getX() + button.getPanel().getW() - 20 - Cloud.INSTANCE.fontHelper.size20.getStringWidth(setting.getCurrentMode()),
                 button.getPanel().getY() + button.getPanel().getH() + getY() + 9,
-                Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
+                color
         );
 
         if (isOpen()) {
@@ -71,8 +67,8 @@ public class ModePicker extends Settings {
                     button.getPanel().getX() + button.getPanel().getW() - 30 - longestString,
                     button.getPanel().getY() + button.getPanel().getH() + getY() - setting.getOptions().length * 15 + animateSelect.getValueI() + 20,
                     longestString + 10, setting.getOptions().length * 15 + 2,
-                    2, ClientStyle.getBackgroundColor(50).getRGB(),
-                    Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+                    2, Style.getColor(50).getRGB(),
+                    roundedCorners ? 0 : -1
             );
 
             int offset = 0;
@@ -87,15 +83,15 @@ public class ModePicker extends Settings {
                         setting.getOptions()[i],
                         button.getPanel().getX() + button.getPanel().getW() - 24 - longestString,
                         button.getPanel().getY() + button.getPanel().getH() + getY() + offset * 15 - setting.getOptions().length * 15 + animateSelect.getValueI() + 25,
-                        Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
+                        color
                 );
 
                 if (hovered) {
                     Helper2D.drawRoundedRectangle(
                             button.getPanel().getX() + button.getPanel().getW() - 30 - longestString,
                             button.getPanel().getY() + button.getPanel().getH() + getY() + offset * 15 - setting.getOptions().length * 15 + animateSelect.getValueI() + 20,
-                            longestString + 10, 17, 2, ClientStyle.getBackgroundColor(50).getRGB(),
-                            Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1
+                            longestString + 10, 17, 2, Style.getColor(50).getRGB(),
+                            roundedCorners ? 0 : -1
                     );
                 }
                 if (longestString < Cloud.INSTANCE.fontHelper.size20.getStringWidth(setting.getOptions()[i])) {
@@ -129,8 +125,7 @@ public class ModePicker extends Settings {
                 if (isOpen()) {
                     setH(25);
                     setOpen(false);
-                }
-                else {
+                } else {
                     animateSelect.reset();
                     setH(getSettingHeight() + 25);
                     setOpen(true);
@@ -141,8 +136,8 @@ public class ModePicker extends Settings {
             int offset = 0;
             for (int i = 0; i < setting.getOptions().length; i++) {
                 boolean hovered = MathHelper.withinBox(
-                        button.getPanel().getX() + button.getPanel().getW() - 46 - longestString / 2,
-                        button.getPanel().getY() + button.getPanel().getH() + getY() + offset * 15 + 24,
+                        button.getPanel().getX() + button.getPanel().getW() - 30 - longestString,
+                        button.getPanel().getY() + button.getPanel().getH() + getY() + offset * 15 + 25,
                         longestString + 10, 15, mouseX, mouseY
                 );
 
@@ -152,5 +147,10 @@ public class ModePicker extends Settings {
                 offset++;
             }
         }
+    }
+
+    @Override
+    public void mouseReleased(int mouseX, int mouseY, int state) {
+
     }
 }

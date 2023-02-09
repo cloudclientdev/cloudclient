@@ -8,7 +8,7 @@ package dev.cloudmc.feature.mod.impl;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
 import dev.cloudmc.feature.setting.Setting;
-import dev.cloudmc.helpers.Helper3D;
+import dev.cloudmc.helpers.render.Helper3D;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.GlStateManager;

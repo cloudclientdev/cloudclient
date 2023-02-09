@@ -6,11 +6,11 @@
 package dev.cloudmc.gui.hudeditor.impl.impl;
 
 import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
-import dev.cloudmc.helpers.GLHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.GLHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.Potion;
@@ -41,15 +41,14 @@ public class PotionHud extends HudMod {
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isModern()) {
                 if (isBackground()) {
-                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, ClientStyle.getBackgroundColor(50).getRGB(), 0);
+                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, Style.getColor(50).getRGB(), 0);
                 }
                 drawPotion(potion, new PotionEffect(5, 1, 1), 0, true, isTime());
                 drawPotion(potion2, new PotionEffect(10, 1, 1), 30, true, isTime());
                 drawPotion(potion3, new PotionEffect(16, 1, 1), 60, true, isTime());
-            }
-            else {
+            } else {
                 if (isBackground()) {
-                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), ClientStyle.getBackgroundColor(50).getRGB());
+                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), Style.getColor(50).getRGB());
                 }
                 drawPotion(potion, new PotionEffect(5, 1, 1), 0, false, isTime());
                 drawPotion(potion2, new PotionEffect(10, 1, 1), 30, false, isTime());
@@ -77,8 +76,7 @@ public class PotionHud extends HudMod {
                     addY += 30;
                     setH(addY);
                 }
-            }
-            else {
+            } else {
                 if (isBackground() && !collection.isEmpty()) {
                     Helper2D.drawRectangle(getX(), getY(), getW(), getH(), 0x50000000);
                 }
@@ -100,8 +98,7 @@ public class PotionHud extends HudMod {
             if (time) {
                 Cloud.INSTANCE.fontHelper.size20.drawString(Potion.getDurationString(effect), getX() + 30, getY() + 17 + y, getColor());
             }
-        }
-        else {
+        } else {
             Cloud.INSTANCE.mc.fontRendererObj.drawString(I18n.format(potion.getName()), getX() + 30, time ? getY() + 5 + y : getY() + 10 + y, getColor());
             if (time) {
                 Cloud.INSTANCE.mc.fontRendererObj.drawString(Potion.getDurationString(effect), getX() + 30, getY() + 17 + y, getColor());

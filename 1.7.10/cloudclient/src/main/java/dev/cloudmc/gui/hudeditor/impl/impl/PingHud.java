@@ -7,11 +7,11 @@ package dev.cloudmc.gui.hudeditor.impl.impl;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
-import dev.cloudmc.helpers.GLHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.GLHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 import dev.cloudmc.helpers.ServerDataHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
@@ -29,18 +29,17 @@ public class PingHud extends HudMod {
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isModern()) {
                 if (isBackground()) {
-                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, ClientStyle.getBackgroundColor(50).getRGB(), 0);
+                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, Style.getColor(50).getRGB(), 0);
                 }
                 Cloud.INSTANCE.fontHelper.size20.drawString(
                         "Ping: " + getPing(),
-                        getX() + getW() / 2 - Cloud.INSTANCE.fontHelper.size20.getStringWidth("Ping: " + getPing()) / 2,
+                        getX() + getW() / 2f - Cloud.INSTANCE.fontHelper.size20.getStringWidth("Ping: " + getPing()) / 2f,
                         getY() + 6,
                         getColor()
                 );
-            }
-            else {
+            } else {
                 if (isBackground()) {
-                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), ClientStyle.getBackgroundColor(50).getRGB());
+                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), Style.getColor(50).getRGB());
                 }
                 Cloud.INSTANCE.mc.fontRendererObj.drawString(
                         "Ping: " + getPing(),
@@ -64,12 +63,11 @@ public class PingHud extends HudMod {
                 }
                 Cloud.INSTANCE.fontHelper.size20.drawString(
                         "Ping: " + getPing(),
-                        getX() + getW() / 2 - Cloud.INSTANCE.fontHelper.size20.getStringWidth("Ping: " + getPing()) / 2,
+                        getX() + getW() / 2f - Cloud.INSTANCE.fontHelper.size20.getStringWidth("Ping: " + getPing()) / 2f,
                         getY() + 6,
                         getColor()
                 );
-            }
-            else {
+            } else {
                 if (isBackground()) {
                     Helper2D.drawRectangle(getX(), getY(), getW(), getH(), 0x50000000);
                 }
@@ -84,7 +82,7 @@ public class PingHud extends HudMod {
         GLHelper.endScale();
     }
 
-    private long getPing(){
+    private long getPing() {
         return Cloud.INSTANCE.mc.isIntegratedServerRunning() ? 0 : ServerDataHelper.getServerData().pingToServer;
     }
 

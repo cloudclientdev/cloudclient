@@ -44,12 +44,7 @@ public class ToggleSprintMod extends Mod {
 
     @SubscribeEvent
     public void onTick(TickEvent.PlayerTickEvent e) {
-        if (toggled) {
-            KeyBinding.setKeyBindState(Cloud.INSTANCE.mc.gameSettings.keyBindSprint.getKeyCode(), true);
-        }
-        else {
-            KeyBinding.setKeyBindState(Cloud.INSTANCE.mc.gameSettings.keyBindSprint.getKeyCode(), false);
-        }
+        KeyBinding.setKeyBindState(Cloud.INSTANCE.mc.gameSettings.keyBindSprint.getKeyCode(), toggled);
     }
 
     @SubscribeEvent

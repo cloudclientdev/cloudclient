@@ -3,7 +3,7 @@
  * GNU Lesser General Public License v3.0
  */
 
-package dev.cloudmc.helpers;
+package dev.cloudmc.helpers.render;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.impl.FreelookMod;
