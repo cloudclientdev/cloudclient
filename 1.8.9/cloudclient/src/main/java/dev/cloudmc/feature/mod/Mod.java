@@ -7,7 +7,7 @@ package dev.cloudmc.feature.mod;
 
 import net.minecraftforge.common.MinecraftForge;
 
-public abstract class Mod {
+public class Mod {
 
     private String name;
     private String description;
