@@ -145,10 +145,18 @@ public class Panel {
             GLHelper.endScissor();
 
             if (MathHelper.withinBox(x, y + 30, w, h + 270, mouseX, mouseY)) {
-                scrollHelperMods.updateScroll();
-                scrollHelperMods.setHeight(buttonList.size() / 4f * (buttonList.get(0).getH() + 3));
-
+                int height = 0;
                 int index = 0;
+                for(Button button : buttonList) {
+                    if(index % 4 == 0) {
+                        height += button.getH() + 3;
+                    }
+                    index++;
+                }
+                scrollHelperMods.updateScroll();
+                scrollHelperMods.setHeight(height);
+
+                index = 0;
                 int count = 0;
                 for (Button button : buttonList) {
                     float position = scrollHelperMods.getCalculatedScroll();

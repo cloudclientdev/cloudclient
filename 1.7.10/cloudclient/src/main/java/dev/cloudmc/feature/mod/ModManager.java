@@ -54,6 +54,7 @@ public class ModManager {
         addMod(new BossbarMod());
         addMod(new DirectionMod());
         addMod(new HitColorMod());
+        addMod(new TimeChangerMod());
     }
 
     /**

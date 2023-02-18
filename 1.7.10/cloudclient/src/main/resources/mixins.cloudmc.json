@@ -13,5 +13,8 @@
     "ItemRendererMixin",
     "MinecraftMixin",
     "RendererLivingEntityMixin"
+  ],
+  "mixins": [
+    "WorldMixin"
   ]
 }

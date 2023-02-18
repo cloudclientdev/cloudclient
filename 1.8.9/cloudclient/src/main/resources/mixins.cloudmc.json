@@ -15,6 +15,7 @@
     "RendererLivingEntityMixin"
   ],
   "mixins": [
-    "GuiUtilsMixin"
+    "GuiUtilsMixin",
+    "WorldMixin"
   ]
 }
