@@ -11,6 +11,7 @@
     "GuiMainMenuMixin",
     "GuiScreenMixin",
     "ItemRendererMixin",
-    "MinecraftMixin"
+    "MinecraftMixin",
+    "RendererLivingEntityMixin"
   ]
 }

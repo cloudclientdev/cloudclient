@@ -11,7 +11,8 @@
     "GuiMainMenuMixin",
     "ItemRendererMixin",
     "MinecraftMixin",
-    "ModelBipedMixin"
+    "ModelBipedMixin",
+    "RendererLivingEntityMixin"
   ],
   "mixins": [
     "GuiUtilsMixin"

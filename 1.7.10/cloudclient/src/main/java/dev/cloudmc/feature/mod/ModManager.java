@@ -53,6 +53,7 @@ public class ModManager {
         addMod(new ScoreboardMod());
         addMod(new BossbarMod());
         addMod(new DirectionMod());
+        addMod(new HitColorMod());
     }
 
     /**
