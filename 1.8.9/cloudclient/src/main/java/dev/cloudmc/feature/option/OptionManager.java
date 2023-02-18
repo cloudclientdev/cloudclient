@@ -27,6 +27,7 @@ public class OptionManager {
         addOption(new Option("Misc"));
         addOption(new Option("Minimal View Bobbing", true));
         addOption(new Option("Fire Height", 50, 0));
+        addOption(new Option("Disable Custom Title Screen", false));
 
         addOption(new Option("Performance"));
         addOption(new Option("Rounded Corners", true));
