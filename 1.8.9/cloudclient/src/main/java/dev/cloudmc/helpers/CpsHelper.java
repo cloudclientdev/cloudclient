@@ -8,17 +8,14 @@ package dev.cloudmc.helpers;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 public class CpsHelper {
 
-    private List<Long> leftClicks = new ArrayList<>();
-    private List<Long> rightClicks = new ArrayList<>();
+    private final List<Long> leftClicks = new ArrayList<>();
+    private final List<Long> rightClicks = new ArrayList<>();
 
     @SubscribeEvent
     public void onClick(MouseEvent event) {

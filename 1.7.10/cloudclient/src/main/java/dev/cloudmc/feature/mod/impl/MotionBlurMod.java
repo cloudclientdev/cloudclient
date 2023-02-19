@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2022 Moulberry
- * CREATIVE COMMONS PUBLIC LICENSE
  */
 
 package dev.cloudmc.feature.mod.impl;
@@ -16,12 +15,12 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
-public class MotionBlurMod extends Mod {
+public class MotionblurMod extends Mod {
 
     private Framebuffer blurBufferMain = null;
     private Framebuffer blurBufferInto = null;
 
-    public MotionBlurMod() {
+    public MotionblurMod() {
         super("MotionBlur", "Adds a motionblur effect to the screen, also seen in cameras.");
 
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Amount", this, 10, 6));

@@ -1,7 +1,5 @@
 /*
- * Copyright (c) 2022 Moulberry &
- * slightly edited by DupliCAT
- * CREATIVE COMMONS PUBLIC LICENSE
+ * Copyright (c) 2022 Moulberry
  */
 
 package dev.cloudmc.feature.mod.impl;
@@ -18,7 +16,6 @@ import net.minecraft.client.shader.Framebuffer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL14;
 
 public class MotionblurMod extends Mod {
 

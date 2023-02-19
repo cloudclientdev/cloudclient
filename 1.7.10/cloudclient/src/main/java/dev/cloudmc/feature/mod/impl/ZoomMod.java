@@ -32,35 +32,28 @@ public class ZoomMod extends Mod {
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Smooth Zoom", this, true));
 
         defaultZoom = Cloud.INSTANCE.mc.gameSettings.fovSetting;
-        animate.setValue(defaultZoom);
+        animate.setEase(Easing.LINEAR).setSpeed(700);
     }
 
     @SubscribeEvent
     public void onRender2D(RenderGameOverlayEvent.Text e) {
-        defaultZoom =  Cloud.INSTANCE.mc.gameSettings.fovSetting;
-
-        animate
-                .setEase(Easing.LINEAR)
-                .setMin(getAmount() / 2)
-                .setMax(defaultZoom)
-                .setSpeed(750)
-                .update();
+        defaultZoom = Cloud.INSTANCE.mc.gameSettings.fovSetting;
+        animate.setMin(getAmount() / 2).setMax(defaultZoom).update();
     }
 
     @SubscribeEvent
     public void onKey(InputEvent.KeyInputEvent e) {
-        if(Keyboard.isKeyDown(getKey())){
+        if (Keyboard.isKeyDown(getKey())) {
             zoom = true;
             animate.setReversed(true);
-        }
-        else {
+        } else {
             zoom = false;
             animate.setReversed(false);
         }
     }
 
     public static float getFOV() {
-        if(isSmooth()){
+        if (isSmooth()) {
             return animate.getValueI();
         }
         return zoom ? getAmount() : defaultZoom;
@@ -74,7 +67,7 @@ public class ZoomMod extends Mod {
         return Cloud.INSTANCE.settingManager.getSettingByModAndName("Zoom", "Zoom Amount").getCurrentNumber();
     }
 
-    private int getKey(){
+    private int getKey() {
         return Cloud.INSTANCE.settingManager.getSettingByModAndName(getName(), "Keybinding").getKey();
     }
 }

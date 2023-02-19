@@ -22,6 +22,8 @@ public abstract class GuiMainMenuMixin {
 
     @Inject(method = "initGui", at = @At("HEAD"))
     public void initGui(CallbackInfo ci) {
-        Cloud.INSTANCE.mc.displayGuiScreen(new TitleScreen());
+        if (!Cloud.INSTANCE.optionManager.getOptionByName("Disable Custom Title Screen").isCheckToggled()) {
+            Cloud.INSTANCE.mc.displayGuiScreen(new TitleScreen());
+        }
     }
 }

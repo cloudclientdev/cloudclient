@@ -5,8 +5,6 @@
 
 package dev.cloudmc.feature.option;
 
-import dev.cloudmc.feature.mod.Mod;
-
 import java.awt.*;
 
 public class Option {
@@ -20,6 +18,9 @@ public class Option {
     private int modeIndex;
 
     private Color color;
+    private Color sideColor;
+    private float sideSlider;
+    private float[] mainSlider;
 
     private boolean checkToggled;
 
@@ -68,11 +69,14 @@ public class Option {
      * An option which allows you to choose a specific color
      */
 
-    public Option(String name, Color color) {
+    public Option(String name, Color color, Color sideColor, float sideSlider, float[] mainSlider) {
         this.mode = "ColorPicker";
         this.name = name;
 
         this.color = color;
+        this.sideColor = sideColor;
+        this.sideSlider = sideSlider;
+        this.mainSlider = mainSlider;
     }
 
     /**
@@ -94,6 +98,7 @@ public class Option {
     }
 
     public Option(String name) {
+        this.mode = "Category";
         this.name = name;
     }
 
@@ -159,6 +164,31 @@ public class Option {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public Color getSideColor() {
+        return sideColor;
+    }
+
+    public void setSideColor(Color sideColor) {
+        this.sideColor = sideColor;
+    }
+
+    public float getSideSlider() {
+
+        return sideSlider;
+    }
+
+    public void setSideSlider(float sideSlider) {
+        this.sideSlider = sideSlider;
+    }
+
+    public float[] getMainSlider() {
+        return mainSlider;
+    }
+
+    public void setMainSlider(float[] mainSlider) {
+        this.mainSlider = mainSlider;
     }
 
     public String[] getOptions() {

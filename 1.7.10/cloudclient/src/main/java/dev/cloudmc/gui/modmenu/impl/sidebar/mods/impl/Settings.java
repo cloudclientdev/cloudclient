@@ -5,12 +5,11 @@
 
 package dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import dev.cloudmc.feature.setting.Setting;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.Button;
 import net.minecraftforge.common.MinecraftForge;
 
-public class Settings {
+public abstract class Settings {
 
     public Setting setting;
     public Button button;
@@ -21,7 +20,6 @@ public class Settings {
 
     public Settings(Setting setting, Button button, int y) {
         MinecraftForge.EVENT_BUS.register(this);
-        FMLCommonHandler.instance().bus().register(this);
         this.setting = setting;
         this.button = button;
         this.open = false;
@@ -29,11 +27,11 @@ public class Settings {
         this.y = y;
     }
 
-    public void renderSetting(int mouseX, int mouseY) {}
+    public abstract void renderSetting(int mouseX, int mouseY);
 
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton) {}
+    public abstract void mouseClicked(int mouseX, int mouseY, int mouseButton);
 
-    public void mouseReleased(int mouseX, int mouseY, int state) {}
+    public abstract void mouseReleased(int mouseX, int mouseY, int state);
 
     public Setting getSetting() {
         return setting;

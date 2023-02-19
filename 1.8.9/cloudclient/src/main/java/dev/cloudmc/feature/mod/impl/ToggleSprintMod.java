@@ -7,7 +7,6 @@ package dev.cloudmc.feature.mod.impl;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
 import dev.cloudmc.feature.setting.Setting;
-import dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.type.Keybinding;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -30,7 +29,7 @@ public class ToggleSprintMod extends Mod {
         String[] mode = {"Modern", "Legacy"};
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Mode", this, "Modern", 0, mode));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Background", this, true));
-        Cloud.INSTANCE.settingManager.addSetting(new Setting("Font Color", this, new Color(255, 255, 255)));
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Font Color", this, new Color(255, 255, 255), new Color(255, 0, 0), 0, new float[]{0, 0}));
     }
 
     public static boolean isSprinting() {
@@ -45,12 +44,7 @@ public class ToggleSprintMod extends Mod {
 
     @SubscribeEvent
     public void onTick(TickEvent.PlayerTickEvent e) {
-        if (toggled) {
-            KeyBinding.setKeyBindState(Cloud.INSTANCE.mc.gameSettings.keyBindSprint.getKeyCode(), true);
-        }
-        else {
-            KeyBinding.setKeyBindState(Cloud.INSTANCE.mc.gameSettings.keyBindSprint.getKeyCode(), false);
-        }
+        KeyBinding.setKeyBindState(Cloud.INSTANCE.mc.gameSettings.keyBindSprint.getKeyCode(), toggled);
     }
 
     @SubscribeEvent

@@ -7,7 +7,7 @@
 package dev.cloudmc.gui.titlescreen;
 
 import dev.cloudmc.Cloud;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.Helper2D;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -19,7 +19,9 @@ import org.lwjgl.util.glu.Project;
 
 public class Panorama extends GuiScreen {
 
-    private DynamicTexture viewportTexture = new DynamicTexture(256, 256);
+    public static int panoramaTimer = 0;
+
+    private final DynamicTexture viewportTexture = new DynamicTexture(256, 256);
 
     /**
      * An array of all the paths to the panorama pictures.
@@ -37,7 +39,7 @@ public class Panorama extends GuiScreen {
      * Called from the main game loop to update the screen.
      */
     public void updateScreen() {
-        PanoramaTimer.setPanoramaTimer(PanoramaTimer.getPanoramaTimer() + 1);
+        panoramaTimer++;
     }
 
     /**
@@ -68,8 +70,8 @@ public class Panorama extends GuiScreen {
             float f2 = ((float) (k / b0) / (float) b0 - 0.5F) / 64.0F;
             float f3 = 0.0F;
             GL11.glTranslatef(f1, f2, f3);
-            GL11.glRotatef(MathHelper.sin(((float) PanoramaTimer.getPanoramaTimer() + partialTicks) / 400.0F) * 25.0F + 20.0F, 1.0F, 0.0F, 0.0F);
-            GL11.glRotatef(-((float) PanoramaTimer.getPanoramaTimer() + partialTicks) * 0.1F, 0.0F, 1.0F, 0.0F);
+            GL11.glRotatef(MathHelper.sin(((float) panoramaTimer + partialTicks) / 400.0F) * 25.0F + 20.0F, 1.0F, 0.0F, 0.0F);
+            GL11.glRotatef(-((float) panoramaTimer + partialTicks) * 0.1F, 0.0F, 1.0F, 0.0F);
 
             for (int l = 0; l < 6; ++l) {
                 GL11.glPushMatrix();
@@ -98,10 +100,10 @@ public class Panorama extends GuiScreen {
                 tessellator.startDrawingQuads();
                 tessellator.setColorRGBA_I(16777215, 255 / (k + 1));
                 float f4 = 0.0F;
-                tessellator.addVertexWithUV(-1.0D, -1.0D, 1.0D, (double) (0.0F + f4), (double) (0.0F + f4));
-                tessellator.addVertexWithUV(1.0D, -1.0D, 1.0D, (double) (1.0F - f4), (double) (0.0F + f4));
-                tessellator.addVertexWithUV(1.0D, 1.0D, 1.0D, (double) (1.0F - f4), (double) (1.0F - f4));
-                tessellator.addVertexWithUV(-1.0D, 1.0D, 1.0D, (double) (0.0F + f4), (double) (1.0F - f4));
+                tessellator.addVertexWithUV(-1.0D, -1.0D, 1.0D, 0.0F + f4, 0.0F + f4);
+                tessellator.addVertexWithUV(1.0D, -1.0D, 1.0D, 1.0F - f4, 0.0F + f4);
+                tessellator.addVertexWithUV(1.0D, 1.0D, 1.0D, 1.0F - f4, 1.0F - f4);
+                tessellator.addVertexWithUV(-1.0D, 1.0D, 1.0D, 0.0F + f4, 1.0F - f4);
                 tessellator.draw();
                 GL11.glPopMatrix();
             }
@@ -142,10 +144,10 @@ public class Panorama extends GuiScreen {
             int j = this.width;
             int k = this.height;
             float f1 = (float) (i - b / 2) / 256.0F;
-            tessellator.addVertexWithUV((double) j, (double) k, (double) this.zLevel, (double) (0.0F + f1), 1.0D);
-            tessellator.addVertexWithUV((double) j, 0.0D, (double) this.zLevel, (double) (1.0F + f1), 1.0D);
-            tessellator.addVertexWithUV(0.0D, 0.0D, (double) this.zLevel, (double) (1.0F + f1), 0.0D);
-            tessellator.addVertexWithUV(0.0D, (double) k, (double) this.zLevel, (double) (0.0F + f1), 0.0D);
+            tessellator.addVertexWithUV(j, k, this.zLevel, 0.0F + f1, 1.0D);
+            tessellator.addVertexWithUV(j, 0.0D, this.zLevel, 1.0F + f1, 1.0D);
+            tessellator.addVertexWithUV(0.0D, 0.0D, this.zLevel, 1.0F + f1, 0.0D);
+            tessellator.addVertexWithUV(0.0D, k, this.zLevel, 0.0F + f1, 0.0D);
         }
 
         tessellator.draw();
@@ -177,10 +179,10 @@ public class Panorama extends GuiScreen {
         tessellator.setColorRGBA_F(1.0F, 1.0F, 1.0F, 1.0F);
         int k = this.width;
         int l = this.height;
-        tessellator.addVertexWithUV(0.0D, (double) l, (double) this.zLevel, (double) (0.5F - f2), (double) (0.5F + f3));
-        tessellator.addVertexWithUV((double) k, (double) l, (double) this.zLevel, (double) (0.5F - f2), (double) (0.5F - f3));
-        tessellator.addVertexWithUV((double) k, 0.0D, (double) this.zLevel, (double) (0.5F + f2), (double) (0.5F - f3));
-        tessellator.addVertexWithUV(0.0D, 0.0D, (double) this.zLevel, (double) (0.5F + f2), (double) (0.5F + f3));
+        tessellator.addVertexWithUV(0.0D, l, this.zLevel, 0.5F - f2, 0.5F + f3);
+        tessellator.addVertexWithUV(k, l, this.zLevel, 0.5F - f2, 0.5F - f3);
+        tessellator.addVertexWithUV(k, 0.0D, this.zLevel, 0.5F + f2, 0.5F - f3);
+        tessellator.addVertexWithUV(0.0D, 0.0D, this.zLevel, 0.5F + f2, 0.5F + f3);
         tessellator.draw();
     }
 
