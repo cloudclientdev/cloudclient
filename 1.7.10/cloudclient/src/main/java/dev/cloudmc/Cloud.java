@@ -68,6 +68,7 @@ public class Cloud {
             ConfigSaver.saveConfig();
         }
         ConfigLoader.loadConfig();
+        fontHelper.init();
 
         Runtime.getRuntime().addShutdownHook(new Thread(ConfigSaver::saveConfig));
     }
