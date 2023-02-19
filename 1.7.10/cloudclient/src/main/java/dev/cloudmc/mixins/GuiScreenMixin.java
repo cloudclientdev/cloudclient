@@ -40,7 +40,8 @@ public abstract class GuiScreenMixin extends Gui {
                     target = "Lnet/minecraft/client/gui/GuiScreen;drawGradientRect(IIIIII)V",
                     shift = At.Shift.BEFORE,
                     ordinal = 0
-            ), locals = LocalCapture.CAPTURE_FAILEXCEPTION
+            ), locals = LocalCapture.CAPTURE_FAILEXCEPTION,
+            remap = false
     )
     public void drawHoveringTextStart(List textLines, int x, int y, FontRenderer font, CallbackInfo ci, int k, Iterator iterator, int j2, int k2, int i1, int j1) {
         GL11.glPushMatrix();
@@ -54,7 +55,8 @@ public abstract class GuiScreenMixin extends Gui {
                     target = "Lorg/lwjgl/opengl/GL11;glEnable(I)V",
                     shift = At.Shift.BEFORE,
                     ordinal = 0
-            )
+            ),
+            remap = false
     )
     public void drawHoveringTextStop(List textLines, int x, int y, FontRenderer font, CallbackInfo ci) {
         GL11.glPopMatrix();

@@ -24,7 +24,7 @@ public class OSHelper {
      */
 
     public static String getMinecraftDirectory() {
-        return Cloud.INSTANCE.mc.mcDataDir.getAbsolutePath();
+        return Cloud.INSTANCE.mc.mcDataDir.getAbsolutePath() + File.separator;
     }
 
     public static String getCloudDirectory() {

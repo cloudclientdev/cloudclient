@@ -39,7 +39,8 @@ public abstract class GuiUtilsMixin {
                     target = "Lnet/minecraftforge/fml/client/config/GuiUtils;drawGradientRect(IIIIIII)V",
                     shift = At.Shift.BEFORE,
                     ordinal = 0
-            ), locals = LocalCapture.CAPTURE_FAILEXCEPTION
+            ), locals = LocalCapture.CAPTURE_FAILEXCEPTION,
+            remap = false
     )
     private static void drawHoveringTextStart(
             List<String> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight, int maxTextWidth, FontRenderer font, CallbackInfo ci,
@@ -55,7 +56,8 @@ public abstract class GuiUtilsMixin {
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/GlStateManager;enableLighting()V",
                     shift = At.Shift.BEFORE
-            )
+            ),
+            remap = false
     )
     private static void drawHoveringTextStop(
             List<String> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight, int maxTextWidth, FontRenderer font, CallbackInfo ci
