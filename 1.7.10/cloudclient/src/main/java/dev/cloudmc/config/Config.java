@@ -5,63 +5,53 @@
 
 package dev.cloudmc.config;
 
-import dev.cloudmc.feature.setting.Setting;
+import dev.cloudmc.feature.option.Option;
 
 import java.util.ArrayList;
 
 public class Config {
 
-    private String name;
-    private boolean toggled;
-    private ArrayList<Setting> settings;
-    private int[] positions;
-    private float size;
+    private final ArrayList<ModConfig> modConfigList;
+    private final ArrayList<Option> optionsConfigList;
+    private boolean darkMode;
+    private boolean snapping;
 
-    public Config(String name, boolean toggled, ArrayList<Setting> settings, int[] positions, float size){
-        this.name = name;
-        this.toggled = toggled;
-        this.settings = settings;
-        this.positions = positions;
-        this.size = size;
+    public Config() {
+        modConfigList = new ArrayList<>();
+        optionsConfigList = new ArrayList<>();
+        darkMode = false;
+        snapping = true;
     }
 
-    public String getName() {
-        return name;
+    public void addConfig(ModConfig modConfig) {
+        modConfigList.add(modConfig);
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void addConfigOption(Option option){
+        optionsConfigList.add(option);
     }
 
-    public boolean isToggled() {
-        return toggled;
+    public void setDarkMode(boolean toggled){
+        darkMode = toggled;
     }
 
-    public void setToggled(boolean toggled) {
-        this.toggled = toggled;
+    public boolean isDarkMode(){
+        return darkMode;
     }
 
-    public ArrayList<Setting> getSettings() {
-        return settings;
+    public boolean isSnapping() {
+        return snapping;
     }
 
-    public void setSettings(ArrayList<Setting> settings) {
-        this.settings = settings;
+    public void setSnapping(boolean snapping) {
+        this.snapping = snapping;
     }
 
-    public int[] getPositions() {
-        return positions;
+    public ArrayList<ModConfig> getConfig() {
+        return modConfigList;
     }
 
-    public void setPositions(int[] positions) {
-        this.positions = positions;
-    }
-
-    public float getSize() {
-        return size;
-    }
-
-    public void setSize(float size) {
-        this.size = size;
+    public ArrayList<Option> getOptionsConfigList() {
+        return optionsConfigList;
     }
 }

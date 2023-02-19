@@ -1,15 +1,25 @@
-![Logo](/Logo.png)
+
+![Logo](/screenshots/Logo.png)
 
 # Cloud Client
 Cloud Client is an open source Minecraft PVP Client for 1.7.10 and 1.8.9 using the Forge API.
 
 ## Downloading
 - Download the mod from the Releases section here
-- Download the mod using the installer [Installer](https://github.com/CloudClientDev/cloudinstaller)
+- Download the mod using the [Installer](https://github.com/CloudClientDev/cloudinstaller)
 
+## Screenshots
+### TitleScreen
+![TitleScreen](/screenshots/TitleScreen.png)
+
+### HudEditor
+![TitleScreen](/screenshots/HudEditor.png)
+
+### ModMenu
+![TitleScreen](/screenshots/ModMenu.png)
 ## Workspace Setup
 1. Clone or download the repository either using git or the zip download.
-2. Open the folder, either `1.7.10/cloudclient` or `1.8.9/cloudclient` and copy the path.
+2. Open the folder, either `1.7.10\cloudclient` or `1.8.9\cloudclient` and copy the path.
 3. Open a command proment or terminal and change the directory to the copied path.
 ```
 cd C:\User\Desktop\cloudclient-main\<version>\cloudclient
@@ -30,8 +40,7 @@ gradlew setupDecompWorkspace eclipse
 ```
 
 ## Building
-In order to build the project you will first need to setup your workspace, which you can do above.
-1. Open either the `1.7.10/cloudclient` or `1.8.9/cloudclient` folder and copy the path.
+1. Open either the `1.7.10\cloudclient` or `1.8.9\cloudclient` folder and copy the path.
 2. Open a command proment or terminal and change the directory to the copied path.
 ```
 cd C:\User\Desktop\cloudclient-main\<version>\cloudclient
@@ -42,12 +51,12 @@ gradlew build
 ```
 You will find the new build in
 ```
-C:\User\Desktop\cloudclient-main\<version>\build\libs
+C:\User\Desktop\cloudclient-main\<version>\cloudclient\build\libs
 ```
 4. Copy the .jar file and paste it into your mods folder and launch forge for your version.
 
 ## Contributions
-Feel free to fork this project, make any changes you would like to add and finally make a pull request.
+Feel free to fork this project, make changes and finally make a pull request to the development branch.
 
 ## License
 This project is licensed under the GNU Lesser General Public License v3.0

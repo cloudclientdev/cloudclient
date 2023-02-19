@@ -8,7 +8,7 @@ package dev.cloudmc.feature.mod.impl;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
 import dev.cloudmc.feature.setting.Setting;
-import dev.cloudmc.helpers.Helper3D;
+import dev.cloudmc.helpers.render.Helper3D;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.GlStateManager;
@@ -31,8 +31,8 @@ public class BlockOverlayMod extends Mod {
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Outline", this, true));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Filling", this, true));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Thickness", this, 20, 3));
-        Cloud.INSTANCE.settingManager.addSetting(new Setting("Outline Color", this, new Color(0, 0, 0)));
-        Cloud.INSTANCE.settingManager.addSetting(new Setting("Filling Color", this, new Color(0, 0, 0)));
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Outline Color", this, new Color(0, 0, 0), new Color(255, 0, 0), 0, new float[]{0, 65}));
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Filling Color", this, new Color(0, 0, 0), new Color(255, 0, 0), 0, new float[]{0, 65}));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Alpha", this, 255, 100));
     }
 

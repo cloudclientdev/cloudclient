@@ -21,6 +21,9 @@ public class Setting {
     private int modeIndex;
 
     private Color color;
+    private Color sideColor;
+    private float sideSlider;
+    private float[] mainSlider;
 
     private boolean checkToggled;
 
@@ -72,12 +75,15 @@ public class Setting {
      * A setting which allows you to choose a specific color
      */
 
-    public Setting(String name, Mod mod, Color color) {
+    public Setting(String name, Mod mod, Color color, Color sideColor, float sideSlider, float[] mainSlider) {
         this.mode = "ColorPicker";
         this.name = name;
         this.mod = mod;
 
         this.color = color;
+        this.sideColor = sideColor;
+        this.sideSlider = sideSlider;
+        this.mainSlider = mainSlider;
     }
 
     /**
@@ -98,10 +104,6 @@ public class Setting {
         this.mod = mod;
 
         this.key = key;
-    }
-
-    public Setting(String name) {
-        this.name = name;
     }
 
     public String getName() {
@@ -174,6 +176,30 @@ public class Setting {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public Color getSideColor() {
+        return sideColor;
+    }
+
+    public void setSideColor(Color sideColor) {
+        this.sideColor = sideColor;
+    }
+
+    public float getSideSlider() {
+        return sideSlider;
+    }
+
+    public void setSideSlider(float sideSlider) {
+        this.sideSlider = sideSlider;
+    }
+
+    public float[] getMainSlider() {
+        return mainSlider;
+    }
+
+    public void setMainSlider(float[] mainSlider) {
+        this.mainSlider = mainSlider;
     }
 
     public String[] getOptions() {

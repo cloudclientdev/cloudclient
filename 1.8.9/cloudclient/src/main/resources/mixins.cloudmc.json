@@ -6,12 +6,16 @@
   "client": [
     "EntityRendererMixin",
     "FontRendererMixin",
+    "GuiIngameMenuMixin",
+    "GuiInGameMixin",
     "GuiMainMenuMixin",
     "ItemRendererMixin",
     "MinecraftMixin",
-    "ModelBipedMixin"
+    "ModelBipedMixin",
+    "RendererLivingEntityMixin"
   ],
   "mixins": [
-    "GuiUtilsMixin"
+    "GuiUtilsMixin",
+    "WorldMixin"
   ]
 }

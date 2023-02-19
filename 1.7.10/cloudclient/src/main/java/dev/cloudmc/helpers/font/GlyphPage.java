@@ -96,7 +96,7 @@ public class GlyphPage {
             glyph.height = bounds.getBounds().height;
 
             if (posY + glyph.height >= imgSize) {
-                Cloud.INSTANCE.warningHelper.showWarning("Font", "Selected Font might not work as expected!");
+                Cloud.INSTANCE.messageHelper.showMessage("Font", "Selected Font might not work as expected!");
             }
 
             if (posX + glyph.width >= imgSize) {

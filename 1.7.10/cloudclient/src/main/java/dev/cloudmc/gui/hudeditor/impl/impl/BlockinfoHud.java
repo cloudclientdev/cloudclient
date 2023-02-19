@@ -7,10 +7,11 @@ package dev.cloudmc.gui.hudeditor.impl.impl;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.hudeditor.HudEditor;
 import dev.cloudmc.gui.hudeditor.impl.HudMod;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.GLHelper;
+import dev.cloudmc.helpers.render.Helper2D;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.init.Blocks;
@@ -35,27 +36,26 @@ public class BlockinfoHud extends HudMod {
 
     @Override
     public void renderMod(int mouseX, int mouseY) {
-        Helper2D.startScale(getX(), getY(), getSize());
+        GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled()) {
             if (isModern()) {
                 setW(Cloud.INSTANCE.fontHelper.size20.getStringWidth("Grass Block") + 42);
                 if (isBackground()) {
-                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, ClientStyle.getBackgroundColor(50).getRGB(), 0);
+                    Helper2D.drawRoundedRectangle(getX(), getY(), getW(), getH(), 2, Style.getColor(50).getRGB(), 0);
                 }
                 Cloud.INSTANCE.fontHelper.size20.drawString("Grass Block", getX() + 35, getY() + 10, getColor());
                 renderItem(new ItemStack(Blocks.grass));
-            }
-            else {
+            } else {
                 setW(Cloud.INSTANCE.mc.fontRendererObj.getStringWidth("Grass Block") + 42);
                 if (isBackground()) {
-                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), ClientStyle.getBackgroundColor(50).getRGB());
+                    Helper2D.drawRectangle(getX(), getY(), getW(), getH(), Style.getColor(50).getRGB());
                 }
                 Cloud.INSTANCE.mc.fontRendererObj.drawString("Grass Block", getX() + 35, getY() + 10, getColor());
                 renderItem(new ItemStack(Blocks.grass));
             }
             super.renderMod(mouseX, mouseY);
         }
-        Helper2D.endScale();
+        GLHelper.endScale();
     }
 
     @SubscribeEvent
@@ -65,7 +65,7 @@ public class BlockinfoHud extends HudMod {
             return;
         }
 
-        Helper2D.startScale(getX(), getY(), getSize());
+        GLHelper.startScale(getX(), getY(), getSize());
         if (Cloud.INSTANCE.modManager.getMod(getName()).isToggled() && !(Cloud.INSTANCE.mc.currentScreen instanceof HudEditor)) {
             World world = Cloud.INSTANCE.mc.theWorld;
             Vector3f v = getLookingAtPosition();
@@ -73,7 +73,7 @@ public class BlockinfoHud extends HudMod {
             ItemStack finalItem = new ItemStack(Item.getItemById(id), 1, block.getDamageValue(world, (int) v.x, (int) v.y, (int) v.z));
             String blockName = getBlockName(id, block.getDamageValue(world, (int) v.x, (int) v.y, (int) v.z));
             if (blockName == null) {
-                Helper2D.endScale();
+                GLHelper.endScale();
                 return;
             }
             if (isModern()) {
@@ -85,8 +85,7 @@ public class BlockinfoHud extends HudMod {
 
                 Cloud.INSTANCE.fontHelper.size20.drawString(blockName, getX() + 35, getY() + 10, getColor());
                 renderItem(finalItem);
-            }
-            else {
+            } else {
                 int width = Cloud.INSTANCE.mc.fontRendererObj.getStringWidth(blockName);
                 setW(width + 42);
                 if (isBackground()) {
@@ -96,7 +95,7 @@ public class BlockinfoHud extends HudMod {
                 renderItem(finalItem);
             }
         }
-        Helper2D.endScale();
+        GLHelper.endScale();
     }
 
     public int getColor() {
@@ -132,14 +131,14 @@ public class BlockinfoHud extends HudMod {
     private String getBlockName(int itemId, int damageValue) {
         try {
             return new ItemStack(Item.getItemById(itemId), 1, damageValue).getDisplayName();
-        }catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             return null;
         }
     }
 
     private Block getLookingAtBlock() {
         MovingObjectPosition objectMouseOver = Cloud.INSTANCE.mc.objectMouseOver;
-        if(objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK){
+        if (objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
             return Cloud.INSTANCE.mc.theWorld.getBlock(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
         }
         return null;
@@ -147,7 +146,7 @@ public class BlockinfoHud extends HudMod {
 
     private Vector3f getLookingAtPosition() {
         MovingObjectPosition objectMouseOver = Cloud.INSTANCE.mc.objectMouseOver;
-        if(objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK){
+        if (objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
             return new Vector3f(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
         }
         return null;

@@ -6,29 +6,26 @@
 package dev.cloudmc.gui.modmenu;
 
 import dev.cloudmc.Cloud;
-import dev.cloudmc.gui.ClientStyle;
+import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.modmenu.impl.Panel;
+import dev.cloudmc.helpers.ResolutionHelper;
 import dev.cloudmc.helpers.TimeHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.Helper2D;
 import dev.cloudmc.helpers.MathHelper;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
 
 public class ModMenu extends GuiScreen {
 
-    Panel panel;
+    private final Panel panel = new Panel();
 
-    public boolean animationFinish;
-
-    Animate animateModMenu = new Animate();
-    Animate animateClock = new Animate();
-    Animate animateSnapping = new Animate();
+    private final Animate animateModMenu = new Animate();
+    private final Animate animateClock = new Animate();
+    private final Animate animateSnapping = new Animate();
 
     public ModMenu() {
-        panel = new Panel();
         animateModMenu.setEase(Easing.CUBIC_OUT).setMin(0).setSpeed(1000).setReversed(false);
         animateClock.setEase(Easing.CUBIC_OUT).setMin(0).setMax(50).setSpeed(100).setReversed(false);
         animateSnapping.setEase(Easing.CUBIC_IN).setMin(0).setMax(50).setSpeed(100).setReversed(false);
@@ -45,45 +42,38 @@ public class ModMenu extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         Helper2D.drawRectangle(0, 0, width, height, 0x70000000);
-        ScaledResolution sr = new ScaledResolution(mc);
+        boolean roundedCorners = Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled();
+        int color = Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB();
 
-        float max = sr.getScaledHeight() / 2f + 150;
+        float max = ResolutionHelper.getHeight() / 2f + 150;
         animateModMenu.setMax(max).update();
-        animationFinish = animateModMenu.hasFinished();
-
-        /*
-        Draws and updates the panel
-         */
-
-        if(!animationFinish)
+        if(!animateModMenu.hasFinished()) {
             panel.setY(height - animateModMenu.getValueI());
+        }
         panel.renderPanel(mouseX, mouseY);
         panel.updatePosition(mouseX, mouseY);
-
-        animateClock.update();
 
         /*
         Draws the time at the top right
          */
 
-        Helper2D.drawRoundedRectangle(width - 130, -10 - 50 + animateClock.getValueI(), 140, 60, 10, ClientStyle.getBackgroundColor(50).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
-        Helper2D.drawPicture(width - 50, 5 - 50 + animateClock.getValueI(), 40, 40, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), "icon/clock.png");
-        Cloud.INSTANCE.fontHelper.size40.drawString(TimeHelper.getFormattedTimeMinute(), width - 120, 10 - 50 + animateClock.getValueI(), Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
-        Cloud.INSTANCE.fontHelper.size20.drawString(TimeHelper.getFormattedDate(), width - 120, 30 - 50 + animateClock.getValueI(), Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB());
+        animateClock.update();
+
+        Helper2D.drawRoundedRectangle(width - 130, animateClock.getValueI() - 60, 140, 60, 10, Style.getColor(50).getRGB(), roundedCorners ? 0 : -1);
+        Helper2D.drawPicture(width - 50, 5 - 50 + animateClock.getValueI(), 40, 40, color, "icon/clock.png");
+
+        Cloud.INSTANCE.fontHelper.size40.drawString(TimeHelper.getFormattedTimeMinute(), width - 120, 10 - 50 + animateClock.getValueI(), color);
+        Cloud.INSTANCE.fontHelper.size20.drawString(TimeHelper.getFormattedDate(), width - 120, 30 - 50 + animateClock.getValueI(), color);
 
         /*
         Draws the dark and light mode button on the bottom left
          */
 
-        Helper2D.drawRoundedRectangle(10, height - 50, 40, 40, 2, ClientStyle.getBackgroundColor(40).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
-        Helper2D.drawPicture(15, height - 45, 30, 30, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(), ClientStyle.isDarkMode() ? "icon/dark.png" : "icon/light.png");
-
         animateSnapping.update();
-
-        Helper2D.drawRoundedRectangle(60, height - 50 + animateSnapping.getValueI(), 40, 40, 2,
-                ClientStyle.getBackgroundColor(40).getRGB(), Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled() ? 0 : -1);
-        Helper2D.drawPicture(65, height - 45 + animateSnapping.getValueI(), 30, 30, Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB(),
-                ClientStyle.isSnapping() ? "icon/grid.png" : "icon/nogrid.png");
+        Helper2D.drawRoundedRectangle(10, height - 50, 40, 40, 2, Style.getColor(40).getRGB(), roundedCorners ? 0 : -1);
+        Helper2D.drawPicture(15, height - 45, 30, 30, color, Style.isDarkMode() ? "icon/dark.png" : "icon/light.png");
+        Helper2D.drawRoundedRectangle(60, height - 50 + animateSnapping.getValueI(), 40, 40, 2, Style.getColor(40).getRGB(), roundedCorners ? 0 : -1);
+        Helper2D.drawPicture(65, height - 45 + animateSnapping.getValueI(), 30, 30, color, Style.isSnapping() ? "icon/grid.png" : "icon/nogrid.png");
     }
 
     /**
@@ -98,21 +88,20 @@ public class ModMenu extends GuiScreen {
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         panel.mouseClicked(mouseX, mouseY, mouseButton);
-        if (MathHelper.withinBox(
-                panel.getX(),
-                panel.getY(),
-                panel.getW(),
-                panel.getH(),
-                mouseX,
-                mouseY
-        ) && mouseButton == 0) {
-            panel.setDragging(true);
-            panel.setOffsetX(mouseX - panel.getX());
-            panel.setOffsetY(mouseY - panel.getY());
-        }
+        if(mouseButton == 0) {
+            if (MathHelper.withinBox(
+                    panel.getX(), panel.getY(),
+                    panel.getW(), panel.getH(),
+                    mouseX, mouseY
+            )) {
+                panel.setDragging(true);
+                panel.setOffsetX(mouseX - panel.getX());
+                panel.setOffsetY(mouseY - panel.getY());
+            }
 
-        if (MathHelper.withinBox(10, height - 50, 40, 40, mouseX, mouseY)) {
-            ClientStyle.setDarkMode(!ClientStyle.isDarkMode());
+            if (MathHelper.withinBox(10, height - 50, 40, 40, mouseX, mouseY)) {
+                Style.setDarkMode(!Style.isDarkMode());
+            }
         }
     }
 

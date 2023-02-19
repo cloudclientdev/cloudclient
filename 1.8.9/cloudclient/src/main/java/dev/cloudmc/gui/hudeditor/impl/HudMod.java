@@ -7,12 +7,10 @@ package dev.cloudmc.gui.hudeditor.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.helpers.MathHelper;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.Helper2D;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.util.ArrayList;
-
-public class HudMod {
+public abstract class HudMod {
 
     private String name;
     private int x, y, w, h;
@@ -21,11 +19,11 @@ public class HudMod {
     private float size;
 
     public HudMod(String name, int x, int y) {
+        MinecraftForge.EVENT_BUS.register(this);
         this.name = name;
         this.x = x;
         this.y = y;
         this.size = 1;
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
     public void renderMod(int mouseX, int mouseY) {

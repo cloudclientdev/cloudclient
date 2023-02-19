@@ -7,7 +7,7 @@
 package dev.cloudmc.gui.titlescreen;
 
 import dev.cloudmc.Cloud;
-import dev.cloudmc.helpers.Helper2D;
+import dev.cloudmc.helpers.render.Helper2D;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -21,12 +21,14 @@ import org.lwjgl.util.glu.Project;
 
 public class Panorama extends GuiScreen {
 
-    private DynamicTexture viewportTexture = new DynamicTexture(256, 256);
+    public static int panoramaTimer = 0;
+
+    private final DynamicTexture viewportTexture = new DynamicTexture(256, 256);
 
     /**
      * An array of all the paths to the panorama pictures.
      */
-    private static final ResourceLocation[] titlePanoramaPaths = new ResourceLocation[] {
+    private static final ResourceLocation[] titlePanoramaPaths = new ResourceLocation[]{
             new ResourceLocation(Cloud.modID, "panorama/panorama_0.png"),
             new ResourceLocation(Cloud.modID, "panorama/panorama_1.png"),
             new ResourceLocation(Cloud.modID, "panorama/panorama_2.png"),
@@ -39,7 +41,7 @@ public class Panorama extends GuiScreen {
      * Called from the main game loop to update the screen.
      */
     public void updateScreen() {
-        PanoramaTimer.setPanoramaTimer(PanoramaTimer.getPanoramaTimer() + 1);
+        panoramaTimer++;
     }
 
     /**
@@ -71,8 +73,8 @@ public class Panorama extends GuiScreen {
             float f1 = ((float) (j / i) / (float) i - 0.5F) / 64.0F;
             float f2 = 0.0F;
             GlStateManager.translate(f, f1, f2);
-            GlStateManager.rotate(MathHelper.sin(((float) PanoramaTimer.getPanoramaTimer() + drawPanorama3) / 400.0F) * 25.0F + 20.0F, 1.0F, 0.0F, 0.0F);
-            GlStateManager.rotate(-((float) PanoramaTimer.getPanoramaTimer() + drawPanorama3) * 0.1F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(MathHelper.sin(((float) panoramaTimer + drawPanorama3) / 400.0F) * 25.0F + 20.0F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(-((float) panoramaTimer + drawPanorama3) * 0.1F, 0.0F, 1.0F, 0.0F);
 
             for (int k = 0; k < 6; ++k) {
                 GlStateManager.pushMatrix();

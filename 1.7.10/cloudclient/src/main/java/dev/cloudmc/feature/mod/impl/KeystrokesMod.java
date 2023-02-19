@@ -24,6 +24,6 @@ public class KeystrokesMod extends Mod {
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Background", this, true));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Clicks", this, true));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("CPS", this, true));
-        Cloud.INSTANCE.settingManager.addSetting(new Setting("Font Color", this, new Color(255, 255, 255)));
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Font Color", this, new Color(255, 255, 255), new Color(255, 0, 0), 0, new float[]{0, 0}));
     }
 }

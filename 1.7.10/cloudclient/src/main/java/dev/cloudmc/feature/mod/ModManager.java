@@ -12,10 +12,9 @@ import java.util.ArrayList;
 
 public class ModManager {
 
-    public ArrayList<Mod> mods;
+    public ArrayList<Mod> mods = new ArrayList<>();
 
     public ModManager() {
-        mods = new ArrayList<>();
         init();
     }
 
@@ -40,7 +39,7 @@ public class ModManager {
         addMod(new SpeedIndicatorMod());
         addMod(new FreelookMod());
         addMod(new CrosshairMod());
-        addMod(new MotionBlurMod());
+        addMod(new MotionblurMod());
         addMod(new GuiBlurMod());
         addMod(new BlockOverlayMod());
         addMod(new BlockInfoMod());
@@ -51,6 +50,11 @@ public class ModManager {
         addMod(new ScrollTooltipsMod());
         addMod(new ParticleMultiplierMod());
         addMod(new NickHiderMod());
+        addMod(new ScoreboardMod());
+        addMod(new BossbarMod());
+        addMod(new DirectionMod());
+        addMod(new HitColorMod());
+        addMod(new TimeChangerMod());
     }
 
     /**

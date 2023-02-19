@@ -17,11 +17,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class GuiMainMenuMixin {
 
     /**
-     Loads the custom Title Screen in dev.cloudmc.gui.titlescreen
+     * Loads the custom Title Screen in dev.cloudmc.gui.titlescreen
      */
 
     @Inject(method = "initGui", at = @At("HEAD"))
-    public void initGui(CallbackInfo ci){
-        Cloud.INSTANCE.mc.displayGuiScreen(new TitleScreen());
+    public void initGui(CallbackInfo ci) {
+        if (!Cloud.INSTANCE.optionManager.getOptionByName("Disable Custom Title Screen").isCheckToggled()) {
+            Cloud.INSTANCE.mc.displayGuiScreen(new TitleScreen());
+        }
     }
 }

@@ -16,16 +16,12 @@ public class FontHelper {
     public GlyphPageFontRenderer size30;
     public GlyphPageFontRenderer size40;
 
-    public FontHelper(){
-        init();
-    }
-
-    public void init(){
+    public void init() {
         font = Cloud.INSTANCE.optionManager.getOptionByName("Font Changer").getCurrentMode();
-        size15 = GlyphPageFontRenderer.create(font, 15, false, false, false);
-        size20 = GlyphPageFontRenderer.create(font, 20, false, false, false);
-        size30 = GlyphPageFontRenderer.create(font, 30, false, false, false);
-        size40 = GlyphPageFontRenderer.create(font, 40, false, false, false);
+        size15 = GlyphPageFontRenderer.create(font, 15, true, true, true);
+        size20 = GlyphPageFontRenderer.create(font, 20, true, true, true);
+        size30 = GlyphPageFontRenderer.create(font, 30, true, true, true);
+        size40 = GlyphPageFontRenderer.create(font, 40, true, true, true);
     }
 
     public String getFont() {

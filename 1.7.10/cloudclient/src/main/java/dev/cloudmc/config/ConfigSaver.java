@@ -9,8 +9,8 @@ import com.google.gson.Gson;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
 import dev.cloudmc.feature.option.Option;
-import dev.cloudmc.gui.ClientStyle;
-import dev.cloudmc.helpers.DirHelper;
+import dev.cloudmc.gui.Style;
+import dev.cloudmc.helpers.OSHelper;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -20,22 +20,23 @@ import java.nio.file.Files;
 public class ConfigSaver {
 
     /**
-     * Saves a configuration of:
-     * - Toggled Mods;
-     * - Position of Mods;
-     * - Settings of Mods;
-     * in .cloud/cloudconfig.json
+     * Creates and saves a configuration in .minecraft/cloud/config.json
      */
 
-    public static void saveConfig() throws IOException {
+    public static void saveConfig() {
         createDir();
 
-        FileWriter writer = new FileWriter(DirHelper.getDirectory() + ".cloud" + File.separator + "cloudconfig.json");
+        FileWriter writer;
+        try {
+            writer = new FileWriter(OSHelper.getCloudDirectory() + "config.json");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        ConfigArray configArray = new ConfigArray();
+        Config config = new Config();
 
         for (Mod mod : Cloud.INSTANCE.modManager.getMods()) {
-            Config config = new Config(
+            ModConfig modConfig = new ModConfig(
                     mod.getName(),
                     mod.isToggled(),
                     Cloud.INSTANCE.settingManager.getSettingsByMod(mod),
@@ -45,52 +46,64 @@ public class ConfigSaver {
                     Cloud.INSTANCE.hudEditor.getHudMod(mod.getName()) != null ?
                             Cloud.INSTANCE.hudEditor.getHudMod(mod.getName()).getSize() : 1
             );
-            configArray.addConfig(config);
+            config.addConfig(modConfig);
         }
 
         for(Option option : Cloud.INSTANCE.optionManager.getOptions()){
-            configArray.addConfigOption(option);
+            config.addConfigOption(option);
         }
 
-        configArray.setDarkMode(ClientStyle.isDarkMode());
-        configArray.setSnapping(ClientStyle.isSnapping());
+        config.setDarkMode(Style.isDarkMode());
+        config.setSnapping(Style.isSnapping());
 
-        String json = new Gson().toJson(configArray);
-        writer.write(json);
-        writer.close();
+        String json = new Gson().toJson(config);
+        try {
+            writer.write(json);
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
-     * Creates the .cloud directory if it cannot be found
+     * Creates the .minecraft/cloud directory if it cannot be found
      */
 
-    private static void createDir() throws IOException {
-        File file = new File(DirHelper.getDirectory() + ".cloud");
+    private static void createDir() {
+        File file = new File(OSHelper.getCloudDirectory());
         if (!file.exists()) {
-            Files.createDirectory(file.toPath());
+            try {
+                Files.createDirectory(file.toPath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         createFile();
     }
 
     /**
-     * Creates the .cloud/cloudconfig.json file if it cannot be found
+     * Creates the .minecraft/cloud/config.json file if it cannot be found
      */
 
-    private static void createFile() throws IOException {
-        File file = new File(DirHelper.getDirectory() + ".cloud" + File.separator + "cloudconfig.json");
+    private static void createFile() {
+        File file = new File(OSHelper.getCloudDirectory() + "config.json");
         if (!file.exists()) {
-            Files.createFile(file.toPath());
+            try {
+                Files.createFile(file.toPath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     /**
-     * Checks if the config / .cloud/cloudconfig.json file exists
+     * Checks if the config .minecraft/cloud/config.json file exists
      *
      * @return Config can be found
      */
 
     public static boolean configExists() {
-        File file = new File(DirHelper.getDirectory() + ".cloud" + File.separator + "cloudconfig.json");
+        File file = new File(OSHelper.getCloudDirectory() + "config.json");
         return file.exists();
     }
 }
