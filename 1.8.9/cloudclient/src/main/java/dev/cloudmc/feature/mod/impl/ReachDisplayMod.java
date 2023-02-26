@@ -7,6 +7,7 @@ package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 
 import java.awt.*;
@@ -16,7 +17,8 @@ public class ReachDisplayMod extends Mod {
     public ReachDisplayMod() {
         super(
                 "ReachDisplay",
-                "Shows you the distance from the player and the entity you attacked."
+                "Shows you the distance from the player and the entity you attacked.",
+                Type.Hud
         );
 
         String[] mode = {"Modern", "Legacy"};

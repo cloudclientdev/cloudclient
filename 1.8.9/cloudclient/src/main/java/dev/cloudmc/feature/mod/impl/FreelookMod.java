@@ -7,6 +7,7 @@ package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -23,7 +24,8 @@ public class FreelookMod extends Mod {
     public FreelookMod() {
         super(
                 "Freelook",
-                "Allows you to see a 360 view around your Player."
+                "Allows you to see a 360 view around your Player.",
+                Type.Mechanic
         );
 
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Keybinding", this, Keyboard.KEY_R));

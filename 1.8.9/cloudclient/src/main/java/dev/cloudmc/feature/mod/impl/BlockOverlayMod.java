@@ -7,6 +7,7 @@ package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 import dev.cloudmc.helpers.render.Helper3D;
 import net.minecraft.block.Block;
@@ -26,7 +27,11 @@ import java.awt.*;
 public class BlockOverlayMod extends Mod {
 
     public BlockOverlayMod() {
-        super("BlockOverlay", "Adds an customizable overlay to blocks.");
+        super(
+                "BlockOverlay",
+                "Adds an customizable overlay to blocks.",
+                Type.Visual
+        );
 
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Outline", this, true));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Filling", this, true));

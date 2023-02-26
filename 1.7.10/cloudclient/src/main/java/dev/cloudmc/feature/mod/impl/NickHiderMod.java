@@ -7,13 +7,15 @@ package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 
 public class NickHiderMod extends Mod {
 
     public NickHiderMod() {
         super(
                 "NickHider",
-                "Hides your nickname in game by replacing it with \"You\"."
+                "Hides your nickname in game by replacing it with \"You\".",
+                Type.Visual
         );
     }
 

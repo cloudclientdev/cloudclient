@@ -5,28 +5,27 @@
 
 package dev.cloudmc.feature.mod;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraftforge.common.MinecraftForge;
 
 public class Mod {
 
     private String name;
     private String description;
+    private Type type;
     private boolean toggled;
 
-    public Mod(String name, String description) {
+    public Mod(String name, String description, Type type) {
         this.name = name;
         this.description = description;
+        this.type = type;
     }
 
     public void onEnable() {
         MinecraftForge.EVENT_BUS.register(this);
-        FMLCommonHandler.instance().bus().register(this);
     }
 
     public void onDisable() {
         MinecraftForge.EVENT_BUS.unregister(this);
-        FMLCommonHandler.instance().bus().unregister(this);
     }
 
     public String getName() {
@@ -47,6 +46,14 @@ public class Mod {
 
     public boolean isToggled() {
         return toggled;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public void setToggled(boolean toggled) {

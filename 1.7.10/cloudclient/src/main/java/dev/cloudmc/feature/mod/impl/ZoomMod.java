@@ -9,6 +9,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
@@ -24,7 +25,8 @@ public class ZoomMod extends Mod {
     public ZoomMod() {
         super(
                 "Zoom",
-                "Allows you to zoom into the world."
+                "Allows you to zoom into the world.",
+                Type.Mechanic
         );
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Keybinding", this, Keyboard.KEY_C));
 

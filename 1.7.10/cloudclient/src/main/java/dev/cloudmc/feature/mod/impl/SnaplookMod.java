@@ -10,6 +10,7 @@ import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 import org.lwjgl.input.Keyboard;
 
@@ -19,7 +20,8 @@ public class SnaplookMod extends Mod {
     public SnaplookMod() {
         super(
                 "Snaplook",
-                "Allows you to see you in 3rd person, by only holding a button."
+                "Allows you to see you in 3rd person, by only holding a button.",
+                Type.Mechanic
         );
 
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Keybinding", this, Keyboard.KEY_F));

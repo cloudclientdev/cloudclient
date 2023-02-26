@@ -7,6 +7,7 @@ package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 
 public class ArmorMod extends Mod {
@@ -14,7 +15,8 @@ public class ArmorMod extends Mod {
     public ArmorMod() {
         super(
                 "Armor Status",
-                "Displays your Armor on the HUD."
+                "Displays your Armor on the HUD.",
+                Type.Visual
         );
 
         String[] mode = {"Modern", "Legacy"};

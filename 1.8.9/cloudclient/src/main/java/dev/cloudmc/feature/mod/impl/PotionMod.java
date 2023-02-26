@@ -7,6 +7,7 @@ package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 
 import java.awt.*;
@@ -16,7 +17,8 @@ public class PotionMod extends Mod {
     public PotionMod() {
         super(
                 "Potion Status",
-                "Shows your active potions on the HUD."
+                "Shows your active potions on the HUD.",
+                Type.Hud
         );
 
         String[] mode = {"Modern", "Legacy"};

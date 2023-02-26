@@ -7,13 +7,13 @@ package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -22,7 +22,8 @@ public class AnimationMod extends Mod {
     public AnimationMod() {
         super(
                 "Animation",
-                "1.7 Animations in 1.8."
+                "1.7 Animations in 1.8.",
+                Type.Visual
         );
 
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Block Animation", this, true));

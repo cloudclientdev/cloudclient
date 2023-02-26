@@ -7,6 +7,7 @@ package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.KeyBinding;
@@ -24,7 +25,8 @@ public class ToggleSneakMod extends Mod {
     public ToggleSneakMod() {
         super(
                 "ToggleSneak",
-                "Allows you to toggle the Sneak button instead of holding it."
+                "Allows you to toggle the Sneak button instead of holding it.",
+                Type.Mechanic
         );
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Keybinding", this, Keyboard.KEY_LSHIFT));
 

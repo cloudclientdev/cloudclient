@@ -7,6 +7,7 @@ package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 
 import java.awt.*;
@@ -16,7 +17,8 @@ public class SpeedIndicatorMod extends Mod {
     public SpeedIndicatorMod() {
         super(
                 "Speed Indicator",
-                "Shows you how many blocks you travel per second on the HUD."
+                "Shows you how many blocks you travel per second on the HUD.",
+                Type.Hud
         );
 
         String[] mode = {"Modern", "Legacy"};

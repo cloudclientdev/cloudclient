@@ -9,6 +9,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 
 public class FullbrightMod extends Mod {
@@ -18,7 +19,8 @@ public class FullbrightMod extends Mod {
     public FullbrightMod() {
         super(
                 "Fullbright",
-                "Changes the Gamma of the game to a given value."
+                "Changes the Gamma of the game to a given value.",
+                Type.Visual
         );
 
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Brightness", this, 100, 10));

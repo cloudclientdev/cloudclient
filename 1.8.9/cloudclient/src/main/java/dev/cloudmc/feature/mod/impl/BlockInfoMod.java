@@ -7,6 +7,7 @@ package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 
 import java.awt.*;
@@ -16,7 +17,8 @@ public class BlockInfoMod extends Mod {
     public BlockInfoMod() {
         super(
                 "BlockInfo",
-                "Shows you information about the block you are looking at."
+                "Shows you information about the block you are looking at.",
+                Type.Hud
         );
 
         String[] mode = {"Modern", "Legacy"};

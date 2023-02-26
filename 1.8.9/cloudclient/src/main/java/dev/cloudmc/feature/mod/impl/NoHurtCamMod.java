@@ -6,13 +6,15 @@
 package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 
 public class NoHurtCamMod extends Mod {
 
     public NoHurtCamMod() {
         super(
                 "NoHurtCam",
-                "Removes the camera shake effect when you take damage."
+                "Removes the camera shake effect when you take damage.",
+                Type.Visual
         );
     }
 }

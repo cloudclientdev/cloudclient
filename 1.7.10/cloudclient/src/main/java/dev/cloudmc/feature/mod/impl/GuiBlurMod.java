@@ -8,6 +8,7 @@ package dev.cloudmc.feature.mod.impl;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.util.ResourceLocation;
@@ -20,7 +21,8 @@ public class GuiBlurMod extends Mod {
     public GuiBlurMod() {
         super(
                 "GuiBlur",
-                "Adds a blur effect to opened GUIs."
+                "Adds a blur effect to opened GUIs.",
+                Type.Visual
         );
     }
 

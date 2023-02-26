@@ -7,6 +7,7 @@ package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 import dev.cloudmc.helpers.ResolutionHelper;
 import dev.cloudmc.helpers.render.Helper2D;
@@ -20,7 +21,8 @@ public class CrosshairMod extends Mod {
     public CrosshairMod() {
         super(
                 "Crosshair",
-                "Makes Crosshair customizable."
+                "Makes Crosshair customizable.",
+                Type.Hud
         );
 
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Color", this, new Color(255, 255, 255), new Color(255, 0, 0), 0, new float[]{0, 0}));

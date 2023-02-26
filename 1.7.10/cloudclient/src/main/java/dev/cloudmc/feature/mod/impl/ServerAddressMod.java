@@ -7,6 +7,7 @@ package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 
 import java.awt.*;
@@ -16,7 +17,8 @@ public class ServerAddressMod extends Mod {
     public ServerAddressMod() {
         super(
                 "Server Address",
-                "Shows the address of the Server you are currently on."
+                "Shows the address of the Server you are currently on.",
+                Type.Hud
         );
 
         String[] mode = {"Modern", "Legacy"};
