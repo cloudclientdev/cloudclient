@@ -5,6 +5,7 @@
 
 package dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import dev.cloudmc.feature.setting.Setting;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.Button;
 import net.minecraftforge.common.MinecraftForge;
@@ -20,6 +21,7 @@ public abstract class Settings {
 
     public Settings(Setting setting, Button button, int y) {
         MinecraftForge.EVENT_BUS.register(this);
+        FMLCommonHandler.instance().bus().register(this);
         this.setting = setting;
         this.button = button;
         this.open = false;

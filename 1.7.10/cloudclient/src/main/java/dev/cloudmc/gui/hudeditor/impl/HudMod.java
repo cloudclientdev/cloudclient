@@ -5,6 +5,7 @@
 
 package dev.cloudmc.gui.hudeditor.impl;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.helpers.MathHelper;
 import dev.cloudmc.helpers.render.Helper2D;
@@ -20,6 +21,7 @@ public abstract class HudMod {
 
     public HudMod(String name, int x, int y) {
         MinecraftForge.EVENT_BUS.register(this);
+        FMLCommonHandler.instance().bus().register(this);
         this.name = name;
         this.x = x;
         this.y = y;

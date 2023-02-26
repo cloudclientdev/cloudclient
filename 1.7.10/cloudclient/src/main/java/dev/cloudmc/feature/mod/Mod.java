@@ -5,6 +5,7 @@
 
 package dev.cloudmc.feature.mod;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraftforge.common.MinecraftForge;
 
 public class Mod {
@@ -22,10 +23,12 @@ public class Mod {
 
     public void onEnable() {
         MinecraftForge.EVENT_BUS.register(this);
+        FMLCommonHandler.instance().bus().register(this);
     }
 
     public void onDisable() {
         MinecraftForge.EVENT_BUS.unregister(this);
+        FMLCommonHandler.instance().bus().unregister(this);
     }
 
     public String getName() {
