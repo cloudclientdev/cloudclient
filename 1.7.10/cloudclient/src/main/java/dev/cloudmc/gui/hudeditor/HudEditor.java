@@ -225,6 +225,7 @@ public class HudEditor extends GuiScreen {
                 Style.setSnapping(!Style.isSnapping());
             }
         }
+        super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
@@ -232,6 +233,7 @@ public class HudEditor extends GuiScreen {
         for (HudMod hudMod : hudModList) {
             hudMod.setDragging(false);
         }
+        super.mouseReleased(mouseX, mouseY, state);
     }
 
     /**
@@ -255,6 +257,7 @@ public class HudEditor extends GuiScreen {
         }
         animateLogo.reset();
         animateSnapping.reset();
+        super.initGui();
     }
 
     /**
@@ -266,6 +269,7 @@ public class HudEditor extends GuiScreen {
         if (mc.entityRenderer.getShaderGroup() != null) {
             mc.entityRenderer.getShaderGroup().deleteShaderGroup();
         }
+        super.onGuiClosed();
     }
 
     /**

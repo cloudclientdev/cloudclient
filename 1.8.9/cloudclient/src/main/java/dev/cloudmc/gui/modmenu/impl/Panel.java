@@ -13,6 +13,7 @@ import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.Button;
 import dev.cloudmc.gui.modmenu.impl.sidebar.options.Options;
 import dev.cloudmc.gui.modmenu.impl.sidebar.options.type.*;
+import dev.cloudmc.gui.modmenu.impl.sidebar.TextBox;
 import dev.cloudmc.helpers.ResolutionHelper;
 import dev.cloudmc.helpers.render.GLHelper;
 import dev.cloudmc.helpers.render.Helper2D;
@@ -32,6 +33,7 @@ public class Panel {
     private final Animate animateTransition = new Animate();
     private final ScrollHelper scrollHelperMods = new ScrollHelper(0, 270);
     private final ScrollHelper scrollHelperOptions = new ScrollHelper(0, 300);
+    private final TextBox textBox = new TextBox("Search", 0, 0, 150, 20);
     private int x, y, w, h;
     private int offsetX, offsetY;
     private boolean dragging;
@@ -98,18 +100,21 @@ public class Panel {
 
     public void initButtons() {
         buttonList.clear();
+        scrollHelperMods.setScrollStep(0);
         int addButtonX = 0;
         int addButtonY = 0;
         int buttonCounter = 0;
         for (Mod mod : Cloud.INSTANCE.modManager.getMods()) {
             if (selectedType.equals(mod.getType()) || selectedType.equals(Type.All)) {
-                Button button = new Button(mod, this, addButtonX, addButtonY);
-                buttonList.add(button);
-                buttonCounter++;
-                addButtonX += button.getW() + 3;
-                if (buttonCounter % 4 == 0) {
-                    addButtonX = 0;
-                    addButtonY += button.getH() + 3;
+                if (textBox.getText().equals("") || mod.getName().toLowerCase().contains(textBox.getText().toLowerCase())) {
+                    Button button = new Button(mod, this, addButtonX, addButtonY);
+                    buttonList.add(button);
+                    buttonCounter++;
+                    addButtonX += button.getW() + 3;
+                    if (buttonCounter % 4 == 0) {
+                        addButtonX = 0;
+                        addButtonY += button.getH() + 3;
+                    }
                 }
             }
         }
@@ -155,7 +160,7 @@ public class Panel {
             int offset = 0;
             for (Type type : Type.values()) {
                 String text = type.name();
-                int length = Cloud.INSTANCE.fontHelper.size30.getStringWidth(text);
+                int length = Cloud.INSTANCE.fontHelper.size20.getStringWidth(text);
                 Helper2D.drawRoundedRectangle(
                         x + offset + 5,
                         y + h + 5,
@@ -165,9 +170,11 @@ public class Panel {
                         roundedCorners ? 0 : -1
                 );
                 Helper2D.drawPicture(x + offset + 8, y + h + 8, 15, 15, -1, "icon/" + type.getIcon());
-                Cloud.INSTANCE.fontHelper.size30.drawString(text, x + offset + 27, y + h + 8, -1);
+                Cloud.INSTANCE.fontHelper.size20.drawString(text, x + offset + 26, y + h + 11, -1);
                 offset += length + 30;
             }
+
+            textBox.renderTextBox(x + w - textBox.getW() - 5, y + h + 5, mouseX, mouseY);
 
             GLHelper.startScissor(x, y + 60, w, h + 240);
             for (Button button : buttonList) {
@@ -270,7 +277,7 @@ public class Panel {
             int offset = 0;
             for (Type type : Type.values()) {
                 String text = type.name();
-                int length = Cloud.INSTANCE.fontHelper.size30.getStringWidth(text);
+                int length = Cloud.INSTANCE.fontHelper.size20.getStringWidth(text);
                 if (MathHelper.withinBox(x + offset + 5, y + h + 5, length + 25, 20, mouseX, mouseY)) {
                     selectedType = type;
                     scrollHelperMods.setScrollStep(0);
@@ -306,6 +313,11 @@ public class Panel {
                 option.mouseReleased(mouseX, mouseY, state);
             }
         }
+    }
+
+    public void keyTyped(char typedChar, int keyCode) {
+        textBox.keyTyped(typedChar, keyCode);
+        initButtons();
     }
 
     public void initGui() {
