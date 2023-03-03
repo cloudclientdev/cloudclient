@@ -69,7 +69,7 @@ public class ConfigLoader {
                         clientSetting.setMainSlider(mainSlider);
                         break;
                     case "CellGrid":
-                        boolean[] cells = configSetting.getCells();
+                        boolean[][] cells = configSetting.getCells();
                         clientSetting.setCells(cells);
                         break;
                     case "Keybinding":
@@ -115,7 +115,7 @@ public class ConfigLoader {
                     clientOption.setMainSlider(mainSlider);
                     break;
                 case "CellGrid":
-                    boolean[] cells = configOption.getCells();
+                    boolean[][] cells = configOption.getCells();
                     clientOption.setCells(cells);
                     break;
                 case "Keybinding":

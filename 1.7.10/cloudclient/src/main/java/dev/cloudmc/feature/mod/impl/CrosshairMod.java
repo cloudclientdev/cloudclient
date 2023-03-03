@@ -26,18 +26,18 @@ public class CrosshairMod extends Mod {
         );
 
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Color", this, new Color(255, 255, 255), new Color(255, 0, 0), 0, new float[]{0, 0}));
-        boolean[] cells = {
-                false, false, false, false, false, false, false, false, false, false, false,
-                false, false, false, false, false, false, false, false, false, false, false,
-                false, false, false, false, false, true, false, false, false, false, false,
-                false, false, false, false, false, true, false, false, false, false, false,
-                false, false, false, false, false, false, false, false, false, false, false,
-                false, false, true, true, false, true, false, true, true, false, false,
-                false, false, false, false, false, false, false, false, false, false, false,
-                false, false, false, false, false, true, false, false, false, false, false,
-                false, false, false, false, false, true, false, false, false, false, false,
-                false, false, false, false, false, false, false, false, false, false, false,
-                false, false, false, false, false, false, false, false, false, false, false
+        boolean[][] cells = new boolean[][]{
+                {false, false, false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, true, false, false, false, false, false},
+                {false, false, false, false, false, true, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false, false},
+                {false, false, true, true, false, true, false, true, true, false, false},
+                {false, false, false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, true, false, false, false, false, false},
+                {false, false, false, false, false, true, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false, false}
         };
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Cells", this, cells));
     }
@@ -45,25 +45,16 @@ public class CrosshairMod extends Mod {
     @SubscribeEvent
     public void onRender(RenderGameOverlayEvent.Post e) {
         if (e.type == RenderGameOverlayEvent.ElementType.TEXT) {
-
-            int x = 0;
-            int y = 0;
-            for (int i = 0; i < 121; i++) {
-                if (x % 11 == 0) {
-                    y += 1;
-                    x = 0;
+            for (int row = 0; row < 11; row++) {
+                for (int col = 0; col < 11; col++) {
+                    if (getCells()[row][col] && isToggled()) {
+                        Helper2D.drawRectangle(
+                                ResolutionHelper.getWidth() / 2 - 5 + row,
+                                ResolutionHelper.getHeight() / 2 - 5 + col,
+                                1, 1, color()
+                        );
+                    }
                 }
-                if (getCells()[i] && isToggled()) {
-                    Helper2D.drawRectangle(
-                            ResolutionHelper.getWidth() / 2 - 5 + x,
-                            ResolutionHelper.getHeight() / 2 - 6 + y,
-                            1,
-                            1,
-                            color()
-                    );
-                }
-
-                x += 1;
             }
         }
     }
@@ -81,7 +72,7 @@ public class CrosshairMod extends Mod {
         return Cloud.INSTANCE.settingManager.getSettingByModAndName(getName(), "Color").getColor().getRGB();
     }
 
-    private boolean[] getCells() {
+    private boolean[][] getCells() {
         return Cloud.INSTANCE.settingManager.getSettingByModAndName(getName(), "Cells").getCells();
     }
 }

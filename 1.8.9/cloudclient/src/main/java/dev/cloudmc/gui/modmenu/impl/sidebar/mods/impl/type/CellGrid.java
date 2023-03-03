@@ -11,6 +11,7 @@ import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.Button;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.impl.Settings;
 import dev.cloudmc.helpers.MathHelper;
+import dev.cloudmc.helpers.ResolutionHelper;
 import dev.cloudmc.helpers.render.Helper2D;
 
 public class CellGrid extends Settings {
@@ -36,24 +37,23 @@ public class CellGrid extends Settings {
                 Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
 
-        int x = 0;
-        int y = 0;
-        for (int i = 0; i < 121; i++) {
-            if (x % 121 == 0) {
-                y += 11;
-                x = 0;
-            }
-            Helper2D.drawRectangle(
-                    button.getPanel().getX() + button.getPanel().getW() - 140 + x,
-                    button.getPanel().getY() + button.getPanel().getH() + getY() + y - 5,
+        for (int row = 0; row < 11; row++) {
+            for (int col = 0; col < 11; col++) {
+                Helper2D.drawRectangle(
+                    button.getPanel().getX() + button.getPanel().getW() - 140 + row * 11,
+                    button.getPanel().getY() + button.getPanel().getH() + getY() + 5 + col * 11,
                     11, 11,
-                    setting.getCells()[i] ? Style.getReverseColor(80).getRGB() : MathHelper.withinBox(
-                            button.getPanel().getX() + button.getPanel().getW() - 140 + x,
-                            button.getPanel().getY() + button.getPanel().getH() + getY() + y - 5,
-                            11, 11, mouseX, mouseY
-                    ) ? 0x00ffffff : Style.getColor(50).getRGB());
-
-            x += 11;
+                    setting.getCells()[row][col] ?
+                            Style.getReverseColor(80).getRGB() :
+                            MathHelper.withinBox(
+                                    button.getPanel().getX() + button.getPanel().getW() - 140 + row * 11,
+                                    button.getPanel().getY() + button.getPanel().getH() + getY() + 5 + col * 11,
+                                    11, 11, mouseX, mouseY
+                            ) ?
+                                    0x00ffffff :
+                                    Style.getColor(50).getRGB()
+                );
+            }
         }
     }
 
@@ -67,21 +67,16 @@ public class CellGrid extends Settings {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        int x = 0;
-        int y = 0;
-        for (int i = 0; i < 121; i++) {
-            if (x % 121 == 0) {
-                y += 11;
-                x = 0;
+        for (int row = 0; row < 11; row++) {
+            for (int col = 0; col < 11; col++) {
+                if (MathHelper.withinBox(
+                        button.getPanel().getX() + button.getPanel().getW() - 140 + row * 11,
+                        button.getPanel().getY() + button.getPanel().getH() + getY() + 5 + col * 11,
+                        11, 11, mouseX, mouseY
+                )) {
+                    setting.getCells()[row][col] = !setting.getCells()[row][col];
+                }
             }
-            if (MathHelper.withinBox(
-                    button.getPanel().getX() + button.getPanel().getW() - 140 + x,
-                    button.getPanel().getY() + button.getPanel().getH() + getY() + y - 5,
-                    11, 11, mouseX, mouseY
-            )) {
-                setting.getCells()[i] = !setting.getCells()[i];
-            }
-            x += 11;
         }
     }
 

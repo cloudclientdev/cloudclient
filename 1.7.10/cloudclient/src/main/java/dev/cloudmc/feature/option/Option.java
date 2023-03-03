@@ -28,7 +28,7 @@ public class Option {
 
     private float maxNumber, currentNumber;
 
-    private boolean[] cells;
+    private boolean[][] cells;
     private int key;
 
     private String placeholderText, text;
@@ -88,7 +88,7 @@ public class Option {
      * An option which allows you to "draw" on an 11 x 11 grid, used for the crosshair mod
      */
 
-    public Option(String name, boolean[] cells) {
+    public Option(String name, boolean[][] cells) {
         this.mode = "CellGrid";
         this.name = name;
 
@@ -213,11 +213,11 @@ public class Option {
         this.options = options;
     }
 
-    public boolean[] getCells() {
+    public boolean[][] getCells() {
         return cells;
     }
 
-    public void setCells(boolean[] cells) {
+    public void setCells(boolean[][] cells) {
         this.cells = cells;
     }
 

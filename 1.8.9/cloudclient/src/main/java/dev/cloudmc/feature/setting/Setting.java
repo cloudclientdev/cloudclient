@@ -29,7 +29,7 @@ public class Setting {
 
     private float maxNumber, currentNumber;
 
-    private boolean[] cells;
+    private boolean[][] cells;
     private int key;
 
     private String placeholderText, text;
@@ -93,7 +93,7 @@ public class Setting {
      * A setting which allows you to "draw" on an 11 x 11 grid, used for the crosshair mod
      */
 
-    public Setting(String name, Mod mod, boolean[] cells) {
+    public Setting(String name, Mod mod, boolean[][] cells) {
         this.mode = "CellGrid";
         this.name = name;
         this.mod = mod;
@@ -223,11 +223,11 @@ public class Setting {
         this.options = options;
     }
 
-    public boolean[] getCells() {
+    public boolean[][] getCells() {
         return cells;
     }
 
-    public void setCells(boolean[] cells) {
+    public void setCells(boolean[][] cells) {
         this.cells = cells;
     }
 
