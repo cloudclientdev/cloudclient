@@ -31,6 +31,9 @@ public class Option {
     private boolean[] cells;
     private int key;
 
+    private String placeholderText, text;
+    private int cursorPosition;
+
     /**
      * An option which can be toggled on and off
      */
@@ -102,6 +105,15 @@ public class Option {
     public Option(String name) {
         this.mode = "Category";
         this.name = name;
+    }
+
+    public Option(String name, String placeholderText, String text, int cursorPosition){
+        this.mode = "TextBox";
+        this.name = name;
+
+        this.placeholderText = placeholderText;
+        this.text = text;
+        this.cursorPosition = cursorPosition;
     }
 
     public String getName() {
@@ -215,5 +227,29 @@ public class Option {
 
     public void setKey(int key) {
         this.key = key;
+    }
+
+    public String getPlaceholderText() {
+        return placeholderText;
+    }
+
+    public void setPlaceholderText(String placeholderText) {
+        this.placeholderText = placeholderText;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public int getCursorPosition() {
+        return cursorPosition;
+    }
+
+    public void setCursorPosition(int cursorPosition) {
+        this.cursorPosition = cursorPosition;
     }
 }

@@ -88,4 +88,9 @@ public class CheckBox extends Options {
     public void mouseReleased(int mouseX, int mouseY, int state) {
 
     }
+
+    @Override
+    public void keyTyped(char typedChar, int keyCode) {
+
+    }
 }

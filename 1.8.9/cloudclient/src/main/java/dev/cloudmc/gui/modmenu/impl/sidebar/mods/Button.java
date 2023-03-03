@@ -20,6 +20,7 @@ import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class Button {
 
@@ -72,10 +73,16 @@ public class Button {
                         settingsList.add(settingsCellGrid);
                         addY += settingsCellGrid.getH();
                         break;
+                    case "TextBox":
+                        TextBox settingTextBox = new TextBox(setting, this, addY);
+                        settingsList.add(settingTextBox);
+                        addY += settingTextBox.getH();
+                        break;
                     case "Keybinding":
                         Keybinding settingKeybinding = new Keybinding(setting, this, addY);
                         settingsList.add(settingKeybinding);
                         addY += settingKeybinding.getH();
+                        break;
                 }
             }
         }
@@ -159,7 +166,7 @@ public class Button {
             Makes the settings scrollable
              */
 
-            if(settingsList.size() != 0) {
+            if (settingsList.size() != 0) {
                 if (MathHelper.withinBox(
                         panel.getX() + 5,
                         panel.getY() + panel.getH() + 35,
@@ -168,7 +175,7 @@ public class Button {
                         mouseX, mouseY)
                 ) {
                     int height = 0;
-                    for(Settings settings : settingsList) {
+                    for (Settings settings : settingsList) {
                         height += settings.getH();
                     }
                     scrollHelper.setHeight(height);
@@ -191,13 +198,13 @@ public class Button {
      * Toggles a mod if it is pressed with the left mouse button
      * Enables the settings panel if a mod is pressed with the right mouse button
      *
-     * @param mouseX The current X position of the mouse
-     * @param mouseY The current Y position of the mouse
+     * @param mouseX      The current X position of the mouse
+     * @param mouseY      The current Y position of the mouse
      * @param mouseButton The current mouse button which is pressed
      */
 
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if(MathHelper.withinBox(panel.getX(), panel.getY() + panel.getH() + 30, panel.getW(), 270, mouseX, mouseY)) {
+        if (MathHelper.withinBox(panel.getX(), panel.getY() + panel.getH() + 30, panel.getW(), 270, mouseX, mouseY)) {
             if (MathHelper.withinBox(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 40, 20, 20, mouseX, mouseY)) {
                 panel.setAnyButtonOpen(false);
                 open = false;
@@ -224,6 +231,12 @@ public class Button {
     public void mouseReleased(int mouseX, int mouseY, int state) {
         for (Settings settings : settingsList) {
             settings.mouseReleased(mouseX, mouseY, state);
+        }
+    }
+
+    public void keyTyped(char typedChar, int keyCode) {
+        for (Settings setting : settingsList) {
+            setting.keyTyped(typedChar, keyCode);
         }
     }
 

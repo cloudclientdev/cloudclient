@@ -159,4 +159,9 @@ public class ColorPicker extends Options {
         dragSide = false;
         dragMain = false;
     }
+
+    @Override
+    public void keyTyped(char typedChar, int keyCode) {
+
+    }
 }

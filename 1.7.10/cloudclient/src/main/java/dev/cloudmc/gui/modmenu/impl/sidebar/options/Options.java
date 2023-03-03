@@ -35,6 +35,8 @@ public abstract class Options {
 
     public abstract void mouseReleased(int mouseX, int mouseY, int state);
 
+    public abstract void keyTyped(char typedChar, int keyCode);
+
     public Option getOption() {
         return option;
     }

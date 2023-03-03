@@ -72,10 +72,16 @@ public class Button {
                         settingsList.add(settingsCellGrid);
                         addY += settingsCellGrid.getH();
                         break;
+                    case "TextBox":
+                        TextBox settingTextBox = new TextBox(setting, this, addY);
+                        settingsList.add(settingTextBox);
+                        addY += settingTextBox.getH();
+                        break;
                     case "Keybinding":
                         Keybinding settingKeybinding = new Keybinding(setting, this, addY);
                         settingsList.add(settingKeybinding);
                         addY += settingKeybinding.getH();
+                        break;
                 }
             }
         }
@@ -224,6 +230,12 @@ public class Button {
     public void mouseReleased(int mouseX, int mouseY, int state) {
         for (Settings settings : settingsList) {
             settings.mouseReleased(mouseX, mouseY, state);
+        }
+    }
+
+    public void keyTyped(char typedChar, int keyCode) {
+        for (Settings setting : settingsList) {
+            setting.keyTyped(typedChar, keyCode);
         }
     }
 

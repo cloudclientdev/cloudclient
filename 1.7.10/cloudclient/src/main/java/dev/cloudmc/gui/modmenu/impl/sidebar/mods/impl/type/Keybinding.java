@@ -86,6 +86,11 @@ public class Keybinding extends Settings {
 
     }
 
+    @Override
+    public void keyTyped(char typedChar, int keyCode) {
+
+    }
+
     /**
      * Checks and sets the button which is pressed if it is active
      */

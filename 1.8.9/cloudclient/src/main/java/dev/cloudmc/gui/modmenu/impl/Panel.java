@@ -316,8 +316,17 @@ public class Panel {
     }
 
     public void keyTyped(char typedChar, int keyCode) {
-        textBox.keyTyped(typedChar, keyCode);
-        initButtons();
+        if(isAnyButtonOpen()) {
+            for (Button button : buttonList) {
+                button.keyTyped(typedChar, keyCode);
+            }
+            for (Options option : optionsList) {
+                option.keyTyped(typedChar, keyCode);
+            }
+        } else {
+            textBox.keyTyped(typedChar, keyCode);
+            initButtons();
+        }
     }
 
     public void initGui() {
