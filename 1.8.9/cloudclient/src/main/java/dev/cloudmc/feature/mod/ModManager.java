@@ -6,7 +6,7 @@
 package dev.cloudmc.feature.mod;
 
 import dev.cloudmc.feature.mod.impl.*;
-import dev.cloudmc.feature.mod.impl.FreelookMod;
+import dev.cloudmc.feature.mod.impl.crosshair.CrosshairMod;
 
 import java.util.ArrayList;
 

@@ -3,8 +3,9 @@
  * GNU Lesser General Public License v3.0
  */
 
-package dev.cloudmc.feature.mod.impl;
+package dev.cloudmc.feature.mod.impl.crosshair;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
 import dev.cloudmc.feature.mod.Type;
@@ -12,11 +13,12 @@ import dev.cloudmc.feature.setting.Setting;
 import dev.cloudmc.helpers.ResolutionHelper;
 import dev.cloudmc.helpers.render.Helper2D;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
 
 public class CrosshairMod extends Mod {
+
+    public static final LayoutManager layoutManager = new LayoutManager();
 
     public CrosshairMod() {
         super(
@@ -26,20 +28,7 @@ public class CrosshairMod extends Mod {
         );
 
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Color", this, new Color(255, 255, 255), new Color(255, 0, 0), 0, new float[]{0, 0}));
-        boolean[][] cells = new boolean[][]{
-                {false, false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, true, false, false, false, false, false},
-                {false, false, false, false, false, true, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false, false},
-                {false, false, true, true, false, true, false, true, true, false, false},
-                {false, false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, true, false, false, false, false, false},
-                {false, false, false, false, false, true, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false, false}
-        };
-        Cloud.INSTANCE.settingManager.addSetting(new Setting("Cells", this, cells));
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Cells", this, layoutManager.getLayout(0)));
     }
 
     @SubscribeEvent
@@ -49,8 +38,8 @@ public class CrosshairMod extends Mod {
                 for (int col = 0; col < 11; col++) {
                     if (getCells()[row][col] && isToggled()) {
                         Helper2D.drawRectangle(
-                                ResolutionHelper.getWidth() / 2 - 5 + row,
-                                ResolutionHelper.getHeight() / 2 - 5 + col,
+                                ResolutionHelper.getWidth() / 2 - 5 + col,
+                                ResolutionHelper.getHeight() / 2 - 5 + row,
                                 1, 1, color()
                         );
                     }
