@@ -56,6 +56,7 @@ public class ModManager {
         addMod(new DirectionMod());
         addMod(new HitColorMod());
         addMod(new TimeChangerMod());
+        addMod(new NameTagMod());
     }
 
     /**

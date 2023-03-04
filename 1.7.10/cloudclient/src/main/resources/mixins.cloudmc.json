@@ -12,7 +12,8 @@
     "GuiScreenMixin",
     "ItemRendererMixin",
     "MinecraftMixin",
-    "RendererLivingEntityMixin"
+    "RendererLivingEntityMixin",
+    "RenderMixin"
   ],
   "mixins": [
     "InventoryPlayerMixin",

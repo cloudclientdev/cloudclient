@@ -12,7 +12,8 @@
     "ItemRendererMixin",
     "MinecraftMixin",
     "ModelBipedMixin",
-    "RendererLivingEntityMixin"
+    "RendererLivingEntityMixin",
+    "RenderMixin"
   ],
   "mixins": [
     "GuiUtilsMixin",
