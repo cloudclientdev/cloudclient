@@ -31,8 +31,8 @@ public class Panel {
     private final String[] sideButtons = {"Mods", "Settings"};
     private final Animate animateSideBar = new Animate();
     private final Animate animateTransition = new Animate();
-    private final ScrollHelper scrollHelperMods = new ScrollHelper(0, 270);
-    private final ScrollHelper scrollHelperOptions = new ScrollHelper(0, 300);
+    private final ScrollHelper scrollHelperMods = new ScrollHelper(0, 270, 35, 300);
+    private final ScrollHelper scrollHelperOptions = new ScrollHelper(0, 300, 35, 300);
     private final TextBox textBox = new TextBox("Search", 0, 0, 150, 20);
     private int x, y, w, h;
     private int offsetX, offsetY;

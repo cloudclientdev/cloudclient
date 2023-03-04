@@ -29,7 +29,7 @@ import java.util.List;
 @Mixin(GuiScreen.class)
 public abstract class GuiScreenMixin extends Gui {
 
-    private static final ScrollHelper scrollHelper = new ScrollHelper(0, 0);
+    private static final ScrollHelper scrollHelper = new ScrollHelper(0, 0, 35, 300);
 
     @Shadow public int height;
 

@@ -11,18 +11,17 @@ import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
+import dev.cloudmc.helpers.hud.ScrollHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 public class ZoomMod extends Mod {
 
-    private static float defaultZoom = Cloud.INSTANCE.mc.gameSettings.fovSetting;
     private static final Animate animate = new Animate();
+    private static final ScrollHelper scrollHelper = new ScrollHelper(0, 0, 5, 50);
     private static boolean zoom = false;
-    private static int scrollAmount;
 
     public ZoomMod() {
         super(
@@ -35,34 +34,19 @@ public class ZoomMod extends Mod {
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Zoom Amount", this, 100, 30));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Smooth Zoom", this, true));
 
-        defaultZoom = Cloud.INSTANCE.mc.gameSettings.fovSetting;
         animate.setEase(Easing.LINEAR).setSpeed(700);
     }
 
     @SubscribeEvent
     public void onRender2D(RenderGameOverlayEvent.Text e) {
-        defaultZoom = Cloud.INSTANCE.mc.gameSettings.fovSetting;
-        animate.setMin(getAmount() / 2).setMax(defaultZoom).update();
+        animate.setMin(getAmount() / 2).setMax(Cloud.INSTANCE.mc.gameSettings.fovSetting).update();
+        scrollHelper.setMinScroll(isSmooth() ? animate.getValueI() - 5 : getAmount() - 5);
+        scrollHelper.update();
 
-        if(zoom && Cloud.INSTANCE.mc.currentScreen == null) {
-            int scroll = Mouse.getDWheel();
-            if (scroll > 0) {
-                if(isSmooth()) {
-                    if(scrollAmount + animate.getValueI() > 2) {
-                        scrollAmount -= 2;
-                    }
-                } else {
-                    if(scrollAmount + getAmount() > 2) {
-                        scrollAmount -= 2;
-                    }
-                }
-            } else if (scroll < 0) {
-                if(scrollAmount  < 0) {
-                    scrollAmount += 2;
-                }
-            }
+        if (zoom && Cloud.INSTANCE.mc.currentScreen == null) {
+            scrollHelper.updateScroll();
         } else {
-            scrollAmount = 0;
+            scrollHelper.setScrollStep(0);
         }
     }
 
@@ -74,9 +58,9 @@ public class ZoomMod extends Mod {
 
     public static float getFOV() {
         if (isSmooth()) {
-            return animate.getValueI() + scrollAmount;
+            return animate.getValueI() - scrollHelper.getCalculatedScroll();
         }
-        return zoom ? getAmount() + scrollAmount : defaultZoom;
+        return zoom ? getAmount() - scrollHelper.getCalculatedScroll() : Cloud.INSTANCE.mc.gameSettings.fovSetting;
     }
 
     public static boolean isZoom() {
@@ -88,7 +72,7 @@ public class ZoomMod extends Mod {
     }
 
     private static float getAmount() {
-        return Cloud.INSTANCE.settingManager.getSettingByModAndName("Zoom", "Zoom Amount").getCurrentNumber() + 2;
+        return Cloud.INSTANCE.settingManager.getSettingByModAndName("Zoom", "Zoom Amount").getCurrentNumber();
     }
 
     private int getKey() {

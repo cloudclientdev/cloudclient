@@ -30,7 +30,7 @@ import static net.minecraftforge.fml.client.config.GuiUtils.drawGradientRect;
 @Mixin(GuiUtils.class)
 public abstract class GuiUtilsMixin {
 
-    private static final ScrollHelper scrollHelper = new ScrollHelper(0, 0);
+    private static final ScrollHelper scrollHelper = new ScrollHelper(0, 0, 35, 300);
 
     @Inject(
             method = "drawHoveringText",

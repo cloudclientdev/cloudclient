@@ -28,7 +28,7 @@ public class Button {
     private final Animate animButton = new Animate();
     private final Animate animPanel = new Animate();
 
-    private final ScrollHelper scrollHelper = new ScrollHelper(0, 210);
+    private final ScrollHelper scrollHelper = new ScrollHelper(0, 210, 35, 300);
 
     private Panel panel;
     private Mod mod;
