@@ -6,9 +6,9 @@
 package dev.cloudmc.gui.hudeditor.impl.impl.keystrokes.keys;
 
 import dev.cloudmc.Cloud;
-import dev.cloudmc.helpers.render.Helper2D;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
+import dev.cloudmc.helpers.render.Helper2D;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Mouse;
 
@@ -58,9 +58,9 @@ public class MouseKey {
                 Helper2D.drawRectangle(x, y, width, height, new Color(255, 255, 255, 100 - animate.getValueI()).getRGB());
             }
 
-            Cloud.INSTANCE.mc.fontRendererObj.drawString(
+            Cloud.INSTANCE.mc.fontRenderer.drawString(
                     getCPS(mouseButton) != 0 && cps ? getCPS(mouseButton) + " CPS" : mouseButton == 0 ? "LMB" : "RMB",
-                    x - Minecraft.getMinecraft().fontRendererObj.getStringWidth(getCPS(mouseButton) != 0 && cps ? getCPS(mouseButton) + " CPS" : mouseButton == 0 ? "LMB" : "RMB") / 2 + width / 2,
+                    x - Minecraft.getMinecraft().fontRenderer.getStringWidth(getCPS(mouseButton) != 0 && cps ? getCPS(mouseButton) + " CPS" : mouseButton == 0 ? "LMB" : "RMB") / 2 + width / 2,
                     y + height / 2 - 4,
                     fontColor
             );
