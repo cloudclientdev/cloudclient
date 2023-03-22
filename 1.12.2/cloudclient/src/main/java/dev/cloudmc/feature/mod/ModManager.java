@@ -40,7 +40,7 @@ public class ModManager {
         addMod(new FreelookMod());
         addMod(new CrosshairMod());
         addMod(new MotionblurMod());
-        addMod(new GuiBlurMod());
+        addMod(new GuiTweaksMod());
         addMod(new BlockOverlayMod());
         addMod(new BlockInfoMod());
         addMod(new ReachDisplayMod());
