@@ -18,8 +18,8 @@ public abstract class GuiScreenMixin extends Gui {
             )
     )
     public void drawWorldBackground(GuiScreen instance, int left, int top, int right, int bottom, int startColor, int endColor) {
-        if (Cloud.INSTANCE.settingManager.getSettingByModAndName("Gui Tweaks", "Darken Background").isCheckToggled() &&
-                Cloud.INSTANCE.modManager.getMod("Gui Tweaks").isToggled()) {
+        if (Cloud.INSTANCE.settingManager.getSettingByModAndName("Gui Tweaks", "Darken Background").isCheckToggled() ||
+                !Cloud.INSTANCE.modManager.getMod("Gui Tweaks").isToggled()) {
             this.drawGradientRect(left, top, right, bottom, startColor, endColor);
         }
     }
