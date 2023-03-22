@@ -9,54 +9,62 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
+import dev.cloudmc.helpers.hud.ScrollHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import org.lwjgl.input.Keyboard;
 
 public class ZoomMod extends Mod {
 
-    private static float defaultZoom = Cloud.INSTANCE.mc.gameSettings.fovSetting;
     private static final Animate animate = new Animate();
+    private static final ScrollHelper scrollHelper = new ScrollHelper(0, 0, 5, 50);
     private static boolean zoom = false;
 
     public ZoomMod() {
         super(
                 "Zoom",
-                "Allows you to zoom into the world."
+                "Allows you to zoom into the world.",
+                Type.Mechanic
         );
-        Cloud.INSTANCE.settingManager.addSetting(new Setting("Keybinding", this, Keyboard.KEY_C));
 
-        Cloud.INSTANCE.settingManager.addSetting(new Setting("Zoom Amount", this, 120, 30));
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Keybinding", this, Keyboard.KEY_C));
+        Cloud.INSTANCE.settingManager.addSetting(new Setting("Zoom Amount", this, 100, 30));
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Smooth Zoom", this, true));
 
-        defaultZoom = Cloud.INSTANCE.mc.gameSettings.fovSetting;
         animate.setEase(Easing.LINEAR).setSpeed(700);
     }
 
     @SubscribeEvent
     public void onRender2D(RenderGameOverlayEvent.Text e) {
-        defaultZoom = Cloud.INSTANCE.mc.gameSettings.fovSetting;
-        animate.setMin(getAmount() / 2).setMax(defaultZoom).update();
+        animate.setMin(getAmount() / 2).setMax(Cloud.INSTANCE.mc.gameSettings.fovSetting).update();
+        scrollHelper.setMinScroll(isSmooth() ? animate.getValueI() - 5 : getAmount() - 5);
+        scrollHelper.update();
+
+        if (zoom && Cloud.INSTANCE.mc.currentScreen == null) {
+            scrollHelper.updateScroll();
+        } else {
+            scrollHelper.setScrollStep(0);
+        }
     }
 
     @SubscribeEvent
     public void onKey(InputEvent.KeyInputEvent e) {
-        if (Keyboard.isKeyDown(getKey())) {
-            zoom = true;
-            animate.setReversed(true);
-        } else {
-            zoom = false;
-            animate.setReversed(false);
-        }
+        zoom = Keyboard.isKeyDown(getKey());
+        animate.setReversed(zoom);
     }
 
     public static float getFOV() {
         if (isSmooth()) {
-            return animate.getValueI();
+            return animate.getValueI() - scrollHelper.getCalculatedScroll();
         }
-        return zoom ? getAmount() : defaultZoom;
+        return zoom ? getAmount() - scrollHelper.getCalculatedScroll() : Cloud.INSTANCE.mc.gameSettings.fovSetting;
+    }
+
+    public static boolean isZoom() {
+        return zoom;
     }
 
     private static boolean isSmooth() {

@@ -24,6 +24,7 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class HudEditor extends GuiScreen {
@@ -203,7 +204,7 @@ public class HudEditor extends GuiScreen {
      */
 
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+    public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         for (HudMod hudMod : hudModList) {
             if (hudMod.withinMod(mouseX, mouseY) && mouseButton == 0) {
                 hudMod.setDragging(true);
@@ -223,6 +224,7 @@ public class HudEditor extends GuiScreen {
                 Style.setSnapping(!Style.isSnapping());
             }
         }
+        super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
@@ -230,6 +232,7 @@ public class HudEditor extends GuiScreen {
         for (HudMod hudMod : hudModList) {
             hudMod.setDragging(false);
         }
+        super.mouseReleased(mouseX, mouseY, state);
     }
 
     /**
@@ -241,6 +244,7 @@ public class HudEditor extends GuiScreen {
         mc.entityRenderer.loadShader(new ResourceLocation("shaders/post/blur.json"));
         animateLogo.reset();
         animateSnapping.reset();
+        super.initGui();
     }
 
     /**
@@ -252,6 +256,7 @@ public class HudEditor extends GuiScreen {
         if (mc.entityRenderer.getShaderGroup() != null) {
             mc.entityRenderer.getShaderGroup().deleteShaderGroup();
         }
+        super.onGuiClosed();
     }
 
     /**

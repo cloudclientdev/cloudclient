@@ -20,6 +20,7 @@ import dev.cloudmc.helpers.animation.Animate;
 import dev.cloudmc.helpers.animation.Easing;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class Button {
 
@@ -28,7 +29,7 @@ public class Button {
     private final Animate animButton = new Animate();
     private final Animate animPanel = new Animate();
 
-    private final ScrollHelper scrollHelper = new ScrollHelper(0, 240);
+    private final ScrollHelper scrollHelper = new ScrollHelper(0, 210, 35, 300);
 
     private Panel panel;
     private Mod mod;
@@ -44,7 +45,7 @@ public class Button {
         this.h = 80;
 
         if (Cloud.INSTANCE.settingManager.getSettingsByMod(mod) != null) {
-            int addY = 40;
+            int addY = 70;
             for (Setting setting : Cloud.INSTANCE.settingManager.getSettingsByMod(mod)) {
                 switch (setting.getMode()) {
                     case "CheckBox":
@@ -72,15 +73,21 @@ public class Button {
                         settingsList.add(settingsCellGrid);
                         addY += settingsCellGrid.getH();
                         break;
+                    case "TextBox":
+                        TextBox settingTextBox = new TextBox(setting, this, addY);
+                        settingsList.add(settingTextBox);
+                        addY += settingTextBox.getH();
+                        break;
                     case "Keybinding":
                         Keybinding settingKeybinding = new Keybinding(setting, this, addY);
                         settingsList.add(settingKeybinding);
                         addY += settingKeybinding.getH();
+                        break;
                 }
             }
         }
 
-        animPanel.setEase(Easing.CUBIC_OUT).setMin(0).setMax(300).setSpeed(1000).setReversed(false);
+        animPanel.setEase(Easing.CUBIC_OUT).setMin(0).setMax(270).setSpeed(1000).setReversed(false);
         animButton.setMin(0).setMax(15).setSpeed(50);
     }
 
@@ -109,28 +116,28 @@ public class Button {
          */
 
         if (!getPanel().isAnyButtonOpen()) {
-            Helper2D.drawRoundedRectangle(panel.getX() + 5 + x, panel.getY() + panel.getH() + 5 + y, w, h, 2, Style.getColor(40).getRGB(), roundedCorners ? 0 : -1);
-            Helper2D.drawRoundedRectangle(panel.getX() + 5 + x, panel.getY() + panel.getH() + y + 60, w, 25, 2, Style.getColor(50).getRGB(), roundedCorners ? 2 : -1);
+            Helper2D.drawRoundedRectangle(panel.getX() + 5 + x, panel.getY() + panel.getH() + 35 + y, w, h, 2, Style.getColor(40).getRGB(), roundedCorners ? 0 : -1);
+            Helper2D.drawRoundedRectangle(panel.getX() + 5 + x, panel.getY() + panel.getH() + y + 90, w, 25, 2, Style.getColor(50).getRGB(), roundedCorners ? 2 : -1);
 
-            Cloud.INSTANCE.fontHelper.size20.drawString(mod.getName(), panel.getX() + 10 + x, panel.getY() + panel.getH() + y + 67, color);
+            Cloud.INSTANCE.fontHelper.size20.drawString(mod.getName(), panel.getX() + 10 + x, panel.getY() + panel.getH() + y + 97, color);
 
-            Helper2D.drawRoundedRectangle(panel.getX() + 13 + x + 77, panel.getY() + panel.getH() + y + h - 16, 30, 15, 2, Style.getColor(50).getRGB(), roundedCorners ? 0 : -1);
+            Helper2D.drawRoundedRectangle(panel.getX() + 13 + x + 77, panel.getY() + panel.getH() + y + h + 14, 30, 15, 2, Style.getColor(50).getRGB(), roundedCorners ? 0 : -1);
             Helper2D.drawRoundedRectangle(
                     animButton.hasFinished() ?
                             mod.isToggled() ?
                                     panel.getX() + 13 + 15 + x + 77 :
                                     panel.getX() + 13 + x + 77 :
                             panel.getX() + 13 + animButton.getValueI() + x + 77,
-                    panel.getY() + panel.getH() + y + h - 16, 15, 15, 2, Style.getColor(70).getRGB(), roundedCorners ? 0 : -1);
+                    panel.getY() + panel.getH() + y + h + 14, 15, 15, 2, Style.getColor(70).getRGB(), roundedCorners ? 0 : -1);
 
-            Helper2D.drawPicture(panel.getX() + getX() + getW() / 2 - 12, panel.getY() + panel.getH() + getY() + 15, 35, 35, color, "icon/button/button/" + mod.getName() + ".png");
+            Helper2D.drawPicture(panel.getX() + getX() + getW() / 2 - 12, panel.getY() + panel.getH() + getY() + 45, 35, 35, color, "icon/button/button/" + mod.getName() + ".png");
         }
 
         if (open) {
             animPanel.update();
 
             Helper2D.drawRoundedRectangle(panel.getX() + 5, panel.getY() + panel.getH() + 5 + 300 - animPanel.getValueI(), panel.getW() - 10, panel.getH(), 2, Style.getColor(80).getRGB(), roundedCorners ? 1 : -1);
-            Helper2D.drawRectangle(panel.getX() + 5, panel.getY() + panel.getH() + 35 + 300 - animPanel.getValueI(), panel.getW() - 10, 265, Style.getColor(40).getRGB());
+            Helper2D.drawRectangle(panel.getX() + 5, panel.getY() + panel.getH() + 35 + 300 - animPanel.getValueI(), panel.getW() - 10, 235, Style.getColor(40).getRGB());
 
             boolean hovered = MathHelper.withinBox(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10, 20, 20, mouseX, mouseY);
             Helper2D.drawRoundedRectangle(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10 + 300 - animPanel.getValueI(), 20, 20, 2, Style.getColor(hovered ? 70 : 50).getRGB(), roundedCorners ? 0 : -1);
@@ -143,11 +150,12 @@ public class Button {
             Renders the settings
              */
 
+
             GLHelper.startScissor(
                     panel.getX() + 5,
-                    panel.getY() + panel.getH() + 35 + 300 - animPanel.getValueI(),
+                    panel.getY() + panel.getH() + 65,
                     panel.getW() - 10,
-                    animPanel.getValueI() - 35
+                    235
             );
             for (Settings settings : settingsList) {
                 settings.renderSetting(mouseX, mouseY);
@@ -158,7 +166,7 @@ public class Button {
             Makes the settings scrollable
              */
 
-            if(settingsList.size() != 0) {
+            if (settingsList.size() != 0) {
                 if (MathHelper.withinBox(
                         panel.getX() + 5,
                         panel.getY() + panel.getH() + 35,
@@ -167,7 +175,7 @@ public class Button {
                         mouseX, mouseY)
                 ) {
                     int height = 0;
-                    for(Settings settings : settingsList) {
+                    for (Settings settings : settingsList) {
                         height += settings.getH();
                     }
                     scrollHelper.setHeight(height);
@@ -176,7 +184,7 @@ public class Button {
                     height = 0;
                     for (Settings settings : settingsList) {
                         float position = height;
-                        position += scrollHelper.getCalculatedScroll() + 40;
+                        position += scrollHelper.getCalculatedScroll() + 270 - animPanel.getValueI() + 70;
                         settings.setY((int) position);
                         height += settings.getH();
                     }
@@ -190,23 +198,25 @@ public class Button {
      * Toggles a mod if it is pressed with the left mouse button
      * Enables the settings panel if a mod is pressed with the right mouse button
      *
-     * @param mouseX The current X position of the mouse
-     * @param mouseY The current Y position of the mouse
+     * @param mouseX      The current X position of the mouse
+     * @param mouseY      The current Y position of the mouse
      * @param mouseButton The current mouse button which is pressed
      */
 
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (MathHelper.withinBox(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 10, 20, 20, mouseX, mouseY)) {
-            panel.setAnyButtonOpen(false);
-            open = false;
-        } else if (MathHelper.withinBox(panel.getX() + 5 + x, panel.getY() + panel.getH() + 5 + y, w, h, mouseX, mouseY)) {
-            if (!panel.isAnyButtonOpen() && !open) {
-                if (mouseButton == 0) {
-                    mod.toggle();
-                } else if (mouseButton == 1) {
-                    animPanel.reset();
-                    getPanel().setAnyButtonOpen(true);
-                    open = true;
+        if (MathHelper.withinBox(panel.getX(), panel.getY() + panel.getH() + 30, panel.getW(), 270, mouseX, mouseY)) {
+            if (MathHelper.withinBox(panel.getX() + panel.getW() - 30, panel.getY() + panel.getH() + 40, 20, 20, mouseX, mouseY)) {
+                panel.setAnyButtonOpen(false);
+                open = false;
+            } else if (MathHelper.withinBox(panel.getX() + 5 + x, panel.getY() + panel.getH() + 35 + y, w, h, mouseX, mouseY)) {
+                if (!panel.isAnyButtonOpen() && !open) {
+                    if (mouseButton == 0) {
+                        mod.toggle();
+                    } else if (mouseButton == 1) {
+                        animPanel.reset();
+                        getPanel().setAnyButtonOpen(true);
+                        open = true;
+                    }
                 }
             }
         }
@@ -221,6 +231,12 @@ public class Button {
     public void mouseReleased(int mouseX, int mouseY, int state) {
         for (Settings settings : settingsList) {
             settings.mouseReleased(mouseX, mouseY, state);
+        }
+    }
+
+    public void keyTyped(char typedChar, int keyCode) {
+        for (Settings setting : settingsList) {
+            setting.keyTyped(typedChar, keyCode);
         }
     }
 

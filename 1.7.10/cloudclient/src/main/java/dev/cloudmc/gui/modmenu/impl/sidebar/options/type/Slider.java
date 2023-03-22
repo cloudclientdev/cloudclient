@@ -107,4 +107,9 @@ public class Slider extends Options {
     public void mouseReleased(int mouseX, int mouseY, int state) {
         drag = false;
     }
+
+    @Override
+    public void keyTyped(char typedChar, int keyCode) {
+
+    }
 }

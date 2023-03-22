@@ -5,6 +5,7 @@
 
 package dev.cloudmc.gui.modmenu.impl.sidebar.options;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import dev.cloudmc.feature.option.Option;
 import dev.cloudmc.gui.modmenu.impl.Panel;
 import net.minecraftforge.common.MinecraftForge;
@@ -20,6 +21,7 @@ public abstract class Options {
 
     public Options(Option options, Panel panel, int y) {
         MinecraftForge.EVENT_BUS.register(this);
+        FMLCommonHandler.instance().bus().register(this);
         this.option = options;
         this.panel = panel;
         this.open = false;
@@ -32,6 +34,8 @@ public abstract class Options {
     public abstract void mouseClicked(int mouseX, int mouseY, int mouseButton);
 
     public abstract void mouseReleased(int mouseX, int mouseY, int state);
+
+    public abstract void keyTyped(char typedChar, int keyCode);
 
     public Option getOption() {
         return option;

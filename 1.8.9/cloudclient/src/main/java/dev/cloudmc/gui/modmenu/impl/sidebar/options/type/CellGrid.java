@@ -36,24 +36,23 @@ public class CellGrid extends Options {
                 Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB()
         );
 
-        int x = 0;
-        int y = 0;
-        for (int i = 0; i < 121; i++) {
-            if (x % 121 == 0) {
-                y += 11;
-                x = 0;
+        for (int row = 0; row < 11; row++) {
+            for (int col = 0; col < 11; col++) {
+                Helper2D.drawRectangle(
+                        panel.getX() + panel.getW() - 140 + row * 11,
+                        panel.getY() + panel.getH() + getY() + 5 + col * 11,
+                        11, 11,
+                        option.getCells()[row][col] ?
+                                Style.getReverseColor(80).getRGB() :
+                                MathHelper.withinBox(
+                                        panel.getX() + panel.getW() - 140 + row * 11,
+                                        panel.getY() + panel.getH() + getY() + 5 + col * 11,
+                                        11, 11, mouseX, mouseY
+                                ) ?
+                                        0x00ffffff :
+                                        Style.getColor(50).getRGB()
+                );
             }
-            Helper2D.drawRectangle(
-                    panel.getX() + panel.getW() - 140 + x,
-                    panel.getY() + panel.getH() + getY() + y - 5,
-                    11, 11,
-                    option.getCells()[i] ? Style.getReverseColor(80).getRGB() : MathHelper.withinBox(
-                            panel.getX() + panel.getW() - 140 + x,
-                            panel.getY() + panel.getH() + getY() + y - 5,
-                            11, 11, mouseX, mouseY
-                    ) ? 0x00ffffff : Style.getColor(50).getRGB());
-
-            x += 11;
         }
     }
 
@@ -67,26 +66,26 @@ public class CellGrid extends Options {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        int x = 0;
-        int y = 0;
-        for (int i = 0; i < 121; i++) {
-            if (x % 121 == 0) {
-                y += 11;
-                x = 0;
+        for (int row = 0; row < 11; row++) {
+            for (int col = 0; col < 11; col++) {
+                if (MathHelper.withinBox(
+                        panel.getX() + panel.getW() - 140 + row * 11,
+                        panel.getY() + panel.getH() + getY() + 5 + col * 11,
+                        11, 11, mouseX, mouseY
+                )) {
+                    option.getCells()[row][col] = !option.getCells()[row][col];
+                }
             }
-            if (MathHelper.withinBox(
-                    panel.getX() + panel.getW() - 140 + x,
-                    panel.getY() + panel.getH() + getY() + y - 5,
-                    11, 11, mouseX, mouseY
-            )) {
-                option.getCells()[i] = !option.getCells()[i];
-            }
-            x += 11;
         }
     }
 
     @Override
     public void mouseReleased(int mouseX, int mouseY, int state) {
+
+    }
+
+    @Override
+    public void keyTyped(char typedChar, int keyCode) {
 
     }
 }

@@ -7,6 +7,7 @@ package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 
 import java.awt.*;
@@ -16,7 +17,8 @@ public class TimeMod extends Mod {
     public TimeMod() {
         super(
                 "Time",
-                "Shows you the real life time on the HUD."
+                "Shows you the real life time on the HUD.",
+                Type.Hud
         );
 
         String[] mode = {"Modern", "Legacy"};

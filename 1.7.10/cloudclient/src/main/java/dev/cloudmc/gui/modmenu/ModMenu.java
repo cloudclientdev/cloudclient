@@ -106,12 +106,20 @@ public class ModMenu extends GuiScreen {
                 Style.setDarkMode(!Style.isDarkMode());
             }
         }
+        super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
     public void mouseReleased(int mouseX, int mouseY, int state) {
         panel.setDragging(false);
         panel.mouseReleased(mouseX, mouseY, state);
+        super.mouseReleased(mouseX, mouseY, state);
+    }
+
+    @Override
+    public void keyTyped(char typedChar, int keyCode) {
+        panel.keyTyped(typedChar, keyCode);
+        super.keyTyped(typedChar, keyCode);
     }
 
     /**
@@ -134,6 +142,7 @@ public class ModMenu extends GuiScreen {
         } catch (IOException ioException) {
             System.out.println(ioException.getMessage());
         }
+        super.initGui();
     }
 
     /**
@@ -145,5 +154,6 @@ public class ModMenu extends GuiScreen {
         if (mc.entityRenderer.getShaderGroup() != null) {
             mc.entityRenderer.getShaderGroup().deleteShaderGroup();
         }
+        super.onGuiClosed();
     }
 }

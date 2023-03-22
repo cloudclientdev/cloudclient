@@ -7,6 +7,7 @@ package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
@@ -18,7 +19,8 @@ public class ParticleMultiplierMod extends Mod {
     public ParticleMultiplierMod() {
         super(
                 "ParticleMultiplier",
-                "Multiplies or adds Particles by a given amount."
+                "Multiplies or adds Particles by a given amount.",
+                Type.Visual
         );
 
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Particle Amount", this, 15, 5));

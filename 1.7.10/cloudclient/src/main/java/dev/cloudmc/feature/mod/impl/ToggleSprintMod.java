@@ -9,6 +9,7 @@ import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
@@ -22,7 +23,8 @@ public class ToggleSprintMod extends Mod {
     public ToggleSprintMod() {
         super(
                 "ToggleSprint",
-                "Allows you to toggle the Sprint button instead of holding it."
+                "Allows you to toggle the Sprint button instead of holding it.",
+                Type.Mechanic
         );
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Keybinding", this, Keyboard.KEY_LCONTROL));
 

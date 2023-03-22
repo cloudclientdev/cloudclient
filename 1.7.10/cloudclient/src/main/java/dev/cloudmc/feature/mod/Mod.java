@@ -12,11 +12,13 @@ public class Mod {
 
     private String name;
     private String description;
+    private Type type;
     private boolean toggled;
 
-    public Mod(String name, String description) {
+    public Mod(String name, String description, Type type) {
         this.name = name;
         this.description = description;
+        this.type = type;
     }
 
     public void onEnable() {
@@ -47,6 +49,14 @@ public class Mod {
 
     public boolean isToggled() {
         return toggled;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public void setToggled(boolean toggled) {

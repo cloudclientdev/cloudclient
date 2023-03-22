@@ -28,8 +28,11 @@ public class Option {
 
     private float maxNumber, currentNumber;
 
-    private boolean[] cells;
+    private boolean[][] cells;
     private int key;
+
+    private String placeholderText, text;
+    private int cursorPosition;
 
     /**
      * An option which can be toggled on and off
@@ -85,7 +88,7 @@ public class Option {
      * An option which allows you to "draw" on an 11 x 11 grid, used for the crosshair mod
      */
 
-    public Option(String name, boolean[] cells) {
+    public Option(String name, boolean[][] cells) {
         this.mode = "CellGrid";
         this.name = name;
 
@@ -102,6 +105,15 @@ public class Option {
     public Option(String name) {
         this.mode = "Category";
         this.name = name;
+    }
+
+    public Option(String name, String placeholderText, String text, int cursorPosition){
+        this.mode = "TextBox";
+        this.name = name;
+
+        this.placeholderText = placeholderText;
+        this.text = text;
+        this.cursorPosition = cursorPosition;
     }
 
     public String getName() {
@@ -201,11 +213,11 @@ public class Option {
         this.options = options;
     }
 
-    public boolean[] getCells() {
+    public boolean[][] getCells() {
         return cells;
     }
 
-    public void setCells(boolean[] cells) {
+    public void setCells(boolean[][] cells) {
         this.cells = cells;
     }
 
@@ -215,5 +227,29 @@ public class Option {
 
     public void setKey(int key) {
         this.key = key;
+    }
+
+    public String getPlaceholderText() {
+        return placeholderText;
+    }
+
+    public void setPlaceholderText(String placeholderText) {
+        this.placeholderText = placeholderText;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public int getCursorPosition() {
+        return cursorPosition;
+    }
+
+    public void setCursorPosition(int cursorPosition) {
+        this.cursorPosition = cursorPosition;
     }
 }

@@ -6,6 +6,7 @@ package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.setting.Setting;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -23,7 +24,11 @@ public class MotionblurMod extends Mod {
     private Framebuffer blurBufferInto = null;
 
     public MotionblurMod() {
-        super("Motionblur", "Adds a motionblur effect to the screen, also seen in cameras.");
+        super(
+                "Motionblur",
+                "Adds a motionblur effect to the screen, also seen in cameras.",
+                Type.Visual
+        );
 
         Cloud.INSTANCE.settingManager.addSetting(new Setting("Amount", this, 10, 6));
     }

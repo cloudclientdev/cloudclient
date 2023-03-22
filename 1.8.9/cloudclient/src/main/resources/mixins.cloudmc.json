@@ -12,10 +12,12 @@
     "ItemRendererMixin",
     "MinecraftMixin",
     "ModelBipedMixin",
-    "RendererLivingEntityMixin"
+    "RendererLivingEntityMixin",
+    "RenderMixin"
   ],
   "mixins": [
     "GuiUtilsMixin",
+    "InventoryPlayerMixin",
     "WorldMixin"
   ]
 }

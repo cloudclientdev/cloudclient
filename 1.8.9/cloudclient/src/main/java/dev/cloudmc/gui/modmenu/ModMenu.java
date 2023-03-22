@@ -17,6 +17,8 @@ import dev.cloudmc.helpers.animation.Easing;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
+import java.io.IOException;
+
 public class ModMenu extends GuiScreen {
 
     private final Panel panel = new Panel();
@@ -86,7 +88,7 @@ public class ModMenu extends GuiScreen {
      */
 
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+    public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         panel.mouseClicked(mouseX, mouseY, mouseButton);
         if(mouseButton == 0) {
             if (MathHelper.withinBox(
@@ -103,12 +105,20 @@ public class ModMenu extends GuiScreen {
                 Style.setDarkMode(!Style.isDarkMode());
             }
         }
+        super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
     public void mouseReleased(int mouseX, int mouseY, int state) {
         panel.setDragging(false);
         panel.mouseReleased(mouseX, mouseY, state);
+        super.mouseReleased(mouseX, mouseY, state);
+    }
+
+    @Override
+    public void keyTyped(char typedChar, int keyCode) throws IOException {
+        panel.keyTyped(typedChar, keyCode);
+        super.keyTyped(typedChar, keyCode);
     }
 
     /**
@@ -119,6 +129,7 @@ public class ModMenu extends GuiScreen {
     public void initGui() {
         panel.initGui();
         mc.entityRenderer.loadShader(new ResourceLocation("shaders/post/blur.json"));
+        super.initGui();
     }
 
     /**
@@ -130,5 +141,6 @@ public class ModMenu extends GuiScreen {
         if (mc.entityRenderer.getShaderGroup() != null) {
             mc.entityRenderer.getShaderGroup().deleteShaderGroup();
         }
+        super.onGuiClosed();
     }
 }

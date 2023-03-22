@@ -3,7 +3,7 @@
   "modid": "cloudmc",
   "name": "Cloud Client",
   "description": "A 1.8.9 Minecraft PVP Client",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "mcversion": "1.8.9",
   "url": "https://cloudmc.dev/",
   "updateUrl": "https://github.com/cloudclientdev",

@@ -7,11 +7,13 @@ package dev.cloudmc.gui.modmenu.impl;
 
 import dev.cloudmc.Cloud;
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 import dev.cloudmc.feature.option.Option;
 import dev.cloudmc.gui.Style;
 import dev.cloudmc.gui.modmenu.impl.sidebar.mods.Button;
 import dev.cloudmc.gui.modmenu.impl.sidebar.options.Options;
 import dev.cloudmc.gui.modmenu.impl.sidebar.options.type.*;
+import dev.cloudmc.gui.modmenu.impl.sidebar.TextBox;
 import dev.cloudmc.helpers.ResolutionHelper;
 import dev.cloudmc.helpers.render.GLHelper;
 import dev.cloudmc.helpers.render.Helper2D;
@@ -29,13 +31,15 @@ public class Panel {
     private final String[] sideButtons = {"Mods", "Settings"};
     private final Animate animateSideBar = new Animate();
     private final Animate animateTransition = new Animate();
-    private final ScrollHelper scrollHelperMods = new ScrollHelper(0, 300);
-    private final ScrollHelper scrollHelperOptions = new ScrollHelper(0, 300);
+    private final ScrollHelper scrollHelperMods = new ScrollHelper(0, 270, 35, 300);
+    private final ScrollHelper scrollHelperOptions = new ScrollHelper(0, 300, 35, 300);
+    private final TextBox textBox = new TextBox("Search", 0, 0, 150, 20);
     private int x, y, w, h;
     private int offsetX, offsetY;
     private boolean dragging;
     private boolean anyButtonOpen;
     private int selected = 0;
+    private Type selectedType = Type.All;
 
     public Panel() {
         this.x = ResolutionHelper.getWidth() / 2 - 250;
@@ -46,19 +50,7 @@ public class Panel {
         this.offsetY = 0;
         this.dragging = false;
 
-        int addButtonX = 0;
-        int addButtonY = 0;
-        int buttonCounter = 0;
-        for (Mod mod : Cloud.INSTANCE.modManager.getMods()) {
-            Button button = new Button(mod, this, addButtonX, addButtonY);
-            buttonList.add(button);
-            buttonCounter++;
-            addButtonX += button.getW() + 3;
-            if (buttonCounter % 4 == 0) {
-                addButtonX = 0;
-                addButtonY += button.getH() + 3;
-            }
-        }
+        initButtons();
 
         int addOptionY = 10;
 
@@ -106,6 +98,28 @@ public class Panel {
         animateTransition.setEase(Easing.CUBIC_IN_OUT).setMin(0).setMax(300).setSpeed(500);
     }
 
+    public void initButtons() {
+        buttonList.clear();
+        scrollHelperMods.setScrollStep(0);
+        int addButtonX = 0;
+        int addButtonY = 0;
+        int buttonCounter = 0;
+        for (Mod mod : Cloud.INSTANCE.modManager.getMods()) {
+            if (selectedType.equals(mod.getType()) || selectedType.equals(Type.All)) {
+                if (textBox.getText().equals("") || mod.getName().toLowerCase().contains(textBox.getText().toLowerCase())) {
+                    Button button = new Button(mod, this, addButtonX, addButtonY);
+                    buttonList.add(button);
+                    buttonCounter++;
+                    addButtonX += button.getW() + 3;
+                    if (buttonCounter % 4 == 0) {
+                        addButtonX = 0;
+                        addButtonY += button.getH() + 3;
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Renders the panel background, the sidebar and all the buttons
      *
@@ -116,9 +130,14 @@ public class Panel {
     public void renderPanel(int mouseX, int mouseY) {
         boolean roundedCorners = Cloud.INSTANCE.optionManager.getOptionByName("Rounded Corners").isCheckToggled();
         int color = Cloud.INSTANCE.optionManager.getOptionByName("Color").getColor().getRGB();
-
-        Helper2D.drawRoundedRectangle(x, y, w, h, 2, Style.getColor(70).getRGB(), roundedCorners ? 1 : -1);
-        Helper2D.drawRoundedRectangle(x, y + 30, w, h + 270, 2, Style.getColor(50).getRGB(), roundedCorners ? 2 : -1);
+        Helper2D.drawRoundedRectangle(x, y, w, h, 2, Style.getColor(80).getRGB(), roundedCorners ? 1 : -1);
+        Helper2D.drawRoundedRectangle(x,
+                selected == 1 ? y + 30 : y + 60, w,
+                selected == 1 ? h + 270 : h + 240, 2,
+                Style.getColor(50).getRGB(), roundedCorners ? 2 : -1
+        );
+        if (selected == 0)
+            Helper2D.drawRectangle(x, y + 30, w, 30, Style.getColor(70).getRGB());
 
         boolean hovered = MathHelper.withinBox(x + w - 25, y + 5, 20, 20, mouseX, mouseY);
         Helper2D.drawRoundedRectangle(x + w - 25, y + 5, 20, 20, 2, Style.getColor(hovered ? 70 : 50).getRGB(), roundedCorners ? 0 : -1);
@@ -138,7 +157,26 @@ public class Panel {
         Cloud.INSTANCE.messageHelper.renderMessage();
 
         if (selected == 0) {
-            GLHelper.startScissor(x, y + 30, w, h + 270);
+            int offset = 0;
+            for (Type type : Type.values()) {
+                String text = type.name();
+                int length = Cloud.INSTANCE.fontHelper.size20.getStringWidth(text);
+                Helper2D.drawRoundedRectangle(
+                        x + offset + 5,
+                        y + h + 5,
+                        length + 25,
+                        20, 2,
+                        Style.getColor(selectedType.equals(type) ? 120 : 50).getRGB(),
+                        roundedCorners ? 0 : -1
+                );
+                Helper2D.drawPicture(x + offset + 8, y + h + 8, 15, 15, -1, "icon/" + type.getIcon());
+                Cloud.INSTANCE.fontHelper.size20.drawString(text, x + offset + 26, y + h + 11, -1);
+                offset += length + 30;
+            }
+
+            textBox.renderTextBox(x + w - textBox.getW() - 5, y + h + 5, mouseX, mouseY);
+
+            GLHelper.startScissor(x, y + 60, w, h + 240);
             for (Button button : buttonList) {
                 button.renderButton(mouseX, mouseY);
             }
@@ -147,8 +185,8 @@ public class Panel {
             if (MathHelper.withinBox(x, y + 30, w, h + 270, mouseX, mouseY)) {
                 int height = 0;
                 int index = 0;
-                for(Button button : buttonList) {
-                    if(index % 4 == 0) {
+                for (Button button : buttonList) {
+                    if (index % 4 == 0) {
                         height += button.getH() + 3;
                     }
                     index++;
@@ -177,7 +215,7 @@ public class Panel {
 
             if (MathHelper.withinBox(x, y + 30, w, h + 270, mouseX, mouseY)) {
                 int height = 0;
-                for(Options options : optionsList) {
+                for (Options options : optionsList) {
                     height += options.getH();
                 }
                 scrollHelperOptions.setHeight(height);
@@ -223,7 +261,7 @@ public class Panel {
      */
 
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if(mouseButton == 0) {
+        if (mouseButton == 0) {
             int index = 0;
             for (String button : sideButtons) {
                 if (MathHelper.withinBox(x - 50, y + index * 40, 40, 39, mouseX, mouseY)) {
@@ -235,6 +273,19 @@ public class Panel {
                 }
                 index++;
             }
+
+            int offset = 0;
+            for (Type type : Type.values()) {
+                String text = type.name();
+                int length = Cloud.INSTANCE.fontHelper.size20.getStringWidth(text);
+                if (MathHelper.withinBox(x + offset + 5, y + h + 5, length + 25, 20, mouseX, mouseY)) {
+                    selectedType = type;
+                    scrollHelperMods.setScrollStep(0);
+                    initButtons();
+                }
+                offset += length + 30;
+            }
+
 
             if (MathHelper.withinBox(x + w - 25, y + 5, 20, 20, mouseX, mouseY)) {
                 Cloud.INSTANCE.mc.displayGuiScreen(Cloud.INSTANCE.hudEditor);
@@ -261,6 +312,20 @@ public class Panel {
             for (Options option : optionsList) {
                 option.mouseReleased(mouseX, mouseY, state);
             }
+        }
+    }
+
+    public void keyTyped(char typedChar, int keyCode) {
+        if(isAnyButtonOpen()) {
+            for (Button button : buttonList) {
+                button.keyTyped(typedChar, keyCode);
+            }
+            for (Options option : optionsList) {
+                option.keyTyped(typedChar, keyCode);
+            }
+        } else {
+            textBox.keyTyped(typedChar, keyCode);
+            initButtons();
         }
     }
 

@@ -6,13 +6,15 @@
 package dev.cloudmc.feature.mod.impl;
 
 import dev.cloudmc.feature.mod.Mod;
+import dev.cloudmc.feature.mod.Type;
 
 public class ScrollTooltipsMod extends Mod {
 
     public ScrollTooltipsMod() {
         super(
                 "ScrollTooltips",
-                "Makes long tooltips which go offscreen, scrollable."
+                "Makes long tooltips which go offscreen, scrollable.",
+                Type.Tweaks
         );
     }
 }

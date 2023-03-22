@@ -55,7 +55,7 @@ public class MouseKey {
             }
 
             if (mouseDown) {
-                Helper2D.drawRectangle(x, y, width, height, new Color(255, 255, 255, animate.getValueI()).getRGB());
+                Helper2D.drawRectangle(x, y, width, height, new Color(255, 255, 255, 100 - animate.getValueI()).getRGB());
             }
 
             Cloud.INSTANCE.mc.fontRendererObj.drawString(
