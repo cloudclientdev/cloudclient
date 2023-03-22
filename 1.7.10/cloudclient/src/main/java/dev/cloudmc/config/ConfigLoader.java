@@ -23,17 +23,8 @@ public class ConfigLoader {
      * Loads the config from .minecraft/cloud/config.json
      */
 
-    public static void loadConfig() {
-        FileReader reader = null;
-        try {
-            reader = new FileReader(OSHelper.getCloudDirectory() + "config.json");
-        } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-
-        if(reader == null) {
-            return;
-        }
+    public static void loadConfig() throws FileNotFoundException {
+        FileReader reader = new FileReader(OSHelper.getCloudDirectory() + "config.json");
 
         Config config = new Gson().fromJson(reader, Config.class);
 

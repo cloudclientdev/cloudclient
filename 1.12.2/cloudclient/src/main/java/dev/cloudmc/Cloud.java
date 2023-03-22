@@ -53,13 +53,23 @@ public class Cloud {
                 messageHelper = new MessageHelper()
         );
 
-        if (!ConfigSaver.configExists()) {
-            ConfigSaver.saveConfig();
+        try {
+            if (!ConfigSaver.configExists()) {
+                ConfigSaver.saveConfig();
+            }
+            ConfigLoader.loadConfig();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        ConfigLoader.loadConfig();
         fontHelper.init();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(ConfigSaver::saveConfig));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                ConfigSaver.saveConfig();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }));
     }
 
     private void registerEvents(Object... events) {
