@@ -9,6 +9,7 @@
     "GuiIngameMenuMixin",
     "GuiInGameMixin",
     "GuiMainMenuMixin",
+    "GuiScreenMixin",
     "ItemRendererMixin",
     "MinecraftMixin",
     "ModelBipedMixin",
