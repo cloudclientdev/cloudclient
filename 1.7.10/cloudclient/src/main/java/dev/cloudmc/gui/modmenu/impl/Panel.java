@@ -245,7 +245,7 @@ public class Panel {
         int index = 0;
         for (String button : sideButtons) {
             Cloud.INSTANCE.fontHelper.size15.drawString(button, x - 30 - Cloud.INSTANCE.fontHelper.size15.getStringWidth(button) / 2f, y + 30 + index * 40, color);
-            Helper2D.drawPicture(x - 40, y + 5 + index * 40, 20, 20, color, "icon/button/sidebar/" + button + ".png");
+            Helper2D.drawPicture(x - 40, y + 5 + index * 40, 20, 20, color, "icon/button/sidebar/" + button.toLowerCase() + ".png");
 
             index++;
         }

@@ -130,7 +130,7 @@ public class Button {
                             panel.getX() + 13 + animButton.getValueI() + x + 77,
                     panel.getY() + panel.getH() + y + h + 14, 15, 15, 2, Style.getColor(70).getRGB(), roundedCorners ? 0 : -1);
 
-            Helper2D.drawPicture(panel.getX() + getX() + getW() / 2 - 12, panel.getY() + panel.getH() + getY() + 45, 35, 35, color, "icon/button/button/" + mod.getName() + ".png");
+            Helper2D.drawPicture(panel.getX() + getX() + getW() / 2 - 12, panel.getY() + panel.getH() + getY() + 45, 35, 35, color, "icon/button/button/" + mod.getName().toLowerCase() + ".png");
         }
 
         if (open) {

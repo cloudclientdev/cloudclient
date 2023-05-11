@@ -23,15 +23,10 @@ public class ConfigSaver {
      * Creates and saves a configuration in .minecraft/cloud/config.json
      */
 
-    public static void saveConfig() {
+    public static void saveConfig() throws IOException {
         createDir();
 
-        FileWriter writer;
-        try {
-            writer = new FileWriter(OSHelper.getCloudDirectory() + "config.json");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        FileWriter writer = new FileWriter(OSHelper.getCloudDirectory() + "config.json");
 
         Config config = new Config();
 
@@ -57,12 +52,8 @@ public class ConfigSaver {
         config.setSnapping(Style.isSnapping());
 
         String json = new Gson().toJson(config);
-        try {
-            writer.write(json);
-            writer.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        writer.write(json);
+        writer.close();
     }
 
     /**

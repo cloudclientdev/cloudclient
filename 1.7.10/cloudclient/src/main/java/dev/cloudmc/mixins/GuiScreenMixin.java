@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
@@ -78,5 +79,19 @@ public abstract class GuiScreenMixin extends Gui {
         }
 
         return scroll;
+    }
+
+    @Redirect(
+            method = "drawWorldBackground",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/GuiScreen;drawGradientRect(IIIIII)V"
+            )
+    )
+    public void drawWorldBackground(GuiScreen instance, int left, int top, int right, int bottom, int startColor, int endColor) {
+        if (Cloud.INSTANCE.settingManager.getSettingByModAndName("Gui Tweaks", "Darken Background").isCheckToggled() ||
+                !Cloud.INSTANCE.modManager.getMod("Gui Tweaks").isToggled()) {
+            this.drawGradientRect(left, top, right, bottom, startColor, endColor);
+        }
     }
 }

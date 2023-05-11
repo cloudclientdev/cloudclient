@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import org.lwjgl.opengl.Display;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 @Mod(
@@ -36,7 +37,7 @@ public class Cloud {
 
     public static final String modID = "cloudmc";
     public static final String modName = "Cloud";
-    public static final String modVersion = "1.4.0 [1.8.9]";
+    public static final String modVersion = "1.4.1 [1.8.9]";
 
     public Minecraft mc = Minecraft.getMinecraft();
 
@@ -52,7 +53,7 @@ public class Cloud {
      * Initializes the client
      */
     @EventHandler
-    public void init(FMLInitializationEvent event) throws IOException {
+    public void init(FMLInitializationEvent event) {
         Display.setTitle(Cloud.modName + " Client " + Cloud.modVersion);
         registerEvents(
                 cpsHelper = new CpsHelper(),
@@ -64,13 +65,23 @@ public class Cloud {
                 messageHelper = new MessageHelper()
         );
 
-        if (!ConfigSaver.configExists()) {
-            ConfigSaver.saveConfig();
+        try {
+            if (!ConfigSaver.configExists()) {
+                ConfigSaver.saveConfig();
+            }
+            ConfigLoader.loadConfig();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        ConfigLoader.loadConfig();
         fontHelper.init();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(ConfigSaver::saveConfig));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                ConfigSaver.saveConfig();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }));
     }
 
     private void registerEvents(Object... events) {

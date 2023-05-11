@@ -36,7 +36,7 @@ public class Cloud {
 
     public static final String modID = "cloudmc";
     public static final String modName = "Cloud";
-    public static final String modVersion = "1.4.0 [1.7.10]";
+    public static final String modVersion = "1.4.1 [1.7.10]";
 
     public Minecraft mc = Minecraft.getMinecraft();
 
@@ -64,13 +64,23 @@ public class Cloud {
                 messageHelper = new MessageHelper()
         );
 
-        if (!ConfigSaver.configExists()) {
-            ConfigSaver.saveConfig();
+        try {
+            if (!ConfigSaver.configExists()) {
+                ConfigSaver.saveConfig();
+            }
+            ConfigLoader.loadConfig();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        ConfigLoader.loadConfig();
         fontHelper.init();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(ConfigSaver::saveConfig));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                ConfigSaver.saveConfig();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }));
     }
 
     private void registerEvents(Object... events) {
