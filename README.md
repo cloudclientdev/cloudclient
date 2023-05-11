@@ -1,7 +1,7 @@
 ![Logo](/screenshots/Logo.png)
 
 # Cloud Client
-Cloud Client is an open source Minecraft PvP Client for 1.7.10 and 1.8.9 which uses the Forge API.
+Cloud Client is an open source Minecraft PvP Client for 1.7.10 1.8.9 and 1.12.2 which uses the Forge API.
 
 ## Downloading
 - Download the mod's `.jar` file from the [Releases](https://github.com/CloudClientDev/cloudclient/releases) section (Windows, MacOS & Linux)
