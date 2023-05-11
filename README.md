@@ -20,11 +20,9 @@ Cloud Client is an open source Minecraft PvP Client for 1.7.10 and 1.8.9 which u
 ![TitleScreen](/screenshots/ModMenu.png)
 </details>
 
-<details>
-<summary><h2>Compatible Mods</h2></summary>
 
-<h3>(WIP!)<h3>
-</details>
+#### Compatiblity
+Basically everything is compatible, maybe not if it majorly changes the GUI. Also, make sure to change Cloud's or another mod's bind, so they won't intefere. An example of this is [OneConfig](https://github.com/Polyfrost/OneConfig), as the default keybind is set to right shift, the same as Cloud.
 
 <br/>
 
@@ -48,14 +46,12 @@ gradlew build
 <br/>
 
 ## Workspace Setup
-### Windows
-1. Clone or download the repository, either using `git`, Git GUI's such as GitHub Desktop or GitKraken, or the [zip download](https://github.com/CloudClientDev/cloudclient/archive/refs/heads/development.zip).
-2. Open the folder, either `1.7.10\cloudclient`, `1.8.9\cloudclient` or `1.12.2\cloudclient` and copy the path.
-3. Open a command prompt or terminal and change the directory (`cd`) to the copied path. Example path if using GitHub Desktop:
+1. Clone or download the repository, either using `git`, Git GUI's such as GitHub Desktop or GitKraken, or the [head zip](https://github.com/CloudClientDev/cloudclient/archive/refs/heads/development.zip).
+2. Open a command prompt/terminal and `cd` into the desired path, `1.7.10\cloudclient`, `1.8.9\cloudclient` or `1.12.2\cloudclient`:
 ```
 cd C:\Users\%USERNAME%\Documents\GitHub\cloudclient\<version>\cloudclient
 ```
-4. Creating the workspace for your IDE <br/>
+3. Creating the workspace for your IDE <br/>
 - IntelliJ IDEA
 ```
 gradlew setupDecompWorkspace idea
